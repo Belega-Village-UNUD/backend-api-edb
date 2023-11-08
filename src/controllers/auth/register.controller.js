@@ -45,6 +45,7 @@ const register = async (req, res) => {
       id: email,
     });
   } catch (err) {
+    console.log(err)
     return response(res, err.status || 500, false, err.message, null);
   }
 };
