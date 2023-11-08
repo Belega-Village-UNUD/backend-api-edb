@@ -1,5 +1,5 @@
 build:
-	docker build . --env-file .env -t Belega-Village-UNUD/backend-api-edb:latest
+	docker build . --no-cache -t belega-village-unud/backend-ecommerce-desa-belega:v1
 
 up:
 	docker compose --env-file .env up -d

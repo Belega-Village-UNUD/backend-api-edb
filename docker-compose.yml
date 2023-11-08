@@ -2,13 +2,9 @@ version: "3.4"
 services:
   app:
     container_name: backend-ecommerce-desa-belega
-    image: desa-belega/backend-ecommerce-desa-belega
-    build:
-      context: ./
-      dockerfile: Dockerfile
+    image: belega-village-unud/backend-ecommerce-desa-belega:v1
     restart: always
-    environment:
-      - PORT=${PORT}
+    env_file: .env
     ports:
       - ${PORT}:${PORT}
     networks:
