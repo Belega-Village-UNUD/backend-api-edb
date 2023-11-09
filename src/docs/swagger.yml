@@ -1,0 +1,451 @@
+openapi: 3.0.0
+info:
+  title: E-Commerce Desa Belega
+  description: >-
+    This is the Documentation for E-Commerce Desa Belega API Collection. This API Collection should be tested using the bearer token
+  version: 1.0.0
+servers:
+- url: http://localhost:3333
+  description: Local server
+- url: https://docs.belega.xyz
+  description: Production server
+- url: https://dev.renata-app.xyz
+  description: Remote Development server
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+security:
+- bearerAuth: []
+tags:
+- name: Auth
+  description: This is the Authentication module API
+- name: Profile
+  description: This is the Profile module API
+paths:
+  /api/auth/register:
+    post:
+      tags:
+      - Auth
+      summary: Register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: gricowijaya@gmail.com
+                password: GeRicO21.
+                confirmPassword: GeRicO21.
+      responses:
+        '201':
+          description: Created
+          headers:
+            X-Powered-By:
+              schema:
+                type: string
+                example: Express
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '117'
+            ETag:
+              schema:
+                type: string
+                example: W/"75-QALVVyZWWi36fMOvQ1A2iSlkaAI"
+            Date:
+              schema:
+                type: string
+                example: Fri, 02 Jun 2023 02:39:53 GMT
+            Via:
+              schema:
+                type: string
+                example: 1.1 google
+            Alt-Svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                status: 201
+                message: Register success
+                success: true
+                data:
+                  id: frHNvqkwtt
+                  email: gricowijaya@gmail.com
+        '400':
+          description: Bad Request
+          headers:
+            X-Powered-By:
+              schema:
+                type: string
+                example: Express
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '73'
+            ETag:
+              schema:
+                type: string
+                example: W/"49-9WQ5zIQXL54Uwx9o9advuIDboG0"
+            Date:
+              schema:
+                type: string
+                example: Fri, 02 Jun 2023 02:40:42 GMT
+            Via:
+              schema:
+                type: string
+                example: 1.1 google
+            Alt-Svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                status: 400
+                message: Email already used
+                success: false
+                data: null
+        '422':
+          description: Unprocessable Entity
+          headers:
+            X-Powered-By:
+              schema:
+                type: string
+                example: Express
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '140'
+            ETag:
+              schema:
+                type: string
+                example: W/"8c-GswzMAnvNZMrmtSxv57ILmVxm4s"
+            Date:
+              schema:
+                type: string
+                example: Fri, 02 Jun 2023 02:41:27 GMT
+            Via:
+              schema:
+                type: string
+                example: 1.1 google
+            Alt-Svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                status: 422
+                success: false
+                message: The given data was invalid.
+                errors:
+                  password: 'Password should contain at least 1 symbol'
+  /api/auth/verify:
+    post:
+      tags:
+      - Auth
+      summary: Verify Email
+      parameters:
+      - in: query
+        name: token
+        schema:
+          type: string
+        required: true
+        description: Reset Password Token by Email
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Powered-By:
+              schema:
+                type: string
+                example: Express
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '329'
+            ETag:
+              schema:
+                type: string
+                example: W/"149-fGqm9fGmSCKpXP1P0Ge3ZCYjt/4"
+            Date:
+              schema:
+                type: string
+                example: Fri, 02 Jun 2023 02:44:01 GMT
+            Via:
+              schema:
+                type: string
+                example: 1.1 google
+            Alt-Svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                status: 200
+                message: Email verified, welcome
+                success: true
+                data:
+                  email: gricowijaya@gmail.com
+                  token: >-
+                    eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZySE52cWt3dHQiLCJlbWFpbCI6ImdyaWNvd2lqYXlhQGdtYWlsLmNvbSIsImlhdCI6MTY4NTY3Mzg0MSwiZXhwIjoxNjg2Mjc4NjQxfQ.5TZg5oIaCFU8qozPuo6nNPdvO4ALP1MQIxlXse2halI
+  /api/auth/verify/resend:
+    post:
+      tags:
+      - Auth
+      summary: Resend JWT Token
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/auth/login:
+    post:
+      tags:
+      - Auth
+      summary: Login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: gricowijaya@gmail.com
+                password: GeRicO21.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/auth/password/forgot:
+    post:
+      tags:
+      - Auth
+      summary: Forgot Password
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: gricowijaya@gmail.com
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/auth/password/reset:
+    put:
+      parameters:
+      - in: query
+        name: token
+        schema:
+          type: string
+        required: true
+        description: Reset Password Token by Email
+      tags:
+      - Auth
+      summary: Reset Password
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                newPassword: gricowijaya.!
+                confirmNewPassword: gricowijaya.!
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/auth/password/change:
+    put:
+      tags:
+      - Auth
+      summary: Change Password
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                currentPassword: GeRicO21.
+                newPassword: gricowijaya.!
+                confirmNewPassword: gricowijaya.!
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/auth/password/reset/verify:
+    post:
+      tags:
+      - Auth
+      summary: Verify Reset Password
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/profiles:
+    get:
+      tags:
+      - Profile
+      summary: Get Profile
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  #  post:
+  #    tags:
+  #    - Profile
+  #    summary: Update Profile
+  #    requestBody:
+  #      content:
+  #        application/json:
+  #          schema:
+  #            type: object
+  #            example:
+  #              first_name: Rico
+  #              last_name: Wijaya
+  #              phone: '62132341351233'
+  #              address: Denpasar, Bali
+  #    responses:
+  #      '200':
+  #        description: Successful response
+  #        content:
+  #          application/json: {}
+  #/api/profiles/image:
+  #  post:
+  #    tags:
+  #    - Profile
+  #    summary: Upload Profile Picture
+  #    requestBody:
+  #      content:
+  #        multipart/form-data:
+  #          schema:
+  #            type: object
+  #            properties:
+  #              file:
+  #                type: string
+  #                format: binary
+  #    responses:
+  #      '200':
+  #        description: OK
+  #        headers:
+  #          X-Powered-By:
+  #            schema:
+  #              type: string
+  #              example: Express
+  #          Content-Type:
+  #            schema:
+  #              type: string
+  #              example: application/json; charset=utf-8
+  #          Content-Length:
+  #            schema:
+  #              type: integer
+  #              example: '165'
+  #          ETag:
+  #            schema:
+  #              type: string
+  #              example: W/"a5-ECqs5HMCwRqBqozHc8vUQp92G10"
+  #          Date:
+  #            schema:
+  #              type: string
+  #              example: Thu, 11 May 2023 02:28:18 GMT
+  #          Connection:
+  #            schema:
+  #              type: string
+  #              example: keep-alive
+  #          Keep-Alive:
+  #            schema:
+  #              type: string
+  #              example: timeout=5
+  #        content:
+  #          application/json:
+  #            schema:
+  #              type: object
+  #            example:
+  #              status: 200
+  #              message: Upload success
+  #              success: true
+  #              data:
+  #                url: >-
+  #                  https://storage.googleapis.com/profile-image-bucket-dev/1683772096920-HMM1vWYYH6CSzw3v.jpeg
+  #      '400':
+  #        description: Bad Request
+  #        headers:
+  #          X-Powered-By:
+  #            schema:
+  #              type: string
+  #              example: Express
+  #          Content-Type:
+  #            schema:
+  #              type: string
+  #              example: application/json; charset=utf-8
+  #          Content-Length:
+  #            schema:
+  #              type: integer
+  #              example: '87'
+  #          ETag:
+  #            schema:
+  #              type: string
+  #              example: W/"57-67j2X3Ie5R/DfRXvI1eG/AW4qdw"
+  #          Date:
+  #            schema:
+  #              type: string
+  #              example: Thu, 11 May 2023 02:19:58 GMT
+  #          Connection:
+  #            schema:
+  #              type: string
+  #              example: keep-alive
+  #          Keep-Alive:
+  #            schema:
+  #              type: string
+  #              example: timeout=5
+  #        content:
+  #          application/json:
+  #            schema:
+  #              type: object
+  #            example:
+  #              status: 400
+  #              message: Only support file png, jpeg, jpg
+  #              success: false
+  #              data: null
