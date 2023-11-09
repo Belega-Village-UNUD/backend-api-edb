@@ -54,6 +54,23 @@ jobs:
           service: ${{ secrets.SERVICE_NAME }}
           region: ${{ secrets.REGION }}
           image: ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE_NAME }}:latest
+          env_vars: |
+            NODE_ENV=${{ secrets.NODE_ENV }}
+            PORT=${{ secrets.PORT }}
+            STAGING_DB_USERNAME=${{ secrets.STAGING_DB_USERNAME }}
+            STAGING_DB_PASSWORD=${{ secrets.STAGING_DB_PASSWORD }}
+            STAGING_DB_HOST=${{ secrets.STAGING_DB_HOST }}
+            STAGING_DB_PORT=${{ secrets.STAGING_DB_PORT }}
+            JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}
+            JWT_EXPIRES=${{ secrets.JWT_EXPIRES }}
+            JWT_RESET_PASSWORD_KEY=${{ secrets.JWT_RESET_PASSWORD_KEY }}
+            JWT_RESET_EXPIRES=${{ secrets.JWT_RESET_EXPIRES }}
+            GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
+            GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
+            GOOGLE_REDIRECT_URI=${{ secrets.GOOGLE_REDIRECT_URI }}
+            GOOGLE_REFRESH_TOKEN=${{ secrets.GOOGLE_REFRESH_TOKEN }}
+            GOOGLE_EMAIL=${{ secrets.GOOGLE_EMAIL }}
+
       - name: Show Output
         run: |
           echo ${{ steps.deploy.outputs.url }}
