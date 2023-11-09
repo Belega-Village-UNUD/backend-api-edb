@@ -5,12 +5,8 @@ info:
     This is the Documentation for E-Commerce Desa Belega API Collection. This API Collection should be tested using the bearer token
   version: 1.0.0
 servers:
-- url: http://localhost:3333
-  description: Local server
-- url: https://docs.belega.xyz
-  description: Production server
-- url: https://dev.renata-app.xyz
-  description: Remote Development server
+- url: https://belega-commerce-api-staging-tku2lejm6q-et.a.run.app
+  description: Staging server
 components:
   securitySchemes:
     bearerAuth:
