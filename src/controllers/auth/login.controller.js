@@ -9,7 +9,6 @@ const login = async (req, res) => {
 
     const user = await User.findOne({
       where: { email },
-      attributes: { exclude: ["id", "role_id"] },
     });
 
     if (!user)
