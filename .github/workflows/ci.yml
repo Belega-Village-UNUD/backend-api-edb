@@ -63,8 +63,8 @@ jobs:
             STAGING_DB_PORT=${{ secrets.STAGING_DB_PORT }}
             JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}
             JWT_EXPIRES=${{ secrets.JWT_EXPIRES }}
-            JWT_RESET_PASSWORD_KEY=${{ secrets.JWT_RESET_PASSWORD_KEY }}
-            JWT_RESET_EXPIRES=${{ secrets.JWT_RESET_EXPIRES }}
+            JWT_OTP_KEY=${{ secrets.JWT_OTP_KEY }}
+            JWT_OTP_EXPIRES=${{ secrets.JWT_OTP_EXPIRES }}
             GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
             GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
             GOOGLE_REDIRECT_URI=${{ secrets.GOOGLE_REDIRECT_URI }}
