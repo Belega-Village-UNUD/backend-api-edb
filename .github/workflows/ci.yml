@@ -56,7 +56,6 @@ jobs:
           image: ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE_NAME }}:latest
           env_vars: |
             NODE_ENV=${{ secrets.NODE_ENV }}
-            PORT=${{ secrets.PORT }}
             STAGING_DB_USERNAME=${{ secrets.STAGING_DB_USERNAME }}
             STAGING_DB_PASSWORD=${{ secrets.STAGING_DB_PASSWORD }}
             STAGING_DB_HOST=${{ secrets.STAGING_DB_HOST }}
