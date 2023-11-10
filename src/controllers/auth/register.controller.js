@@ -3,8 +3,8 @@ const bcrypt = require("bcrypt");
 const { response } = require("../../utils/response.utils");
 const { nanoid } = require("nanoid");
 const { ROLE } = require("../../utils/enum.utils");
-//const sendEmail = require("../../config/nodemailer");
-//const htmlTemplate = require("../../utils/html-template");
+const { sendOTP } = require("../../configs/otp.config");
+const { generateToken } = require("../../utils/token.utils");
 
 const register = async (req, res) => {
   try {
@@ -38,14 +38,21 @@ const register = async (req, res) => {
       avatar_link: null,
     });
 
-    //const html = await htmlTemplate("verify-email.ejs", { otp });
-    //await sendEmail(user.email, "Verify Email - Renata", html);
+    await sendOTP(user, "Belega Commerce OTP Token");
+    const payload = {
+      email: user.email,
+      role_id: user.role_id,
+      is_verified: user.is_verified,
+    };
 
+    console.log(payload);
+
+    // TODO: Discuss flow about generate token after register for user authentication
+    const token = await generateToken(payload);
     return response(res, 201, true, "Register success", {
-      id: email,
+      token,
     });
   } catch (err) {
-    console.log(err)
     return response(res, err.status || 500, false, err.message, null);
   }
 };
