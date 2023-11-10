@@ -30,12 +30,14 @@ const restrict = (req, res, next) => {
 
     next();
   } catch (err) {
-    if (err) {
-      if (err.message == "jwt malformed") {
+    switch (err && err.message) {
+      case "jwt malformed":
+      case "jwt expired":
         return response(res, 401, false, err.message, null);
-      }
-      return response(res, err.status, false, err.message, null);
+      default:
+        break;
     }
+    return response(res, err.status, false, err.message, null);
     next(err);
   }
 };
