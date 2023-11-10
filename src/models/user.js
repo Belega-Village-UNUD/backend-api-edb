@@ -5,11 +5,15 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       User.belongsTo(models.Role, {
         foreignKey: "role_id",
-        as: "role",
+        as: "userRole",
       });
       User.hasOne(models.Profile, {
         foreignKey: "user_id",
-        as: "profile",
+        as: "userProfile",
+      });
+      User.hasOne(models.OTP, {
+        foreignKey: "user_id",
+        as: "userOTP",
       });
     }
   }
