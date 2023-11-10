@@ -160,18 +160,18 @@ paths:
                 message: The given data was invalid.
                 errors:
                   password: 'Password should contain at least 1 symbol'
-  /api/auth/verify:
+  /api/auth/otp/verify:
     post:
       tags:
       - Auth
-      summary: Verify Email
-      parameters:
-      - in: query
-        name: token
-        schema:
-          type: string
-        required: true
-        description: Reset Password Token by Email
+      summary: Verify OTP (Require JWT Token from Register or from Forgot Password)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                otp: ""
       responses:
         '200':
           description: OK
@@ -216,16 +216,55 @@ paths:
                   email: gricowijaya@gmail.com
                   token: >-
                     eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZySE52cWt3dHQiLCJlbWFpbCI6ImdyaWNvd2lqYXlhQGdtYWlsLmNvbSIsImlhdCI6MTY4NTY3Mzg0MSwiZXhwIjoxNjg2Mjc4NjQxfQ.5TZg5oIaCFU8qozPuo6nNPdvO4ALP1MQIxlXse2halI
-  /api/auth/verify/resend:
-    post:
+  /api/auth/otp:
+    get:
       tags:
       - Auth
-      summary: Resend JWT Token
+      summary: Resend OTP (if User doesn't received any OTP, need JWT Token from Register)
       responses:
         '200':
-          description: Successful response
+          description: OK
+          headers:
+            X-Powered-By:
+              schema:
+                type: string
+                example: Express
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '329'
+            ETag:
+              schema:
+                type: string
+                example: W/"149-fGqm9fGmSCKpXP1P0Ge3ZCYjt/4"
+            Date:
+              schema:
+                type: string
+                example: Fri, 02 Jun 2023 02:44:01 GMT
+            Via:
+              schema:
+                type: string
+                example: 1.1 google
+            Alt-Svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
           content:
-            application/json: {}
+            application/json:
+              schema:
+                type: object
+              example:
+                status: 200
+                message: Email verified, welcome
+                success: true
+                data:
+                  email: gricowijaya@gmail.com
+                  token: >-
+                    eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZySE52cWt3dHQiLCJlbWFpbCI6ImdyaWNvd2lqYXlhQGdtYWlsLmNvbSIsImlhdCI6MTY4NTY3Mzg0MSwiZXhwIjoxNjg2Mjc4NjQxfQ.5TZg5oIaCFU8qozPuo6nNPdvO4ALP1MQIxlXse2halI
   /api/auth/login:
     post:
       tags:
@@ -263,24 +302,17 @@ paths:
             application/json: {}
   /api/auth/password/reset:
     put:
-      parameters:
-      - in: query
-        name: token
-        schema:
-          type: string
-        required: true
-        description: Reset Password Token by Email
       tags:
       - Auth
-      summary: Reset Password
+      summary: Reset Password (Require JWT from Forgot Password)
       requestBody:
         content:
           application/json:
             schema:
               type: object
               example:
-                newPassword: gricowijaya.!
-                confirmNewPassword: gricowijaya.!
+                newPassword: GeRicO21!
+                confirmNewPassword: GeRicO21!
       responses:
         '200':
           description: Successful response
@@ -300,22 +332,6 @@ paths:
                 currentPassword: GeRicO21.
                 newPassword: gricowijaya.!
                 confirmNewPassword: gricowijaya.!
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json: {}
-  /api/auth/password/reset/verify:
-    post:
-      tags:
-      - Auth
-      summary: Verify Reset Password
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              example:
       responses:
         '200':
           description: Successful response
