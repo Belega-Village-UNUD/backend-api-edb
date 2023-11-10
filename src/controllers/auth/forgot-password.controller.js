@@ -1,14 +1,14 @@
 const { User } = require("../../models");
 const { response } = require("../../utils/response.utils");
-const { generateResetToken } = require("../../utils/token.utils");
-const sendEmail = require("../../configs/nodemailer.config");
-const emailTemplate = require("../../utils/email-template.utils");
+const { sendOTP } = require("../../configs/otp.config");
+const { generateToken } = require("../../utils/token.utils");
 
 const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
 
     const user = await User.findOne({ where: { email } });
+    console.log(user);
     if (!user)
       return response(
         res,
@@ -18,22 +18,16 @@ const forgotPassword = async (req, res) => {
         null
       );
 
-    const resetToken = generateResetToken(user);
-    const resetLink = `${process.env.RESET_PASSWORD_ENDPOINT}${resetToken}`;
-    console.log(resetLink);
+    const token = await generateToken(user);
 
-    const template = await emailTemplate("reset-password.template.ejs", {
-      resetLink,
-    });
-
-    await sendEmail(user.email, "Account Reset Password", template);
+    await sendOTP(user, "Belega Commerce Forgot Password OTP Token");
 
     return response(
       res,
       200,
       true,
-      "Please check your email to reset password",
-      null
+      "Please check your email to reset your forgotten password",
+      token
     );
   } catch (error) {
     return response(res, error.status || 500, false, error.message, null);
