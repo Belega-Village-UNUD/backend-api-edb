@@ -1,4 +1,7 @@
 const jwt = require("jsonwebtoken");
+const { User } = require("../models");
+const crypto = require("crypto");
+const bcrypt = require("bcrypt");
 
 module.exports = {
   generateToken: (user) => {
@@ -8,10 +11,13 @@ module.exports = {
     });
   },
 
-  generateResetToken: (user) => {
-    const payload = { email: user.email };
-    return jwt.sign(payload, process.env.JWT_RESET_PASSWORD_KEY, {
-      expiresIn: process.env.JWT_RESET_EXPIRES,
-    });
+  generateOTPToken: async (user) => {
+    const otp = crypto
+      .randomBytes(256)
+      .toString("hex")
+      .slice(0, 4)
+      .toUpperCase();
+    const encryptedOTP = bcrypt.hashSync(otp, 10);
+    return { otp, encryptedOTP };
   },
 };
