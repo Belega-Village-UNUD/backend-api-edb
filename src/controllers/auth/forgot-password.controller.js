@@ -8,7 +8,6 @@ const forgotPassword = async (req, res) => {
     const { email } = req.body;
 
     const user = await User.findOne({ where: { email } });
-    console.log(user);
     if (!user)
       return response(
         res,
