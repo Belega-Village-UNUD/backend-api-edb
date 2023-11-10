@@ -6,13 +6,24 @@ const { MODULE } = require("../../utils/enum.utils");
 router.post("/register", controllers.auth.register);
 router.post("/login", controllers.auth.login);
 router.post(
-  "/verify",
+  "/otp/verify",
   middleware.restrict,
   middleware.rbac(MODULE.AUTH, true, false),
-  controllers.auth.login
+  controllers.auth.verifyUser
+);
+router.get(
+  "/otp",
+  middleware.restrict,
+  middleware.rbac(MODULE.AUTH, true, false),
+  controllers.auth.resendOTP
 );
 router.post("/password/forgot", controllers.auth.forgotPassword);
-router.put("/password/reset", controllers.auth.resetPassword);
+router.put(
+  "/password/reset",
+  middleware.restrict,
+  middleware.rbac(MODULE.AUTH, true, false),
+  controllers.auth.resetPassword
+);
 router.put(
   "/password/change",
   middleware.restrict,
