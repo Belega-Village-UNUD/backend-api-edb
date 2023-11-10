@@ -4,7 +4,6 @@ const oAuth2Token = require("./google.oauth.config");
 const sendEmail = async (to, subject, html) => {
   try {
     const accessToken = await oAuth2Token();
-    console.log(accessToken);
 
     const transport = nodemailer.createTransport({
       service: "gmail",
@@ -24,9 +23,9 @@ const sendEmail = async (to, subject, html) => {
       html,
     });
 
-    console.log(`Message sent: ${info.messageId}`);
+    //console.log(`Message sent: ${info.messageId}`);
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     throw err;
   }
 };
