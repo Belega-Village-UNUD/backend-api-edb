@@ -1,16 +1,12 @@
 const { User } = require("../../models");
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 const { response } = require("../../utils/response.utils");
+const { verifyOTP } = require("../../configs/otp.config");
 
 const resetPassword = async (req, res) => {
   try {
+    const { email } = req.user;
     const { newPassword, confirmNewPassword } = req.body;
-    const token = req.query;
-    console.log(token);
-
-    const payload = jwt.verify(token.token, process.env.JWT_RESET_PASSWORD_KEY);
-    const email = payload.email;
 
     const user = await User.findOne({
       where: { email },
@@ -29,9 +25,7 @@ const resetPassword = async (req, res) => {
       { where: { id: user.id } }
     );
 
-    return response(res, 200, true, "Sucessfully Reset Password", {
-      user,
-    });
+    return response(res, 200, true, "Sucessfully Reset Password", null);
   } catch (err) {
     console.log(err);
     return response(res, err.status || 500, false, err.message, null);
