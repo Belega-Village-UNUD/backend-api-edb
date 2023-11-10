@@ -14,7 +14,7 @@ const login = async (req, res) => {
     if (!user)
       return response(
         res,
-        404,
+        400,
         false,
         "These credentials do not match with our records",
         null
@@ -24,9 +24,9 @@ const login = async (req, res) => {
     if (!isMatch)
       return response(
         res,
-        404,
+        401,
         false,
-        "These credentials do not match with our records",
+        "Password credentials do not match with our records",
         null
       );
 
@@ -44,7 +44,6 @@ const login = async (req, res) => {
       token,
     });
   } catch (error) {
-    console.log(error);
     return response(res, error.status || 500, false, error.message, null);
   }
 };
