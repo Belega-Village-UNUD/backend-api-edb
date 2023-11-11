@@ -11,7 +11,7 @@ router.post(
   middleware.rbac(MODULE.AUTH, true, false),
   controllers.auth.verifyUser
 );
-router.get(
+router.post(
   "/otp",
   middleware.restrict,
   middleware.rbac(MODULE.AUTH, true, false),

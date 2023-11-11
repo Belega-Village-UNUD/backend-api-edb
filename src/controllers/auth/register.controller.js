@@ -45,8 +45,6 @@ const register = async (req, res) => {
       is_verified: user.is_verified,
     };
 
-    console.log(payload);
-
     // TODO: Discuss flow about generate token after register for user authentication
     const token = await generateToken(payload);
     return response(res, 201, true, "Register success", {

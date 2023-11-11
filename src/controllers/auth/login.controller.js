@@ -40,7 +40,7 @@ const login = async (req, res) => {
     const token = generateToken(payload);
 
     return response(res, 200, true, "Login success", {
-      email,
+      payload,
       token,
     });
   } catch (error) {

@@ -26,7 +26,7 @@ const forgotPassword = async (req, res) => {
       200,
       true,
       "Please check your email to reset your forgotten password",
-      token
+      { token }
     );
   } catch (error) {
     return response(res, error.status || 500, false, error.message, null);
