@@ -217,10 +217,17 @@ paths:
                   token: >-
                     eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZySE52cWt3dHQiLCJlbWFpbCI6ImdyaWNvd2lqYXlhQGdtYWlsLmNvbSIsImlhdCI6MTY4NTY3Mzg0MSwiZXhwIjoxNjg2Mjc4NjQxfQ.5TZg5oIaCFU8qozPuo6nNPdvO4ALP1MQIxlXse2halI
   /api/auth/otp:
-    get:
+    post:
       tags:
       - Auth
-      summary: Resend OTP (if User doesn't received any OTP, need JWT Token from Register)
+      summary: Resend OTP (if User doesn't received any OTP, need JWT Token from Register, you can use email too)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: gricowijaya@gmail.com
       responses:
         '200':
           description: OK
