@@ -2,7 +2,7 @@ name: Create and publish a API to Cloud Run
 
 on:
   push:
-    branches: ["staging-temp"]
+    branches: ["staging"]
 
 env:
   IMAGE_NAME: belega-commerce-api-image
