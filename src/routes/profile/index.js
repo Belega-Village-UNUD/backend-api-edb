@@ -10,4 +10,6 @@ router.get(
   controller.whoami
 );
 
+router.delete("/", controller.deleteUser);
+
 module.exports = router;

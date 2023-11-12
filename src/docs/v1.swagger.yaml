@@ -1,0 +1,520 @@
+openapi: 3.0.0
+info:
+  title: Belega Commerce
+  version: 1.0.0
+servers:
+- url: http://{{host}}
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+security:
+- bearerAuth: []
+tags:
+- name: auth
+- name: checkhealth
+- name: profile
+paths:
+  /api/auth/otp/verify:
+    post:
+      tags:
+      - auth
+      summary: verify
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                otp: ''
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Powered-By:
+              schema:
+                type: string
+                example: Express
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '303'
+            ETag:
+              schema:
+                type: string
+                example: W/"12f-bPcSlaj3DPDUc3YiZDf21z11iIw"
+            Date:
+              schema:
+                type: string
+                example: Sun, 12 Nov 2023 15:42:01 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                status: 200
+                message: You are verified!
+                success: true
+                data:
+                  token: >-
+                    eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ii1CaUFNaDc1TFgiLCJlbWFpbCI6ImdyaWNvd2lqYXlhQGdtYWlsLmNvbSIsInJvbGUiOlsiVlZjQXlJWGV2aSJdLCJpYXQiOjE2OTk4MDM3MjEsImV4cCI6MTY5OTgxNDUyMX0.uI3RaGIG07tmlGkoiXr6BiipJXCtjkvgkPTa3yLajIU
+        '400':
+          description: Bad Request
+          headers:
+            X-Powered-By:
+              schema:
+                type: string
+                example: Express
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '99'
+            ETag:
+              schema:
+                type: string
+                example: W/"63-ikOaHdt1hpwz77QroKHC6F0HEXY"
+            Date:
+              schema:
+                type: string
+                example: Sun, 12 Nov 2023 15:42:11 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                status: 400
+                message: OTP expired, please request another OTP Code
+                success: false
+                data: null
+  /api/auth/otp:
+    post:
+      tags:
+      - auth
+      summary: otp
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: ''
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Powered-By:
+              schema:
+                type: string
+                example: Express
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '98'
+            ETag:
+              schema:
+                type: string
+                example: W/"62-ELD/TAAPnrN43D4e51zzZu7/O6I"
+            Date:
+              schema:
+                type: string
+                example: Sun, 12 Nov 2023 15:40:13 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                example-0:
+                  summary: using email
+                  value:
+                    status: 200
+                    message: Please check your email for your OTP Request
+                    success: true
+                    data: null
+                example-1:
+                  summary: using jwt
+                  value:
+                    status: 200
+                    message: Please check your email for your OTP Request
+                    success: true
+                    data: null
+  /api/auth/login:
+    post:
+      tags:
+      - auth
+      summary: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: gricowijaya@gmail.com
+                password: GeRicO21.
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Powered-By:
+              schema:
+                type: string
+                example: Express
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '405'
+            ETag:
+              schema:
+                type: string
+                example: W/"195-ytUGptMt7+1CvTM/WZrWMKnJqRo"
+            Date:
+              schema:
+                type: string
+                example: Sun, 12 Nov 2023 15:42:39 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                status: 200
+                message: Login success
+                success: true
+                data:
+                  payload:
+                    id: '-BiAMh75LX'
+                    email: gricowijaya@gmail.com
+                    role_id:
+                    - VVcAyIXevi
+                    is_verified: true
+                  token: >-
+                    eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ii1CaUFNaDc1TFgiLCJlbWFpbCI6ImdyaWNvd2lqYXlhQGdtYWlsLmNvbSIsInJvbGUiOlsiVlZjQXlJWGV2aSJdLCJpYXQiOjE2OTk4MDM3NTksImV4cCI6MTY5OTgxNDU1OX0.j3VK18ZKAI9vaGjLFrxhkbdeg06ghn2DHNfaqmgiXOg
+        '401':
+          description: Unauthorized
+          headers:
+            X-Powered-By:
+              schema:
+                type: string
+                example: Express
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '105'
+            ETag:
+              schema:
+                type: string
+                example: W/"69-X7HfOzPNYng2zv2udDDKVxhPFME"
+            Date:
+              schema:
+                type: string
+                example: Sun, 12 Nov 2023 15:42:59 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                status: 401
+                message: Password credentials do not match with our records
+                success: false
+                data: null
+  /api/auth/register:
+    post:
+      tags:
+      - auth
+      summary: register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: abeljollando@gmail.com
+                password: GeRicO21.
+                confirmPassword: GeRicO21.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /:
+    get:
+      tags:
+      - checkhealth
+      summary: root
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Powered-By:
+              schema:
+                type: string
+                example: Express
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '59'
+            ETag:
+              schema:
+                type: string
+                example: W/"3b-ogY3Sl33VhNBUeNv94+h0Fc9R5E"
+            Date:
+              schema:
+                type: string
+                example: Sun, 12 Nov 2023 15:43:27 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                status: 200
+                message: Server is healthy
+                success: true
+  /api:
+    get:
+      tags:
+      - checkhealth
+      summary: api
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Powered-By:
+              schema:
+                type: string
+                example: Express
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '63'
+            ETag:
+              schema:
+                type: string
+                example: W/"3f-ZTztjCU/x0nkbMBXu3feaiLSPPQ"
+            Date:
+              schema:
+                type: string
+                example: Sun, 12 Nov 2023 15:43:21 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                status: 200
+                message: Server API is healthy
+                success: true
+  /api/profiles:
+    get:
+      tags:
+      - profile
+      summary: whoami
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Powered-By:
+              schema:
+                type: string
+                example: Express
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '153'
+            ETag:
+              schema:
+                type: string
+                example: W/"99-p77QIdwM9yFUYycv74DWhXR0Nuc"
+            Date:
+              schema:
+                type: string
+                example: Sun, 12 Nov 2023 15:43:59 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                status: 200
+                message: Successfully get profile
+                success: true
+                data:
+                  avatar_link: null
+                  name: null
+                  phone: null
+                  address: null
+                  description: null
+    delete:
+      tags:
+      - profile
+      summary: profiles
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Powered-By:
+              schema:
+                type: string
+                example: Express
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '66'
+            ETag:
+              schema:
+                type: string
+                example: W/"42-ha56rT1ll3aONwSrW0sERi0moi8"
+            Date:
+              schema:
+                type: string
+                example: Sun, 12 Nov 2023 16:07:29 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                status: 200
+                message: User deleted
+                success: true
+                data: null
