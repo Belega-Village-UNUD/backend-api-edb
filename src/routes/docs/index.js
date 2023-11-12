@@ -10,13 +10,7 @@ router.use("/", swaggerUi.serve);
 router.get(
   "/",
   swaggerUi.setup(apiDocs, {
-    swaggerOptions: {
-      requestInterceptor: function (request) {
-        request.headers.Origin = `${process.env.HOST}:${process.env.PORT}`;
-        return request;
-      },
-      url: `${process.env.HOST}:${process.env.PORT}/api/docs`,
-    },
+    swaggerOptions: {},
   })
 );
 
