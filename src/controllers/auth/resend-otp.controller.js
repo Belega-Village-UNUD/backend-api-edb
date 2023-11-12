@@ -1,12 +1,33 @@
 const { User } = require("../../models");
 const { response } = require("../../utils/response.utils");
 const { sendOTP } = require("../../configs/otp.config");
+const jwt = require("jsonwebtoken");
 
 const resendOTP = async (req, res) => {
   try {
-    const { email } = req.user || req.body;
+    let user = null;
+    let email = null;
 
-    const user = await User.findOne({
+    const header = req.headers["authorization"];
+    if (header) {
+      const token = header.split(" ")[1];
+      if (!token) {
+        return response(
+          res,
+          401,
+          false,
+          "You are not authorized wrong token",
+          null
+        );
+      }
+
+      const payload = jwt.verify(token, process.env.JWT_SECRET_KEY);
+      email = payload.email;
+    } else {
+      email = req.body.email;
+    }
+
+    user = await User.findOne({
       where: { email },
       attributes: { exclude: ["password"] },
     });
