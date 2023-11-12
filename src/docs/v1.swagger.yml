@@ -354,119 +354,19 @@ paths:
           description: Successful response
           content:
             application/json: {}
-  #  post:
-  #    tags:
-  #    - Profile
-  #    summary: Update Profile
-  #    requestBody:
-  #      content:
-  #        application/json:
-  #          schema:
-  #            type: object
-  #            example:
-  #              first_name: Rico
-  #              last_name: Wijaya
-  #              phone: '62132341351233'
-  #              address: Denpasar, Bali
-  #    responses:
-  #      '200':
-  #        description: Successful response
-  #        content:
-  #          application/json: {}
-  #/api/profiles/image:
-  #  post:
-  #    tags:
-  #    - Profile
-  #    summary: Upload Profile Picture
-  #    requestBody:
-  #      content:
-  #        multipart/form-data:
-  #          schema:
-  #            type: object
-  #            properties:
-  #              file:
-  #                type: string
-  #                format: binary
-  #    responses:
-  #      '200':
-  #        description: OK
-  #        headers:
-  #          X-Powered-By:
-  #            schema:
-  #              type: string
-  #              example: Express
-  #          Content-Type:
-  #            schema:
-  #              type: string
-  #              example: application/json; charset=utf-8
-  #          Content-Length:
-  #            schema:
-  #              type: integer
-  #              example: '165'
-  #          ETag:
-  #            schema:
-  #              type: string
-  #              example: W/"a5-ECqs5HMCwRqBqozHc8vUQp92G10"
-  #          Date:
-  #            schema:
-  #              type: string
-  #              example: Thu, 11 May 2023 02:28:18 GMT
-  #          Connection:
-  #            schema:
-  #              type: string
-  #              example: keep-alive
-  #          Keep-Alive:
-  #            schema:
-  #              type: string
-  #              example: timeout=5
-  #        content:
-  #          application/json:
-  #            schema:
-  #              type: object
-  #            example:
-  #              status: 200
-  #              message: Upload success
-  #              success: true
-  #              data:
-  #                url: >-
-  #                  https://storage.googleapis.com/profile-image-bucket-dev/1683772096920-HMM1vWYYH6CSzw3v.jpeg
-  #      '400':
-  #        description: Bad Request
-  #        headers:
-  #          X-Powered-By:
-  #            schema:
-  #              type: string
-  #              example: Express
-  #          Content-Type:
-  #            schema:
-  #              type: string
-  #              example: application/json; charset=utf-8
-  #          Content-Length:
-  #            schema:
-  #              type: integer
-  #              example: '87'
-  #          ETag:
-  #            schema:
-  #              type: string
-  #              example: W/"57-67j2X3Ie5R/DfRXvI1eG/AW4qdw"
-  #          Date:
-  #            schema:
-  #              type: string
-  #              example: Thu, 11 May 2023 02:19:58 GMT
-  #          Connection:
-  #            schema:
-  #              type: string
-  #              example: keep-alive
-  #          Keep-Alive:
-  #            schema:
-  #              type: string
-  #              example: timeout=5
-  #        content:
-  #          application/json:
-  #            schema:
-  #              type: object
-  #            example:
-  #              status: 400
-  #              message: Only support file png, jpeg, jpg
-  #              success: false
-  #              data: null
+    delete:
+      tags:
+      - Profile
+      summary: Delete Profile, USE ONLY IN DEVELOPMENT
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: gricowijaya@gmail.com
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
