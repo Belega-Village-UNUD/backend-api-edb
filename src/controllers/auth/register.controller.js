@@ -47,9 +47,15 @@ const register = async (req, res) => {
 
     // TODO: Discuss flow about generate token after register for user authentication
     const token = await generateToken(payload);
-    return response(res, 201, true, "Register success", {
-      token,
-    });
+    return response(
+      res,
+      201,
+      true,
+      "Register Succces, please check your email for verification",
+      {
+        token,
+      }
+    );
   } catch (err) {
     return response(res, err.status || 500, false, err.message, null);
   }
