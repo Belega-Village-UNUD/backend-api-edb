@@ -4,14 +4,14 @@ const { response } = require("../../utils/response.utils");
 const whoami = async (req, res) => {
   try {
     const { email } = req.user;
-    const user = await User.findOne({ where: { email: email } });
+    const user = await User.findOne({
+      where: { email: email },
+      attributes: { exclude: ["password"] },
+    });
     const profile = await Profile.findOne({ where: { user_id: user.id } });
     const payload = {
-      avatar_link: profile.avatar_link,
-      name: profile.name,
-      phone: profile.phone,
-      address: profile.address,
-      description: profile.description,
+      user,
+      profile,
     };
     return response(res, 200, true, "Successfully get profile", payload);
   } catch (error) {
