@@ -2,6 +2,7 @@
 	"info": {
 		"_postman_id": "e550f8a5-3896-4ae5-9564-8f9eb0039c3d",
 		"name": "Belega Commerce",
+		"description": "This is the API Collection for Belega Commerce using Express JS, it runs Google API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "30880460",
 		"_collection_link": "https://belegasquad.postman.co/workspace/Team-Workspace~4ce574b9-348b-440d-8cab-6aee65a76f48/collection/30880460-e550f8a5-3896-4ae5-9564-8f9eb0039c3d?action=share&source=collection_link&creator=30880460"
@@ -1039,7 +1040,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "",
+							"raw": "{\n    \"avatar_link\": null,\n    \"name\": \"Gede Rico Wijaya\",\n    \"phone\": null,\n    \"address\": null,\n    \"description\": null\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1055,9 +1056,76 @@
 								"api",
 								"profiles"
 							]
-						}
+						},
+						"description": "This is the update profile API, it takes the phone, address, description, the avatar link should be in a different routes"
 					},
-					"response": []
+					"response": [
+						{
+							"name": "update",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"avatar_link\": null,\n    \"name\": \"Gede Rico Wijaya\",\n    \"phone\": null,\n    \"address\": null,\n    \"description\": null\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/profiles",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"profiles"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "482"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"1e2-7qboQD48PsSZOLcnxaX0a67ueag\""
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 13 Nov 2023 20:22:55 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": 200,\n    \"message\": \"Successfully update profile\",\n    \"success\": true,\n    \"data\": {\n        \"user\": {\n            \"id\": \"2GNhkWVuGn\",\n            \"email\": \"gricowijaya@gmail.com\",\n            \"role_id\": [\n                \"VVcAyIXevi\"\n            ],\n            \"is_verified\": true,\n            \"createdAt\": \"2023-11-13T19:25:48.146Z\",\n            \"updatedAt\": \"2023-11-13T19:27:00.855Z\"\n        },\n        \"profile\": {\n            \"id\": \"-_gcO6kPb-\",\n            \"user_id\": \"2GNhkWVuGn\",\n            \"avatar_link\": null,\n            \"name\": \"Gede Rico Wijaya\",\n            \"phone\": null,\n            \"address\": null,\n            \"description\": null,\n            \"createdAt\": \"2023-11-13T19:25:48.185Z\",\n            \"updatedAt\": \"2023-11-13T20:22:55.572Z\"\n        }\n    }\n}"
+						}
+					]
 				}
 			],
 			"description": "This is the collection of profile RUD, the profile is automatically created when user register using the \\`/auth\\` endpoint"
@@ -1153,7 +1221,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijh0TzBXYzVESWYiLCJlbWFpbCI6Im1haGFwdXRyYTk3MUBnbWFpbC5jb20iLCJyb2xlIjpbIlZWY0F5SVhldmkiXSwiaWF0IjoxNjk5OTAwNzkwLCJleHAiOjE2OTk5MTE1OTB9.ahEcPoJUwLn_nl5MaoLktW7EwzyWibw628uMsX5eefo",
+				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJHTmhrV1Z1R24iLCJlbWFpbCI6ImdyaWNvd2lqYXlhQGdtYWlsLmNvbSIsInJvbGUiOlsiVlZjQXlJWGV2aSJdLCJpYXQiOjE2OTk5MDY0ODAsImV4cCI6MTY5OTkxNzI4MH0.9asS9HfWYb6Qk7-1mNI5Bp1Ad7bhFUqM7Y-7mQPKnCM",
 				"type": "string"
 			}
 		]
