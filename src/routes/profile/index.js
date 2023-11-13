@@ -10,6 +10,11 @@ router.get(
   controller.whoami
 );
 
-router.delete("/", controller.deleteUser);
+router.delete(
+  "/",
+  middleware.restrict,
+  middleware.rbac(MODULE.LANDING, true, true),
+  controller.deleteUser
+);
 
 module.exports = router;

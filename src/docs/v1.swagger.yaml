@@ -3,31 +3,48 @@ info:
   title: Belega Commerce
   version: 1.0.0
 servers:
-- url: http://{{host}}
+- url: https://belega-commerce-api-staging-tku2lejm6q-et.a.run.app
+  description: staging server
+- url: http://localhost:3333
+  description: local server
 components:
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
+    noauthAuth:
+      type: http
+      scheme: noauth
 security:
 - bearerAuth: []
 tags:
 - name: auth
+- name: auth > otp
+  description: >-
+    This is the collection for the OTP endpoint, it should resend the OTP and verifying the OTP
+- name: auth > password
+  description: this is the endpoint for modifying the users passwords
 - name: checkhealth
+  description: this is the endpoint for server checkhealth
 - name: profile
+  description: >-
+    This is the collection of profile RUD, the profile is automatically created when user register using the \`/auth\` endpoint
+- name: google
+  description: This is Development only API for request authorization URL for Google API
 paths:
   /api/auth/otp/verify:
     post:
       tags:
-      - auth
+      - auth > otp
       summary: verify
+      description: "This is the OTP that should read the Bearer Token to be requested because identification are there any OTP based on the JWT Token,  \n  #magic___^_^___line\nthis endpoint also generate a JWT Token for any OTP based authentication such as register and forgot password"
       requestBody:
         content:
           application/json:
             schema:
               type: object
               example:
-                otp: ''
+                otp: E8F2
       responses:
         '200':
           description: OK
@@ -122,14 +139,17 @@ paths:
   /api/auth/otp:
     post:
       tags:
-      - auth
+      - auth > otp
       summary: otp
+      description: >-
+        This is for requesting another OTP value for identification, this is because the users sometimes forgot to verify the account or does not verify, it can read the JWT Token from register, login, but if it does not have a Token user can post a JSON email body
       requestBody:
         content:
           application/json:
             schema:
               type: object
-              example: ''
+              example:
+                email: gricowijaya@gmail.com
       security:
       - bearerAuth: []
       responses:
@@ -187,6 +207,71 @@ paths:
                     message: Please check your email for your OTP Request
                     success: true
                     data: null
+  /api/auth/password/reset:
+    put:
+      tags:
+      - auth > password
+      summary: reset
+      description: >-
+        This endpoint is for resetting the password and after verifying the OTP that has been given when user consume `/api/auth/password/forgot` endpoint and uses the token from verifying the OTP
+
+
+        it takes only the new password without the oldPassword the roles in here should be either Users, or Admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                newPassword: testing.!
+                confirmNewPassword: testing.!
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/auth/password/change:
+    put:
+      tags:
+      - auth > password
+      summary: change
+      description: >-
+        This endpoint is for changing the password and after the user logged, it takes the old Password, new password. The roles in here should be either Buyer or Admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                oldPassword: GeRicO21.
+                newPassword: testing.!
+                confirmNewPassword: testing.!
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/auth/password/forgot:
+    post:
+      tags:
+      - auth > password
+      summary: forgot
+      description: >-
+        This is the forgot password endoint that received the email and sending an OTP that used for endpoint `/api/auth/password/reset`
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: gricowijaya@gmail.com
+      security:
+      - noauthAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
   /api/auth/login:
     post:
       tags:
@@ -302,25 +387,70 @@ paths:
       tags:
       - auth
       summary: register
+      description: >-
+        This is the Register API, it triggers the creation of users and users should be verified
       requestBody:
         content:
           application/json:
             schema:
               type: object
               example:
-                email: abeljollando@gmail.com
+                email: gricowijaya@gmail.com
                 password: GeRicO21.
                 confirmPassword: GeRicO21.
       responses:
-        '200':
-          description: Successful response
+        '201':
+          description: Created
+          headers:
+            X-Powered-By:
+              schema:
+                type: string
+                example: Express
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '279'
+            ETag:
+              schema:
+                type: string
+                example: W/"117-maIb6eX7ybBZl5jiTY6rGILKGBo"
+            Date:
+              schema:
+                type: string
+                example: Mon, 13 Nov 2023 18:36:24 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
           content:
-            application/json: {}
+            application/json:
+              schema:
+                type: object
+              example:
+                status: 201
+                message: Register success
+                success: true
+                data:
+                  token: >-
+                    eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1haGFwdXRyYTk3MUBnbWFpbC5jb20iLCJyb2xlIjpbIlZWY0F5SVhldmkiXSwiaWF0IjoxNjk5OTAwNTg0LCJleHAiOjE2OTk5MTEzODR9.Emj98opArI29XC59C_IrPq8CV4qMB8oDtiJo1aGBLHg
   /:
     get:
       tags:
       - checkhealth
       summary: root
+      description: root server checkhealth
       responses:
         '200':
           description: OK
@@ -370,6 +500,7 @@ paths:
       tags:
       - checkhealth
       summary: api
+      description: api routes checkhealth
       responses:
         '200':
           description: OK
@@ -419,6 +550,8 @@ paths:
       tags:
       - profile
       summary: whoami
+      description: >-
+        This is the endpoint that after user logon into the systems, it reads the Bearer Token for identifying the Profiles.
       responses:
         '200':
           description: OK
@@ -473,6 +606,8 @@ paths:
       tags:
       - profile
       summary: profiles
+      description: >-
+        This is the endpoint for deleting user profiles, only send the email for the user that you want to delete, **ONLY USE FOR DEVELOPMENT**
       responses:
         '200':
           description: OK
@@ -518,3 +653,74 @@ paths:
                 message: User deleted
                 success: true
                 data: null
+    put:
+      tags:
+      - profile
+      summary: update
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: ''
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/google:
+    get:
+      tags:
+      - google
+      summary: get authorization url
+      description: >-
+        This is the endpoint for getting authorization endpoint in Google API for getting the refresh token, **ONLY USE THIS ENDPOINT FOR DEVELOPMENT**
+      security:
+      - noauthAuth: []
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Powered-By:
+              schema:
+                type: string
+                example: Express
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '410'
+            ETag:
+              schema:
+                type: string
+                example: W/"19a-cqXuYU2IE+i3nr89p/zYnYShFzg"
+            Date:
+              schema:
+                type: string
+                example: Mon, 13 Nov 2023 18:23:39 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                status: 200
+                message: Successfully Redirect to Google OAuth2
+                success: true
+                data:
+                  url: >-
+                    https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&scope=https%3A%2F%2Fmail.google.com&prompt=consent&include_granted_scopes=true&response_type=code&client_id=548173948719-f1771t9erma63c9su8kmpkv07i8f43se.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Fdevelopers.google.com%2Foauthplayground

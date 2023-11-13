@@ -266,12 +266,9 @@ paths:
                 type: object
               example:
                 status: 200
-                message: Email verified, welcome
+                message: Please check your email OTP
                 success: true
-                data:
-                  email: gricowijaya@gmail.com
-                  token: >-
-                    eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZySE52cWt3dHQiLCJlbWFpbCI6ImdyaWNvd2lqYXlhQGdtYWlsLmNvbSIsImlhdCI6MTY4NTY3Mzg0MSwiZXhwIjoxNjg2Mjc4NjQxfQ.5TZg5oIaCFU8qozPuo6nNPdvO4ALP1MQIxlXse2halI
+                data: null
   /api/auth/login:
     post:
       tags:

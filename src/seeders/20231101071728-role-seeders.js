@@ -3,6 +3,7 @@ var { ROLE, MODULE } = require("../utils/enum.utils");
 var { Role, Module, Access, User, Profile } = require("../models");
 const { nanoid } = require("nanoid");
 const bcrypt = require("bcrypt");
+const { BELEGA_ADMIN_EMAIL, BELEGA_ADMIN_PASSWORD } = process.env;
 
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -21,17 +22,17 @@ module.exports = {
     }
 
     const admin = await User.findOne({
-      where: { email: "superadmin@mail.com" },
+      where: { email: BELEGA_ADMIN_EMAIL },
     });
 
     if (!admin) {
-      const password = await bcrypt.hash("password", 10);
+      const password = await bcrypt.hash(BELEGA_ADMIN_PASSWORD, 10);
       const roleAdmin = await Role.findOne({ where: { name: ROLE.ADMIN } });
       const roleUser = await Role.findOne({ where: { name: ROLE.USER } });
 
       const admin = await User.create({
         id: nanoid(10),
-        email: "superadmin@mail.com",
+        email: BELEGA_ADMIN_EMAIL,
         password: password,
         role_id: [roleAdmin.id, roleUser.id],
         is_verified: true,
@@ -67,7 +68,9 @@ module.exports = {
         });
       }
 
-      var userAccess = await Access.findOne({ where: { role_id: roleUser.id, module_id: module.id } });
+      var userAccess = await Access.findOne({
+        where: { role_id: roleUser.id, module_id: module.id },
+      });
       if (!userAccess) {
         await Access.create({
           id: nanoid(10),
@@ -86,5 +89,6 @@ module.exports = {
     await queryInterface.bulkDelete("Accesses", null, {});
     await queryInterface.bulkDelete("Profiles", null, {});
     await queryInterface.bulkDelete("Users", null, {});
+    await queryInterface.bulkDelete("OTPs", null, {});
   },
 };
