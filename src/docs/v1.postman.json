@@ -3,7 +3,8 @@
 		"_postman_id": "e550f8a5-3896-4ae5-9564-8f9eb0039c3d",
 		"name": "Belega Commerce",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "30880460"
+		"_exporter_id": "30880460",
+		"_collection_link": "https://belegasquad.postman.co/workspace/Team-Workspace~4ce574b9-348b-440d-8cab-6aee65a76f48/collection/30880460-e550f8a5-3896-4ae5-9564-8f9eb0039c3d?action=share&source=collection_link&creator=30880460"
 	},
 	"item": [
 		{
@@ -19,7 +20,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"otp\": \"\"\r\n}",
+									"raw": "{\r\n    \"otp\": \"E8F2\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -37,7 +38,8 @@
 										"otp",
 										"verify"
 									]
-								}
+								},
+								"description": "This is the OTP that should read the Bearer Token to be requested because identification are there any OTP based on the JWT Token,  \n  \nthis endpoint also generate a JWT Token for any OTP based authentication such as register and forgot password"
 							},
 							"response": [
 								{
@@ -193,7 +195,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "",
+									"raw": "{\n    \"email\": \"gricowijaya@gmail.com\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -210,7 +212,8 @@
 										"auth",
 										"otp"
 									]
-								}
+								},
+								"description": "This is for requesting another OTP value for identification, this is because the users sometimes forgot to verify the account or does not verify, it can read the JWT Token from register, login, but if it does not have a Token user can post a JSON email body"
 							},
 							"response": [
 								{
@@ -347,7 +350,107 @@
 								}
 							]
 						}
-					]
+					],
+					"description": "This is the collection for the OTP endpoint, it should resend the OTP and verifying the OTP"
+				},
+				{
+					"name": "password",
+					"item": [
+						{
+							"name": "reset",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"newPassword\": \"testing.!\",\n    \"confirmNewPassword\": \"testing.!\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/auth/password/reset",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"password",
+										"reset"
+									]
+								},
+								"description": "This endpoint is for resetting the password and after verifying the OTP that has been given when user consume `/api/auth/password/forgot` endpoint and uses the token from verifying the OTP\n\nit takes only the new password without the oldPassword the roles in here should be either Users, or Admin"
+							},
+							"response": []
+						},
+						{
+							"name": "change",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"oldPassword\": \"GeRicO21.\",\n    \"newPassword\": \"testing.!\",\n    \"confirmNewPassword\": \"testing.!\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/auth/password/change",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"password",
+										"change"
+									]
+								},
+								"description": "This endpoint is for changing the password and after the user logged, it takes the old Password, new password. The roles in here should be either Buyer or Admin"
+							},
+							"response": []
+						},
+						{
+							"name": "forgot",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"gricowijaya@gmail.com\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/auth/password/forgot",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"password",
+										"forgot"
+									]
+								},
+								"description": "This is the forgot password endoint that received the email and sending an OTP that used for endpoint `/api/auth/password/reset`"
+							},
+							"response": []
+						}
+					],
+					"description": "this is the endpoint for modifying the users passwords"
 				},
 				{
 					"name": "login",
@@ -517,7 +620,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"email\": \"abeljollando@gmail.com\",\r\n  \"password\": \"GeRicO21.\",\r\n  \"confirmPassword\": \"GeRicO21.\"\r\n}   ",
+							"raw": "{\r\n  \"email\": \"gricowijaya@gmail.com\",\r\n  \"password\": \"GeRicO21.\",\r\n  \"confirmPassword\": \"GeRicO21.\"\r\n}   ",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -534,9 +637,77 @@
 								"auth",
 								"register"
 							]
-						}
+						},
+						"description": "This is the Register API, it triggers the creation of users and users should be verified"
 					},
-					"response": []
+					"response": [
+						{
+							"name": "register",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"email\": \"gricowijaya@gmail.com\",\r\n  \"password\": \"GeRicO21.\",\r\n  \"confirmPassword\": \"GeRicO21.\"\r\n}   ",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/auth/register",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"register"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "279"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"117-maIb6eX7ybBZl5jiTY6rGILKGBo\""
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 13 Nov 2023 18:36:24 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": 201,\n    \"message\": \"Register success\",\n    \"success\": true,\n    \"data\": {\n        \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1haGFwdXRyYTk3MUBnbWFpbC5jb20iLCJyb2xlIjpbIlZWY0F5SVhldmkiXSwiaWF0IjoxNjk5OTAwNTg0LCJleHAiOjE2OTk5MTEzODR9.Emj98opArI29XC59C_IrPq8CV4qMB8oDtiJo1aGBLHg\"\n    }\n}"
+						}
+					]
 				}
 			]
 		},
@@ -553,7 +724,8 @@
 							"host": [
 								"{{host}}"
 							]
-						}
+						},
+						"description": "root server checkhealth"
 					},
 					"response": [
 						{
@@ -623,7 +795,8 @@
 							"path": [
 								"api"
 							]
-						}
+						},
+						"description": "api routes checkhealth"
 					},
 					"response": [
 						{
@@ -683,7 +856,8 @@
 						}
 					]
 				}
-			]
+			],
+			"description": "this is the endpoint for server checkhealth"
 		},
 		{
 			"name": "profile",
@@ -702,7 +876,8 @@
 								"api",
 								"profiles"
 							]
-						}
+						},
+						"description": "This is the endpoint that after user logon into the systems, it reads the Bearer Token for identifying the Profiles."
 					},
 					"response": [
 						{
@@ -770,7 +945,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"dyuaaaa@gmail.com\"\r\n}",
+							"raw": "{\r\n    \"email\": \"gricowijaya@gmail.com\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -786,7 +961,8 @@
 								"api",
 								"profiles"
 							]
-						}
+						},
+						"description": "This is the endpoint for deleting user profiles, only send the email for the user that you want to delete, **ONLY USE FOR DEVELOPMENT**"
 					},
 					"response": [
 						{
@@ -855,8 +1031,121 @@
 							"body": "{\n    \"status\": 200,\n    \"message\": \"User deleted\",\n    \"success\": true,\n    \"data\": null\n}"
 						}
 					]
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/profiles",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"profiles"
+							]
+						}
+					},
+					"response": []
 				}
-			]
+			],
+			"description": "This is the collection of profile RUD, the profile is automatically created when user register using the \\`/auth\\` endpoint"
+		},
+		{
+			"name": "google",
+			"item": [
+				{
+					"name": "get authorization url",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/google",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"google"
+							]
+						},
+						"description": "This is the endpoint for getting authorization endpoint in Google API for getting the refresh token, **ONLY USE THIS ENDPOINT FOR DEVELOPMENT**"
+					},
+					"response": [
+						{
+							"name": "get authorization url",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/api/google",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"google"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "410"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"19a-cqXuYU2IE+i3nr89p/zYnYShFzg\""
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 13 Nov 2023 18:23:39 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": 200,\n    \"message\": \"Successfully Redirect to Google OAuth2\",\n    \"success\": true,\n    \"data\": {\n        \"url\": \"https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&scope=https%3A%2F%2Fmail.google.com&prompt=consent&include_granted_scopes=true&response_type=code&client_id=548173948719-f1771t9erma63c9su8kmpkv07i8f43se.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Fdevelopers.google.com%2Foauthplayground\"\n    }\n}"
+						}
+					]
+				}
+			],
+			"description": "This is Development only API for request authorization URL for Google API"
 		}
 	],
 	"auth": {
@@ -864,7 +1153,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ii1CaUFNaDc1TFgiLCJlbWFpbCI6ImdyaWNvd2lqYXlhQGdtYWlsLmNvbSIsInJvbGUiOlsiVlZjQXlJWGV2aSJdLCJpYXQiOjE2OTk4MDE0MzcsImV4cCI6MTY5OTgxMjIzN30.-wJIzahOjaFdId_i0_JwJeTdYbhGntFxNFyBLy22fTI",
+				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijh0TzBXYzVESWYiLCJlbWFpbCI6Im1haGFwdXRyYTk3MUBnbWFpbC5jb20iLCJyb2xlIjpbIlZWY0F5SVhldmkiXSwiaWF0IjoxNjk5OTAwNzkwLCJleHAiOjE2OTk5MTE1OTB9.ahEcPoJUwLn_nl5MaoLktW7EwzyWibw628uMsX5eefo",
 				"type": "string"
 			}
 		]
