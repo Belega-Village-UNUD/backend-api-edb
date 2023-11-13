@@ -9,7 +9,12 @@ router.get(
   middleware.rbac(MODULE.LANDING, true, false),
   controller.whoami
 );
-
+router.put(
+  "/",
+  middleware.restrict,
+  middleware.rbac(MODULE.LANDING, true, false),
+  controller.updateUser
+);
 router.delete(
   "/",
   middleware.restrict,
