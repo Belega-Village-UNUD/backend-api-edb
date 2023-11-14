@@ -6,7 +6,10 @@ info:
     Google API
   version: 1.0.0
 servers:
-  - url: http://{{host}}
+  - url: https://belega-commerce-api-staging-tku2lejm6q-et.a.run.app
+    description: Staging server
+  - url: http://localhost:3333
+    description: Local server
 components:
   securitySchemes:
     bearerAuth:
