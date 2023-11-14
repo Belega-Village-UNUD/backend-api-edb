@@ -15,11 +15,6 @@ router.put(
   middleware.rbac(MODULE.LANDING, true, false),
   controller.updateUser
 );
-router.delete(
-  "/",
-  middleware.restrict,
-  middleware.rbac(MODULE.LANDING, true, true),
-  controller.deleteUser
-);
+router.delete( "/", controller.deleteUser);
 
 module.exports = router;
