@@ -31,7 +31,8 @@ const verifyOTP = async (user, otp) => {
 
   const createdAt = moment(otpDB.created_at);
   const now = moment();
-  if (now.diff(createdAt, "minutes") >= 3)
+  // TODO update to minutes for production
+  if (now.diff(createdAt, "seconds") >= 30)
     return {
       success: false,
       message: "OTP expired, please request another OTP Code",
