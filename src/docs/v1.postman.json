@@ -4,8 +4,7 @@
 		"name": "Belega Commerce",
 		"description": "This is the API Collection for Belega Commerce using Express JS, it runs Google API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "30880460",
-		"_collection_link": "https://belegasquad.postman.co/workspace/Team-Workspace~4ce574b9-348b-440d-8cab-6aee65a76f48/collection/30880460-e550f8a5-3896-4ae5-9564-8f9eb0039c3d?action=share&source=collection_link&creator=30880460"
+		"_exporter_id": "30880460"
 	},
 	"item": [
 		{
@@ -621,7 +620,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"email\": \"gricowijaya@gmail.com\",\r\n  \"password\": \"GeRicO21.\",\r\n  \"confirmPassword\": \"GeRicO21.\"\r\n}   ",
+							"raw": "{\r\n  \"email\": \"gricowijaya@gmail.com\",\r\n  \"password\": \"GeRicO21.\",\r\n  \"confirmPassword\": \"GeRicO21.\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -856,6 +855,89 @@
 							"body": "{\n    \"status\": 200,\n    \"message\": \"Server API is healthy\",\n    \"success\": true\n}"
 						}
 					]
+				},
+				{
+					"name": "Test Request",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"gricowijaya@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/test",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"test"
+							]
+						},
+						"description": "api routes checkhealth"
+					},
+					"response": [
+						{
+							"name": "api",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/api",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "63"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"3f-ZTztjCU/x0nkbMBXu3feaiLSPPQ\""
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 12 Nov 2023 15:43:21 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": 200,\n    \"message\": \"Server API is healthy\",\n    \"success\": true\n}"
+						}
+					]
 				}
 			],
 			"description": "this is the endpoint for server checkhealth"
@@ -902,40 +984,44 @@
 							"_postman_previewlanguage": "json",
 							"header": [
 								{
-									"key": "X-Powered-By",
+									"key": "x-powered-by",
 									"value": "Express"
 								},
 								{
-									"key": "Access-Control-Allow-Origin",
+									"key": "access-control-allow-origin",
 									"value": "*"
 								},
 								{
-									"key": "Content-Type",
+									"key": "content-type",
 									"value": "application/json; charset=utf-8"
 								},
 								{
-									"key": "Content-Length",
-									"value": "153"
+									"key": "etag",
+									"value": "W/\"1df-QrF3IDBvcFyb5y8SYc3f3G4cvgU\""
 								},
 								{
-									"key": "ETag",
-									"value": "W/\"99-p77QIdwM9yFUYycv74DWhXR0Nuc\""
+									"key": "X-Cloud-Trace-Context",
+									"value": "5996c1521de6f203768f30f621408e66;o=1"
 								},
 								{
 									"key": "Date",
-									"value": "Sun, 12 Nov 2023 15:43:59 GMT"
+									"value": "Thu, 16 Nov 2023 04:44:26 GMT"
 								},
 								{
-									"key": "Connection",
-									"value": "keep-alive"
+									"key": "Server",
+									"value": "Google Frontend"
 								},
 								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
+									"key": "Content-Length",
+									"value": "479"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"status\": 200,\n    \"message\": \"Successfully get profile\",\n    \"success\": true,\n    \"data\": {\n        \"avatar_link\": null,\n        \"name\": null,\n        \"phone\": null,\n        \"address\": null,\n        \"description\": null\n    }\n}"
+							"body": "{\n    \"status\": 200,\n    \"message\": \"Successfully get profile\",\n    \"success\": true,\n    \"data\": {\n        \"user\": {\n            \"id\": \"2GNhkWVuGn\",\n            \"email\": \"gricowijaya@gmail.com\",\n            \"role_id\": [\n                \"VVcAyIXevi\"\n            ],\n            \"is_verified\": true,\n            \"createdAt\": \"2023-11-13T19:25:48.146Z\",\n            \"updatedAt\": \"2023-11-13T19:27:00.855Z\"\n        },\n        \"profile\": {\n            \"id\": \"-_gcO6kPb-\",\n            \"user_id\": \"2GNhkWVuGn\",\n            \"avatar_link\": null,\n            \"name\": \"Gede Rico Wijaya\",\n            \"phone\": null,\n            \"address\": null,\n            \"description\": null,\n            \"createdAt\": \"2023-11-13T19:25:48.185Z\",\n            \"updatedAt\": \"2023-11-13T20:22:55.572Z\"\n        }\n    }\n}"
 						}
 					]
 				},
@@ -1214,6 +1300,212 @@
 				}
 			],
 			"description": "This is Development only API for request authorization URL for Google API"
+		},
+		{
+			"name": "media",
+			"item": [
+				{
+					"name": "image",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/grico/Pictures/Camera Roll/WIN_20231114_19_34_22_Pro.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/api/media/storage/images",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"media",
+								"storage",
+								"images"
+							]
+						},
+						"description": "This is the image storage API, it request an `image` form data it should be only jpg, jpeg, and png  \n  \nthis is just one image"
+					},
+					"response": [
+						{
+							"name": "image",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "image",
+											"type": "file",
+											"src": "/C:/Users/grico/Pictures/Camera Roll/WIN_20231114_19_34_22_Pro.jpg"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/api/media/imagekit/images",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"media",
+										"imagekit",
+										"images"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "146"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"92-pbyZB2x0Op2em1vzlS3hIEM9XT4\""
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 20 Nov 2023 08:06:07 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": 200,\n    \"message\": \"File uploaded successfully\",\n    \"success\": true,\n    \"data\": {\n        \"url\": \"https://ik.imagekit.io/esp6kyxwz/1700467563406_PxukL_E-k.jpg\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "documents",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "document",
+									"type": "file",
+									"src": "/C:/Users/grico/Documents/Administrasi/Ekuivalensi/2005551091_Gede Rico Wijaya.pdf"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/api/media/storage/documents",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"media",
+								"storage",
+								"documents"
+							]
+						},
+						"description": "This is the document storage API, it request an `document` form data it should be only pdf.  \n  \nOnly one documents"
+					},
+					"response": [
+						{
+							"name": "documents",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "document",
+											"type": "file",
+											"src": "/C:/Users/grico/Documents/Administrasi/Ekuivalensi/2005551091_Gede Rico Wijaya.pdf"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/api/media/storage/documents",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"media",
+										"storage",
+										"documents"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "146"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"92-PU8s9/iyn+gwyLYkY8pTxdJvBYE\""
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 20 Nov 2023 08:22:08 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": 200,\n    \"message\": \"File uploaded successfully\",\n    \"success\": true,\n    \"data\": {\n        \"url\": \"https://ik.imagekit.io/esp6kyxwz/1700468524928__Goz4ZtoL.pdf\"\n    }\n}"
+						}
+					]
+				}
+			],
+			"description": "This is the media endpoint for storing images and documents such as\n\nprofile,  \npre order document"
 		}
 	],
 	"auth": {
@@ -1221,7 +1513,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJHTmhrV1Z1R24iLCJlbWFpbCI6ImdyaWNvd2lqYXlhQGdtYWlsLmNvbSIsInJvbGUiOlsiVlZjQXlJWGV2aSJdLCJpYXQiOjE2OTk5MDY0ODAsImV4cCI6MTY5OTkxNzI4MH0.9asS9HfWYb6Qk7-1mNI5Bp1Ad7bhFUqM7Y-7mQPKnCM",
+				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJHTmhrV1Z1R24iLCJlbWFpbCI6ImdyaWNvd2lqYXlhQGdtYWlsLmNvbSIsInJvbGUiOlsiVlZjQXlJWGV2aSJdLCJpYXQiOjE3MDAyMDQxMTEsImV4cCI6MTcwMDIxNDkxMX0.D3-URJ0GJpjcBsIILwYo4KJuzWmb0BUBdCv_gIisWcQ",
 				"type": "string"
 			}
 		]

@@ -2,11 +2,10 @@ openapi: 3.0.0
 info:
   title: Belega Commerce
   description: >-
-    This is the API Collection for Belega Commerce using Express JS, it runs
-    Google API
+    This is the API Collection for Belega Commerce using Express JS, it runs Google API
   version: 1.0.0
 servers:
-  - url: http://{{host}}
+- url: https://belega-commerce-api-staging-tku2lejm6q-et.a.run.app/api/docs/
 components:
   securitySchemes:
     bearerAuth:
@@ -16,35 +15,30 @@ components:
       type: http
       scheme: noauth
 security:
-  - bearerAuth: []
+- bearerAuth: []
 tags:
-  - name: auth
-  - name: auth > otp
-    description: >-
-      This is the collection for the OTP endpoint, it should resend the OTP and
-      verifying the OTP
-  - name: auth > password
-    description: this is the endpoint for modifying the users passwords
-  - name: checkhealth
-    description: this is the endpoint for server checkhealth
-  - name: profile
-    description: >-
-      This is the collection of profile RUD, the profile is automatically
-      created when user register using the \`/auth\` endpoint
-  - name: google
-    description: This is Development only API for request authorization URL for Google API
+- name: auth
+- name: auth > otp
+  description: >-
+    This is the collection for the OTP endpoint, it should resend the OTP and verifying the OTP
+- name: auth > password
+  description: this is the endpoint for modifying the users passwords
+- name: checkhealth
+  description: this is the endpoint for server checkhealth
+- name: profile
+  description: >-
+    This is the collection of profile RUD, the profile is automatically created when user register using the \`/auth\` endpoint
+- name: google
+  description: This is Development only API for request authorization URL for Google API
+- name: media
+  description: "This is the media endpoint for storing images and documents such as\n#magic___^_^___line\nprofile,  \npre order document"
 paths:
   /api/auth/otp/verify:
     post:
       tags:
-        - auth > otp
+      - auth > otp
       summary: verify
-      description: >-
-        This is the OTP that should read the Bearer Token to be requested
-        because identification are there any OTP based on the JWT Token,  
-          
-        this endpoint also generate a JWT Token for any OTP based authentication
-        such as register and forgot password
+      description: "This is the OTP that should read the Bearer Token to be requested because identification are there any OTP based on the JWT Token,  \n  #magic___^_^___line\nthis endpoint also generate a JWT Token for any OTP based authentication such as register and forgot password"
       requestBody:
         content:
           application/json:
@@ -146,13 +140,10 @@ paths:
   /api/auth/otp:
     post:
       tags:
-        - auth > otp
+      - auth > otp
       summary: otp
       description: >-
-        This is for requesting another OTP value for identification, this is
-        because the users sometimes forgot to verify the account or does not
-        verify, it can read the JWT Token from register, login, but if it does
-        not have a Token user can post a JSON email body
+        This is for requesting another OTP value for identification, this is because the users sometimes forgot to verify the account or does not verify, it can read the JWT Token from register, login, but if it does not have a Token user can post a JSON email body
       requestBody:
         content:
           application/json:
@@ -161,7 +152,7 @@ paths:
               example:
                 email: gricowijaya@gmail.com
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       responses:
         '200':
           description: OK
@@ -220,16 +211,13 @@ paths:
   /api/auth/password/reset:
     put:
       tags:
-        - auth > password
+      - auth > password
       summary: reset
       description: >-
-        This endpoint is for resetting the password and after verifying the OTP
-        that has been given when user consume `/api/auth/password/forgot`
-        endpoint and uses the token from verifying the OTP
+        This endpoint is for resetting the password and after verifying the OTP that has been given when user consume `/api/auth/password/forgot` endpoint and uses the token from verifying the OTP
 
 
-        it takes only the new password without the oldPassword the roles in here
-        should be either Users, or Admin
+        it takes only the new password without the oldPassword the roles in here should be either Users, or Admin
       requestBody:
         content:
           application/json:
@@ -246,12 +234,10 @@ paths:
   /api/auth/password/change:
     put:
       tags:
-        - auth > password
+      - auth > password
       summary: change
       description: >-
-        This endpoint is for changing the password and after the user logged, it
-        takes the old Password, new password. The roles in here should be either
-        Buyer or Admin
+        This endpoint is for changing the password and after the user logged, it takes the old Password, new password. The roles in here should be either Buyer or Admin
       requestBody:
         content:
           application/json:
@@ -269,11 +255,10 @@ paths:
   /api/auth/password/forgot:
     post:
       tags:
-        - auth > password
+      - auth > password
       summary: forgot
       description: >-
-        This is the forgot password endoint that received the email and sending
-        an OTP that used for endpoint `/api/auth/password/reset`
+        This is the forgot password endoint that received the email and sending an OTP that used for endpoint `/api/auth/password/reset`
       requestBody:
         content:
           application/json:
@@ -282,7 +267,7 @@ paths:
               example:
                 email: gricowijaya@gmail.com
       security:
-        - noauthAuth: []
+      - noauthAuth: []
       responses:
         '200':
           description: Successful response
@@ -291,7 +276,7 @@ paths:
   /api/auth/login:
     post:
       tags:
-        - auth
+      - auth
       summary: login
       requestBody:
         content:
@@ -350,7 +335,7 @@ paths:
                     id: '-BiAMh75LX'
                     email: gricowijaya@gmail.com
                     role_id:
-                      - VVcAyIXevi
+                    - VVcAyIXevi
                     is_verified: true
                   token: >-
                     eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ii1CaUFNaDc1TFgiLCJlbWFpbCI6ImdyaWNvd2lqYXlhQGdtYWlsLmNvbSIsInJvbGUiOlsiVlZjQXlJWGV2aSJdLCJpYXQiOjE2OTk4MDM3NTksImV4cCI6MTY5OTgxNDU1OX0.j3VK18ZKAI9vaGjLFrxhkbdeg06ghn2DHNfaqmgiXOg
@@ -401,11 +386,10 @@ paths:
   /api/auth/register:
     post:
       tags:
-        - auth
+      - auth
       summary: register
       description: >-
-        This is the Register API, it triggers the creation of users and users
-        should be verified
+        This is the Register API, it triggers the creation of users and users should be verified
       requestBody:
         content:
           application/json:
@@ -465,7 +449,7 @@ paths:
   /:
     get:
       tags:
-        - checkhealth
+      - checkhealth
       summary: root
       description: root server checkhealth
       responses:
@@ -515,9 +499,66 @@ paths:
   /api:
     get:
       tags:
-        - checkhealth
+      - checkhealth
       summary: api
       description: api routes checkhealth
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Powered-By:
+              schema:
+                type: string
+                example: Express
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '63'
+            ETag:
+              schema:
+                type: string
+                example: W/"3f-ZTztjCU/x0nkbMBXu3feaiLSPPQ"
+            Date:
+              schema:
+                type: string
+                example: Sun, 12 Nov 2023 15:43:21 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                status: 200
+                message: Server API is healthy
+                success: true
+  /test:
+    post:
+      tags:
+      - checkhealth
+      summary: Test Request
+      description: api routes checkhealth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: gricowijaya@gmail.com
       responses:
         '200':
           description: OK
@@ -565,47 +606,50 @@ paths:
   /api/profiles:
     get:
       tags:
-        - profile
+      - profile
       summary: whoami
       description: >-
-        This is the endpoint that after user logon into the systems, it reads
-        the Bearer Token for identifying the Profiles.
+        This is the endpoint that after user logon into the systems, it reads the Bearer Token for identifying the Profiles.
       responses:
         '200':
           description: OK
           headers:
-            X-Powered-By:
+            x-powered-by:
               schema:
                 type: string
                 example: Express
-            Access-Control-Allow-Origin:
+            access-control-allow-origin:
               schema:
                 type: string
                 example: '*'
-            Content-Type:
+            content-type:
               schema:
                 type: string
                 example: application/json; charset=utf-8
-            Content-Length:
-              schema:
-                type: integer
-                example: '153'
-            ETag:
+            etag:
               schema:
                 type: string
-                example: W/"99-p77QIdwM9yFUYycv74DWhXR0Nuc"
+                example: W/"1df-QrF3IDBvcFyb5y8SYc3f3G4cvgU"
+            X-Cloud-Trace-Context:
+              schema:
+                type: string
+                example: 5996c1521de6f203768f30f621408e66;o=1
             Date:
               schema:
                 type: string
-                example: Sun, 12 Nov 2023 15:43:59 GMT
-            Connection:
+                example: Thu, 16 Nov 2023 04:44:26 GMT
+            Server:
               schema:
                 type: string
-                example: keep-alive
-            Keep-Alive:
+                example: Google Frontend
+            Content-Length:
+              schema:
+                type: integer
+                example: '479'
+            Alt-Svc:
               schema:
                 type: string
-                example: timeout=5
+                example: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
           content:
             application/json:
               schema:
@@ -615,18 +659,30 @@ paths:
                 message: Successfully get profile
                 success: true
                 data:
-                  avatar_link: null
-                  name: null
-                  phone: null
-                  address: null
-                  description: null
+                  user:
+                    id: 2GNhkWVuGn
+                    email: gricowijaya@gmail.com
+                    role_id:
+                    - VVcAyIXevi
+                    is_verified: true
+                    createdAt: '2023-11-13T19:25:48.146Z'
+                    updatedAt: '2023-11-13T19:27:00.855Z'
+                  profile:
+                    id: '-_gcO6kPb-'
+                    user_id: 2GNhkWVuGn
+                    avatar_link: null
+                    name: Gede Rico Wijaya
+                    phone: null
+                    address: null
+                    description: null
+                    createdAt: '2023-11-13T19:25:48.185Z'
+                    updatedAt: '2023-11-13T20:22:55.572Z'
     delete:
       tags:
-        - profile
+      - profile
       summary: profiles
       description: >-
-        This is the endpoint for deleting user profiles, only send the email for
-        the user that you want to delete, **ONLY USE FOR DEVELOPMENT**
+        This is the endpoint for deleting user profiles, only send the email for the user that you want to delete, **ONLY USE FOR DEVELOPMENT**
       responses:
         '200':
           description: OK
@@ -674,11 +730,10 @@ paths:
                 data: null
     put:
       tags:
-        - profile
+      - profile
       summary: update
       description: >-
-        This is the update profile API, it takes the phone, address,
-        description, the avatar link should be in a different routes
+        This is the update profile API, it takes the phone, address, description, the avatar link should be in a different routes
       requestBody:
         content:
           application/json:
@@ -739,7 +794,7 @@ paths:
                     id: 2GNhkWVuGn
                     email: gricowijaya@gmail.com
                     role_id:
-                      - VVcAyIXevi
+                    - VVcAyIXevi
                     is_verified: true
                     createdAt: '2023-11-13T19:25:48.146Z'
                     updatedAt: '2023-11-13T19:27:00.855Z'
@@ -756,14 +811,12 @@ paths:
   /api/google:
     get:
       tags:
-        - google
+      - google
       summary: get authorization url
       description: >-
-        This is the endpoint for getting authorization endpoint in Google API
-        for getting the refresh token, **ONLY USE THIS ENDPOINT FOR
-        DEVELOPMENT**
+        This is the endpoint for getting authorization endpoint in Google API for getting the refresh token, **ONLY USE THIS ENDPOINT FOR DEVELOPMENT**
       security:
-        - noauthAuth: []
+      - noauthAuth: []
       responses:
         '200':
           description: OK
@@ -811,3 +864,125 @@ paths:
                 data:
                   url: >-
                     https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&scope=https%3A%2F%2Fmail.google.com&prompt=consent&include_granted_scopes=true&response_type=code&client_id=548173948719-f1771t9erma63c9su8kmpkv07i8f43se.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Fdevelopers.google.com%2Foauthplayground
+  /api/media/storage/images:
+    post:
+      tags:
+      - media
+      summary: image
+      description: "This is the image storage API, it request an `image` form data it should be only jpg, jpeg, and png  \n              #magic___^_^___line\nthis is just one image"
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Powered-By:
+              schema:
+                type: string
+                example: Express
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '146'
+            ETag:
+              schema:
+                type: string
+                example: W/"92-pbyZB2x0Op2em1vzlS3hIEM9XT4"
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 08:06:07 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                status: 200
+                message: File uploaded successfully
+                success: true
+                data:
+                  url: https://ik.imagekit.io/esp6kyxwz/1700467563406_PxukL_E-k.jpg
+  /api/media/storage/documents:
+    post:
+      tags:
+      - media
+      summary: documents
+      description: "This is the document storage API, it request an `document` form data it should be only pdf.  \n              #magic___^_^___line\nOnly one documents"
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                document:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Powered-By:
+              schema:
+                type: string
+                example: Express
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '146'
+            ETag:
+              schema:
+                type: string
+                example: W/"92-PU8s9/iyn+gwyLYkY8pTxdJvBYE"
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 08:22:08 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                status: 200
+                message: File uploaded successfully
+                success: true
+                data:
+                  url: https://ik.imagekit.io/esp6kyxwz/1700468524928__Goz4ZtoL.pdf
