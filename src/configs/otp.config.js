@@ -7,18 +7,26 @@ const bcrypt = require("bcrypt");
 const emailTemplate = require("../utils/email-template.utils");
 
 const sendOTP = async (user, subject) => {
-  const { otp, encryptedOTP } = await generateOTPToken(user);
-  const otpExist = await OTP.findOne({ where: { user_id: user.id } });
-  if (!otpExist)
-    await OTP.create({ id: nanoid(10), user_id: user.id, code: encryptedOTP });
-  else
-    await OTP.update({ code: encryptedOTP }, { where: { user_id: user.id } });
+  try {
+    const { otp, encryptedOTP } = await generateOTPToken(user);
+    const otpExist = await OTP.findOne({ where: { user_id: user.id } });
+    if (!otpExist)
+      await OTP.create({
+        id: nanoid(10),
+        user_id: user.id,
+        code: encryptedOTP,
+      });
+    else
+      await OTP.update({ code: encryptedOTP }, { where: { user_id: user.id } });
 
-  const template = await emailTemplate("otp.template.ejs", {
-    otp,
-  });
+    const template = await emailTemplate("otp.template.ejs", {
+      otp,
+    });
 
-  await sendEmail(user.email, subject, template);
+    await sendEmail(user.email, subject, template);
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 const verifyOTP = async (user, otp) => {
@@ -29,10 +37,10 @@ const verifyOTP = async (user, otp) => {
       message: "OTP expired, please request another OTP Code",
     };
 
-  const createdAt = moment(otpDB.created_at);
+  const createdAt = moment(otpDB.createdAt);
   const now = moment();
-
-  if (now.diff(createdAt, "minutes") >= 1) {
+  const minutesPass = now.diff(createdAt, "m");
+  if (minutesPass >= 1) {
     console.log("OTP expired");
     return {
       success: false,
