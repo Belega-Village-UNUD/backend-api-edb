@@ -25,7 +25,6 @@ const sendEmail = async (to, subject, html) => {
     });
     return true;
   } catch (err) {
-    //console.log(err);
     throw err;
   }
 };
