@@ -31,11 +31,14 @@ const verifyOTP = async (user, otp) => {
 
   const createdAt = moment(otpDB.created_at);
   const now = moment();
-  if (now.diff(createdAt, "minutes") >= 1)
+
+  if (now.diff(createdAt, "minutes") >= 1) {
+    console.log("OTP expired");
     return {
       success: false,
       message: "OTP expired, please request another OTP Code",
     };
+  }
 
   const otpCheck = bcrypt.compareSync(otp, otpDB.code);
   if (!otpCheck)
