@@ -22,6 +22,7 @@ security:
   - bearerAuth: []
 tags:
   - name: auth
+    description: authentication such as otp, login, password
   - name: auth > otp
     description: >-
       This is the collection for the OTP endpoint, it should resend the OTP and
@@ -43,11 +44,59 @@ paths:
         - auth > otp
       summary: verify
       description: >-
-        This is the OTP that should read the Bearer Token to be requested
-        because identification are there any OTP based on the JWT Token,  
-          
-        this endpoint also generate a JWT Token for any OTP based authentication
-        such as register and forgot password
+        This API endpoint is used to verify an OTP (One-Time Password) for
+        authentication. It is an HTTP POST request sent to
+        `{{host}}/api/auth/otp/verify`.
+
+
+        ### Request Parameters
+
+
+        The request does not require any specific parameters. However, it is
+        expected to contain the OTP value in the request body.
+
+
+        ### Response
+
+
+        The response will have the following properties:
+
+
+        - `status`: An integer representing the status of the request. A value
+        of `0` indicates success.
+
+        - `message`: A string containing any additional information or error
+        message.
+
+        - `success`: A boolean value indicating the success of the OTP
+        verification.
+
+        - `data`: An object containing additional data related to the request.
+        In this case, it will contain a `token` property, which is an empty
+        string.
+            
+
+        ### Examples
+
+
+        Example response for a successful OTP verification:
+
+
+        ```
+
+        {
+          "status": 0,
+          "message": "",
+          "success": true,
+          "data": {
+            "token": ""
+          }
+        }
+
+         ```
+
+        Please note that the `token` property will have a value in a real-world
+        scenario, but it is empty in this example for security reasons.
       requestBody:
         content:
           application/json:
@@ -565,14 +614,19 @@ paths:
                 status: 200
                 message: Server API is healthy
                 success: true
-  /api/profiles:
-    get:
+  /test:
+    post:
       tags:
-        - profile
-      summary: whoami
-      description: >-
-        This is the endpoint that after user logon into the systems, it reads
-        the Bearer Token for identifying the Profiles.
+        - checkhealth
+      summary: Test Request
+      description: api routes checkhealth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: gricowijaya@gmail.com
       responses:
         '200':
           description: OK
@@ -592,15 +646,15 @@ paths:
             Content-Length:
               schema:
                 type: integer
-                example: '153'
+                example: '63'
             ETag:
               schema:
                 type: string
-                example: W/"99-p77QIdwM9yFUYycv74DWhXR0Nuc"
+                example: W/"3f-ZTztjCU/x0nkbMBXu3feaiLSPPQ"
             Date:
               schema:
                 type: string
-                example: Sun, 12 Nov 2023 15:43:59 GMT
+                example: Sun, 12 Nov 2023 15:43:21 GMT
             Connection:
               schema:
                 type: string
@@ -615,14 +669,83 @@ paths:
                 type: object
               example:
                 status: 200
+                message: Server API is healthy
+                success: true
+  /api/profiles:
+    get:
+      tags:
+        - profile
+      summary: whoami
+      description: >-
+        This is the endpoint that after user logon into the systems, it reads
+        the Bearer Token for identifying the Profiles.
+      responses:
+        '200':
+          description: OK
+          headers:
+            x-powered-by:
+              schema:
+                type: string
+                example: Express
+            access-control-allow-origin:
+              schema:
+                type: string
+                example: '*'
+            content-type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            etag:
+              schema:
+                type: string
+                example: W/"1df-QrF3IDBvcFyb5y8SYc3f3G4cvgU"
+            X-Cloud-Trace-Context:
+              schema:
+                type: string
+                example: 5996c1521de6f203768f30f621408e66;o=1
+            Date:
+              schema:
+                type: string
+                example: Thu, 16 Nov 2023 04:44:26 GMT
+            Server:
+              schema:
+                type: string
+                example: Google Frontend
+            Content-Length:
+              schema:
+                type: integer
+                example: '479'
+            Alt-Svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                status: 200
                 message: Successfully get profile
                 success: true
                 data:
-                  avatar_link: null
-                  name: null
-                  phone: null
-                  address: null
-                  description: null
+                  user:
+                    id: 2GNhkWVuGn
+                    email: gricowijaya@gmail.com
+                    role_id:
+                      - VVcAyIXevi
+                    is_verified: true
+                    createdAt: '2023-11-13T19:25:48.146Z'
+                    updatedAt: '2023-11-13T19:27:00.855Z'
+                  profile:
+                    id: '-_gcO6kPb-'
+                    user_id: 2GNhkWVuGn
+                    avatar_link: null
+                    name: Gede Rico Wijaya
+                    phone: null
+                    address: null
+                    description: null
+                    createdAt: '2023-11-13T19:25:48.185Z'
+                    updatedAt: '2023-11-13T20:22:55.572Z'
     delete:
       tags:
         - profile
@@ -756,6 +879,170 @@ paths:
                     description: null
                     createdAt: '2023-11-13T19:25:48.185Z'
                     updatedAt: '2023-11-13T20:22:55.572Z'
+  /api/profiles/avatar:
+    post:
+      tags:
+        - profile
+      summary: avatar
+      description: >-
+        This API endpoint allows you to upload an avatar image for a user
+        profile. It is an HTTP POST request to `{{host}}/api/profiles/avatar`.
+
+
+        ### Request Parameters
+
+
+        This request does not require any specific parameters in the request
+        body. However, the avatar image file should be included as part of the
+        request.
+
+
+        ### Response
+
+
+        The response will have a status code of 200 if the request is
+        successful. The response body will be in JSON format and will have the
+        following properties:
+
+
+        - `status`: Indicates the status of the request. In this case, the value
+        is 0, which means the request was successful.
+
+        - `message`: A message related to the status of the request. In this
+        case, it is an empty string.
+
+        - `success`: Indicates whether the request was successful or not. In
+        this case, the value is `true`.
+
+        - `data`: Contains additional data related to the request. It has the
+        following properties:
+            - `user`: Contains information about the user associated with the profile. It has the following properties:
+                - `id`: The unique identifier of the user.
+                - `email`: The email address of the user.
+                - `role_id`: An array of role identifiers assigned to the user.
+                - `is_verified`: Indicates whether the user is verified or not.
+                - `createdAt`: The date and time when the user was created.
+                - `updatedAt`: The date and time when the user was last updated.
+            - `profile`: Contains information about the user's profile. It has the following properties:
+                - `id`: The unique identifier of the profile.
+                - `user_id`: The unique identifier of the user associated with the profile.
+                - `avatar_link`: The URL of the uploaded avatar image.
+                - `name`: The name associated with the profile.
+                - `phone`: The phone number associated with the profile (can be null).
+                - `address`: The address associated with the profile (can be null).
+                - `description`: The description associated with the profile (can be null).
+                - `createdAt`: The date and time when the profile was created.
+                - `updatedAt`: The date and time when the profile was last updated.
+            - `url`: The URL of the uploaded avatar image.
+
+        ### Example Response
+
+
+        ``` json
+
+        {
+            "status": 0,
+            "message": "",
+            "success": true,
+            "data": {
+                "user": {
+                    "id": "",
+                    "email": "",
+                    "role_id": [""],
+                    "is_verified": true,
+                    "createdAt": "",
+                    "updatedAt": ""
+                },
+                "profile": {
+                    "id": "",
+                    "user_id": "",
+                    "avatar_link": "",
+                    "name": "",
+                    "phone": null,
+                    "address": null,
+                    "description": null,
+                    "createdAt": "",
+                    "updatedAt": ""
+                },
+                "url": ""
+            }
+        }
+
+         ```
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                avatar:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Powered-By:
+              schema:
+                type: string
+                example: Express
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '608'
+            ETag:
+              schema:
+                type: string
+                example: W/"260-XSNjIPYfc3ipDerckQ7LMZgAK7c"
+            Date:
+              schema:
+                type: string
+                example: Mon, 20 Nov 2023 15:43:06 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                status: 200
+                message: Successfully Update Avatar
+                success: true
+                data:
+                  user:
+                    id: 2GNhkWVuGn
+                    email: gricowijaya@gmail.com
+                    role_id:
+                      - VVcAyIXevi
+                    is_verified: true
+                    createdAt: '2023-11-13T19:25:48.146Z'
+                    updatedAt: '2023-11-13T19:27:00.855Z'
+                  profile:
+                    id: '-_gcO6kPb-'
+                    user_id: 2GNhkWVuGn
+                    avatar_link: >-
+                      https://ik.imagekit.io/esp6kyxwz/1700494981986_7_ZozKLhJ.png
+                    name: Gede Rico Wijaya
+                    phone: null
+                    address: null
+                    description: null
+                    createdAt: '2023-11-13T19:25:48.185Z'
+                    updatedAt: '2023-11-20T15:43:05.585Z'
+                  url: https://ik.imagekit.io/esp6kyxwz/1700494981986_7_ZozKLhJ.png
   /api/google:
     get:
       tags:
