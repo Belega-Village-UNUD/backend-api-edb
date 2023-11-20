@@ -4,7 +4,8 @@
 		"name": "Belega Commerce",
 		"description": "This is the API Collection for Belega Commerce using Express JS, it runs Google API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "30880460"
+		"_exporter_id": "30880460",
+		"_collection_link": "https://belegasquad.postman.co/workspace/Team-Workspace~4ce574b9-348b-440d-8cab-6aee65a76f48/collection/30880460-e550f8a5-3896-4ae5-9564-8f9eb0039c3d?action=share&source=collection_link&creator=30880460"
 	},
 	"item": [
 		{
@@ -39,7 +40,7 @@
 										"verify"
 									]
 								},
-								"description": "This is the OTP that should read the Bearer Token to be requested because identification are there any OTP based on the JWT Token,  \n  \nthis endpoint also generate a JWT Token for any OTP based authentication such as register and forgot password"
+								"description": "This API endpoint is used to verify an OTP (One-Time Password) for authentication. It is an HTTP POST request sent to `{{host}}/api/auth/otp/verify`.\n\n### Request Parameters\n\nThe request does not require any specific parameters. However, it is expected to contain the OTP value in the request body.\n\n### Response\n\nThe response will have the following properties:\n\n- `status`: An integer representing the status of the request. A value of `0` indicates success.\n- `message`: A string containing any additional information or error message.\n- `success`: A boolean value indicating the success of the OTP verification.\n- `data`: An object containing additional data related to the request. In this case, it will contain a `token` property, which is an empty string.\n    \n\n### Examples\n\nExample response for a successful OTP verification:\n\n```\n{\n  \"status\": 0,\n  \"message\": \"\",\n  \"success\": true,\n  \"data\": {\n    \"token\": \"\"\n  }\n}\n\n ```\n\nPlease note that the `token` property will have a value in a real-world scenario, but it is empty in this example for security reasons."
 							},
 							"response": [
 								{
@@ -709,7 +710,8 @@
 						}
 					]
 				}
-			]
+			],
+			"description": "authentication such as otp, login, password"
 		},
 		{
 			"name": "checkhealth",
@@ -1212,6 +1214,104 @@
 							"body": "{\n    \"status\": 200,\n    \"message\": \"Successfully update profile\",\n    \"success\": true,\n    \"data\": {\n        \"user\": {\n            \"id\": \"2GNhkWVuGn\",\n            \"email\": \"gricowijaya@gmail.com\",\n            \"role_id\": [\n                \"VVcAyIXevi\"\n            ],\n            \"is_verified\": true,\n            \"createdAt\": \"2023-11-13T19:25:48.146Z\",\n            \"updatedAt\": \"2023-11-13T19:27:00.855Z\"\n        },\n        \"profile\": {\n            \"id\": \"-_gcO6kPb-\",\n            \"user_id\": \"2GNhkWVuGn\",\n            \"avatar_link\": null,\n            \"name\": \"Gede Rico Wijaya\",\n            \"phone\": null,\n            \"address\": null,\n            \"description\": null,\n            \"createdAt\": \"2023-11-13T19:25:48.185Z\",\n            \"updatedAt\": \"2023-11-13T20:22:55.572Z\"\n        }\n    }\n}"
 						}
 					]
+				},
+				{
+					"name": "avatar",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "avatar",
+									"type": "file",
+									"src": "/home/notroot/Downloads/test-min-shot.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/api/profiles/avatar",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"profiles",
+								"avatar"
+							]
+						},
+						"description": "This API endpoint allows you to upload an avatar image for a user profile. It is an HTTP POST request to `{{host}}/api/profiles/avatar`.\n\n### Request Parameters\n\nThis request does not require any specific parameters in the request body. However, the avatar image file should be included as part of the request.\n\n### Response\n\nThe response will have a status code of 200 if the request is successful. The response body will be in JSON format and will have the following properties:\n\n- `status`: Indicates the status of the request. In this case, the value is 0, which means the request was successful.\n- `message`: A message related to the status of the request. In this case, it is an empty string.\n- `success`: Indicates whether the request was successful or not. In this case, the value is `true`.\n- `data`: Contains additional data related to the request. It has the following properties:\n    - `user`: Contains information about the user associated with the profile. It has the following properties:\n        - `id`: The unique identifier of the user.\n        - `email`: The email address of the user.\n        - `role_id`: An array of role identifiers assigned to the user.\n        - `is_verified`: Indicates whether the user is verified or not.\n        - `createdAt`: The date and time when the user was created.\n        - `updatedAt`: The date and time when the user was last updated.\n    - `profile`: Contains information about the user's profile. It has the following properties:\n        - `id`: The unique identifier of the profile.\n        - `user_id`: The unique identifier of the user associated with the profile.\n        - `avatar_link`: The URL of the uploaded avatar image.\n        - `name`: The name associated with the profile.\n        - `phone`: The phone number associated with the profile (can be null).\n        - `address`: The address associated with the profile (can be null).\n        - `description`: The description associated with the profile (can be null).\n        - `createdAt`: The date and time when the profile was created.\n        - `updatedAt`: The date and time when the profile was last updated.\n    - `url`: The URL of the uploaded avatar image.\n\n### Example Response\n\n``` json\n{\n    \"status\": 0,\n    \"message\": \"\",\n    \"success\": true,\n    \"data\": {\n        \"user\": {\n            \"id\": \"\",\n            \"email\": \"\",\n            \"role_id\": [\"\"],\n            \"is_verified\": true,\n            \"createdAt\": \"\",\n            \"updatedAt\": \"\"\n        },\n        \"profile\": {\n            \"id\": \"\",\n            \"user_id\": \"\",\n            \"avatar_link\": \"\",\n            \"name\": \"\",\n            \"phone\": null,\n            \"address\": null,\n            \"description\": null,\n            \"createdAt\": \"\",\n            \"updatedAt\": \"\"\n        },\n        \"url\": \"\"\n    }\n}\n\n ```"
+					},
+					"response": [
+						{
+							"name": "success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "avatar",
+											"type": "file",
+											"src": "/home/notroot/Downloads/test-min-shot.png"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/api/profiles/avatar",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"profiles",
+										"avatar"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "608"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"260-XSNjIPYfc3ipDerckQ7LMZgAK7c\""
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 20 Nov 2023 15:43:06 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": 200,\n    \"message\": \"Successfully Update Avatar\",\n    \"success\": true,\n    \"data\": {\n        \"user\": {\n            \"id\": \"2GNhkWVuGn\",\n            \"email\": \"gricowijaya@gmail.com\",\n            \"role_id\": [\n                \"VVcAyIXevi\"\n            ],\n            \"is_verified\": true,\n            \"createdAt\": \"2023-11-13T19:25:48.146Z\",\n            \"updatedAt\": \"2023-11-13T19:27:00.855Z\"\n        },\n        \"profile\": {\n            \"id\": \"-_gcO6kPb-\",\n            \"user_id\": \"2GNhkWVuGn\",\n            \"avatar_link\": \"https://ik.imagekit.io/esp6kyxwz/1700494981986_7_ZozKLhJ.png\",\n            \"name\": \"Gede Rico Wijaya\",\n            \"phone\": null,\n            \"address\": null,\n            \"description\": null,\n            \"createdAt\": \"2023-11-13T19:25:48.185Z\",\n            \"updatedAt\": \"2023-11-20T15:43:05.585Z\"\n        },\n        \"url\": \"https://ik.imagekit.io/esp6kyxwz/1700494981986_7_ZozKLhJ.png\"\n    }\n}"
+						}
+					]
 				}
 			],
 			"description": "This is the collection of profile RUD, the profile is automatically created when user register using the \\`/auth\\` endpoint"
@@ -1300,212 +1400,6 @@
 				}
 			],
 			"description": "This is Development only API for request authorization URL for Google API"
-		},
-		{
-			"name": "media",
-			"item": [
-				{
-					"name": "image",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "image",
-									"type": "file",
-									"src": "/C:/Users/grico/Pictures/Camera Roll/WIN_20231114_19_34_22_Pro.jpg"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{host}}/api/media/storage/images",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"api",
-								"media",
-								"storage",
-								"images"
-							]
-						},
-						"description": "This is the image storage API, it request an `image` form data it should be only jpg, jpeg, and png  \n  \nthis is just one image"
-					},
-					"response": [
-						{
-							"name": "image",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "image",
-											"type": "file",
-											"src": "/C:/Users/grico/Pictures/Camera Roll/WIN_20231114_19_34_22_Pro.jpg"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{host}}/api/media/imagekit/images",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"api",
-										"media",
-										"imagekit",
-										"images"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Access-Control-Allow-Origin",
-									"value": "*"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "146"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"92-pbyZB2x0Op2em1vzlS3hIEM9XT4\""
-								},
-								{
-									"key": "Date",
-									"value": "Mon, 20 Nov 2023 08:06:07 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"status\": 200,\n    \"message\": \"File uploaded successfully\",\n    \"success\": true,\n    \"data\": {\n        \"url\": \"https://ik.imagekit.io/esp6kyxwz/1700467563406_PxukL_E-k.jpg\"\n    }\n}"
-						}
-					]
-				},
-				{
-					"name": "documents",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "document",
-									"type": "file",
-									"src": "/C:/Users/grico/Documents/Administrasi/Ekuivalensi/2005551091_Gede Rico Wijaya.pdf"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{host}}/api/media/storage/documents",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"api",
-								"media",
-								"storage",
-								"documents"
-							]
-						},
-						"description": "This is the document storage API, it request an `document` form data it should be only pdf.  \n  \nOnly one documents"
-					},
-					"response": [
-						{
-							"name": "documents",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "document",
-											"type": "file",
-											"src": "/C:/Users/grico/Documents/Administrasi/Ekuivalensi/2005551091_Gede Rico Wijaya.pdf"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{host}}/api/media/storage/documents",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"api",
-										"media",
-										"storage",
-										"documents"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Access-Control-Allow-Origin",
-									"value": "*"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "146"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"92-PU8s9/iyn+gwyLYkY8pTxdJvBYE\""
-								},
-								{
-									"key": "Date",
-									"value": "Mon, 20 Nov 2023 08:22:08 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"status\": 200,\n    \"message\": \"File uploaded successfully\",\n    \"success\": true,\n    \"data\": {\n        \"url\": \"https://ik.imagekit.io/esp6kyxwz/1700468524928__Goz4ZtoL.pdf\"\n    }\n}"
-						}
-					]
-				}
-			],
-			"description": "This is the media endpoint for storing images and documents such as\n\nprofile,  \npre order document"
 		}
 	],
 	"auth": {
@@ -1513,7 +1407,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJHTmhrV1Z1R24iLCJlbWFpbCI6ImdyaWNvd2lqYXlhQGdtYWlsLmNvbSIsInJvbGUiOlsiVlZjQXlJWGV2aSJdLCJpYXQiOjE3MDAyMDQxMTEsImV4cCI6MTcwMDIxNDkxMX0.D3-URJ0GJpjcBsIILwYo4KJuzWmb0BUBdCv_gIisWcQ",
+				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJHTmhrV1Z1R24iLCJlbWFpbCI6ImdyaWNvd2lqYXlhQGdtYWlsLmNvbSIsInJvbGUiOlsiVlZjQXlJWGV2aSJdLCJpYXQiOjE3MDA0OTM2NjgsImV4cCI6MTcwMDUwNDQ2OH0.4-hAYAnAXMQ5A3m-PX0QamI2R0puTRb_M-LCa9GT9DU",
 				"type": "string"
 			}
 		]
