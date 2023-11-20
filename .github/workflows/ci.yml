@@ -72,6 +72,9 @@ jobs:
             GOOGLE_EMAIL=${{ secrets.GOOGLE_EMAIL }}
             BELEGA_ADMIN_EMAIL=${{ secrets.BELEGA_ADMIN_EMAIL }}
             BELEGA_ADMIN_PASSWORD=${{ secrets.BELEGA_ADMIN_PASSWORD }}
+            IMAGEKIT_PUBLIC_KEY=${{ secrets.IMAGEKIT_PUBLIC_KEY }}
+            IMAGEKIT_PRIVATE_KEY=${{ secrets.IMAGEKIT_PRIVATE_KEY }}
+            IMAGEKIT_URL_ENDPOINT=${{ secrets.IMAGEKIT_URL_ENDPOINT }}
 
       - name: Show Output
         run: |
