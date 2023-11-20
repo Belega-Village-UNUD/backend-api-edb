@@ -18,6 +18,7 @@ const verifyUser = async (req, res) => {
     if (!user) return response(res, 404, false, "User not found", null);
 
     const verified = await verifyOTP(user, otp);
+    console.log("verified ", verified.success);
     if (!verified.success)
       return response(res, 400, verified.success, verified.message, null);
 
