@@ -2,6 +2,7 @@ const router = require("express").Router();
 const controller = require("../../controllers/profile");
 const middleware = require("../../middlewares");
 const { MODULE } = require("../../utils/enum.utils");
+const { image, document } = require("../../configs/multer.config");
 
 router.get(
   "/",
@@ -15,6 +16,12 @@ router.put(
   middleware.rbac(MODULE.LANDING, true, false),
   controller.updateUser
 );
-router.delete( "/", controller.deleteUser);
+router.post(
+  "/avatar",
+  middleware.restrict,
+  image.single("avatar"),
+  controller.upAvatar
+);
+router.delete("/", controller.deleteUser);
 
 module.exports = router;
