@@ -1,12 +1,12 @@
 const multer = require("multer");
 const path = require("path");
 
-const generateStorage = async (props) => {
+function generateStorage(props) {
   let { location, allowedMimeTypes } = props;
   return multer({
     storage: multer.diskStorage({
       destination: function (req, file, callback) {
-        filename, null;
+        callback(null, location);
       },
 
       filename: function (req, file, callback) {
@@ -27,9 +27,9 @@ const generateStorage = async (props) => {
       next(err);
     },
   });
-};
+}
 
-const generateFilter = async (props) => {
+function generateFilter(props) {
   let { allowedMimeTypes } = props;
 
   return multer({
@@ -46,7 +46,7 @@ const generateFilter = async (props) => {
       next(err);
     },
   });
-};
+}
 
 module.exports = {
   imageStorage: generateStorage({
