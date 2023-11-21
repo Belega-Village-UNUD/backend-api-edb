@@ -4,7 +4,7 @@ const { response } = require("../../utils/response.utils");
 const updateUser = async (req, res) => {
   try {
     const { email } = req.user;
-    const { avatar_link, name, phone, address, description } = req.body;
+    const { name, phone, address, description } = req.body;
 
     const user = await User.findOne({
       where: { email: email },
@@ -12,7 +12,7 @@ const updateUser = async (req, res) => {
     });
 
     await Profile.update(
-      { avatar_link, name, phone, address, description },
+      { name, phone, address, description },
       { where: { user_id: user.id } }
     );
     const profile = await Profile.findOne({ where: { user_id: user.id } });
