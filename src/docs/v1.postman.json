@@ -4,8 +4,7 @@
 		"name": "Belega Commerce",
 		"description": "This is the API Collection for Belega Commerce using Express JS, it runs Google API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "30880460",
-		"_collection_link": "https://belegasquad.postman.co/workspace/Team-Workspace~4ce574b9-348b-440d-8cab-6aee65a76f48/collection/30880460-e550f8a5-3896-4ae5-9564-8f9eb0039c3d?action=share&source=collection_link&creator=30880460"
+		"_exporter_id": "30880460"
 	},
 	"item": [
 		{
@@ -348,6 +347,84 @@
 									],
 									"cookie": [],
 									"body": "{\n    \"status\": 200,\n    \"message\": \"Please check your email for your OTP Request\",\n    \"success\": true,\n    \"data\": null\n}"
+								}
+							]
+						},
+						{
+							"name": "otp",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/api/auth/otp",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"otp"
+									]
+								},
+								"description": "Endpoint for get the timestamp of the Users OTP, it is required for the countdown of the frontend to get the OTP timestamp from the server  \n  \nThis endpoint requires the JWT Token"
+							},
+							"response": [
+								{
+									"name": "otp",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{host}}/api/auth/otp",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"auth",
+												"otp"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "X-Powered-By",
+											"value": "Express"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "115"
+										},
+										{
+											"key": "ETag",
+											"value": "W/\"73-jr47GD5ocDuCB/FQreCy/LEiQNU\""
+										},
+										{
+											"key": "Date",
+											"value": "Fri, 24 Nov 2023 16:57:18 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"status\": 200,\n    \"message\": \"This is the OTP timestamp\",\n    \"success\": true,\n    \"data\": {\n        \"createdAt\": \"2023-11-24T16:53:14.323Z\"\n    }\n}"
 								}
 							]
 						}
@@ -1128,7 +1205,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"avatar_link\": null,\n    \"name\": \"Gede Rico Wijaya\",\n    \"phone\": null,\n    \"address\": null,\n    \"description\": null\n}",
+							"raw": "{\n    \"name\": \"Gede Rico Wijaya\",\n    \"phone\": null,\n    \"address\": null,\n    \"description\": null\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1155,7 +1232,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"avatar_link\": null,\n    \"name\": \"Gede Rico Wijaya\",\n    \"phone\": null,\n    \"address\": null,\n    \"description\": null\n}",
+									"raw": "{\n    \"name\": \"Gede Rico Wijaya\",\n    \"phone\": null,\n    \"address\": null,\n    \"description\": null\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1191,15 +1268,15 @@
 								},
 								{
 									"key": "Content-Length",
-									"value": "482"
+									"value": "540"
 								},
 								{
 									"key": "ETag",
-									"value": "W/\"1e2-7qboQD48PsSZOLcnxaX0a67ueag\""
+									"value": "W/\"21c-8ebAxSoWecG+cUaA4olELe+fWcY\""
 								},
 								{
 									"key": "Date",
-									"value": "Mon, 13 Nov 2023 20:22:55 GMT"
+									"value": "Tue, 21 Nov 2023 09:08:20 GMT"
 								},
 								{
 									"key": "Connection",
@@ -1211,7 +1288,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"status\": 200,\n    \"message\": \"Successfully update profile\",\n    \"success\": true,\n    \"data\": {\n        \"user\": {\n            \"id\": \"2GNhkWVuGn\",\n            \"email\": \"gricowijaya@gmail.com\",\n            \"role_id\": [\n                \"VVcAyIXevi\"\n            ],\n            \"is_verified\": true,\n            \"createdAt\": \"2023-11-13T19:25:48.146Z\",\n            \"updatedAt\": \"2023-11-13T19:27:00.855Z\"\n        },\n        \"profile\": {\n            \"id\": \"-_gcO6kPb-\",\n            \"user_id\": \"2GNhkWVuGn\",\n            \"avatar_link\": null,\n            \"name\": \"Gede Rico Wijaya\",\n            \"phone\": null,\n            \"address\": null,\n            \"description\": null,\n            \"createdAt\": \"2023-11-13T19:25:48.185Z\",\n            \"updatedAt\": \"2023-11-13T20:22:55.572Z\"\n        }\n    }\n}"
+							"body": "{\n    \"status\": 200,\n    \"message\": \"Successfully update profile\",\n    \"success\": true,\n    \"data\": {\n        \"user\": {\n            \"id\": \"2GNhkWVuGn\",\n            \"email\": \"gricowijaya@gmail.com\",\n            \"role_id\": [\n                \"VVcAyIXevi\"\n            ],\n            \"is_verified\": true,\n            \"createdAt\": \"2023-11-13T19:25:48.146Z\",\n            \"updatedAt\": \"2023-11-13T19:27:00.855Z\"\n        },\n        \"profile\": {\n            \"id\": \"-_gcO6kPb-\",\n            \"user_id\": \"2GNhkWVuGn\",\n            \"avatar_link\": \"https://ik.imagekit.io/esp6kyxwz/1700555986186_A8-jXz5mu.png\",\n            \"name\": \"Gede Rico Wijaya\",\n            \"phone\": null,\n            \"address\": null,\n            \"description\": null,\n            \"createdAt\": \"2023-11-13T19:25:48.185Z\",\n            \"updatedAt\": \"2023-11-21T09:08:20.137Z\"\n        }\n    }\n}"
 						}
 					]
 				},
@@ -1407,7 +1484,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJHTmhrV1Z1R24iLCJlbWFpbCI6ImdyaWNvd2lqYXlhQGdtYWlsLmNvbSIsInJvbGUiOlsiVlZjQXlJWGV2aSJdLCJpYXQiOjE3MDA0OTM2NjgsImV4cCI6MTcwMDUwNDQ2OH0.4-hAYAnAXMQ5A3m-PX0QamI2R0puTRb_M-LCa9GT9DU",
+				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImdyaWNvd2lqYXlhQGdtYWlsLmNvbSIsInJvbGUiOlsiVlZjQXlJWGV2aSJdLCJpYXQiOjE3MDA4NDQ3OTcsImV4cCI6MTcwMDg1NTU5N30.e9kHnvNKczzfYbBLWQA9ELaqOC4_sFaCTnnaLe5ZCkA",
 				"type": "string"
 			}
 		]
