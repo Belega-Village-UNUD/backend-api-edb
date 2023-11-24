@@ -11,6 +11,12 @@ router.post(
   middleware.rbac(MODULE.AUTH, true, false),
   controllers.auth.verifyUser
 );
+router.get(
+  "/otp",
+  middleware.restrict,
+  middleware.rbac(MODULE.AUTH, true, false),
+  controllers.auth.getOTP
+);
 router.post("/otp", controllers.auth.resendOTP);
 router.post("/password/forgot", controllers.auth.forgotPassword);
 router.put(
