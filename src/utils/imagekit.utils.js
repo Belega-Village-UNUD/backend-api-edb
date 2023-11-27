@@ -33,4 +33,4 @@ const multiUpload = async (req, res) => {
   }
 };
 
-module.exports = { singleUpload, multiUpload}
+module.exports = { singleUpload, multiUpload }
