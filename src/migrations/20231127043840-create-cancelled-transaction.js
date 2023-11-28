@@ -5,7 +5,6 @@ module.exports = {
     await queryInterface.createTable("CancelledTransactions", {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
         type: Sequelize.STRING,
       },
