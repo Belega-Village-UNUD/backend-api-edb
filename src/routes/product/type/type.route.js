@@ -4,7 +4,7 @@ const middleware = require("../../../middlewares");
 const { MODULE } = require("../../../utils/enum.utils");
 
 router.get(
-  "/",
+  "/all",
   middleware.restrict,
   // middleware.rbac(MODULE.PRODUCT, true, false),
   controllers.productType.getAllType
