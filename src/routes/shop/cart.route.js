@@ -13,21 +13,21 @@ router.post(
 router.get(
   "/",
   middleware.restrict,
-  middleware.rbac(MODULE.SHOP, true, false),
+  // middleware.rbac(MODULE.SHOP, true, false),
   controller.getItems
 );
 
 router.delete(
   "/",
   middleware.restrict,
-  middleware.rbac(MODULE.SHOP, true, false),
+  // middleware.rbac(MODULE.SHOP, true, false),
   controller.removeItem
 );
 
 router.post(
   "/checkout",
   middleware.restrict,
-  middleware.rbac(MODULE.SHOP, true, false),
+  // middleware.rbac(MODULE.SHOP, true, false),
   controller.checkoutItem
 );
 

@@ -9,24 +9,24 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      //this.hasOne(models.ProductType, {
-      //  foreignKey: "id",
-      //  as: "product_type",
-      //});
-      //this.belongsTo(models.Store, {
-      //  foreignKey: "store_id",
-      //  as: "store",
-      //  foreignKeyConstraint: true,
-      //});
-      //this.belongsTo(models.User, {
-      //  foreignKey: "user_id",
-      //  as: "user",
-      //  foreignKeyConstraint: true,
-      //});
-      //this.hasMany(models.Cart, {
-      //  foreignKey: "product_id",
-      //  as: "cart",
-      //});
+      this.hasOne(models.ProductType, {
+        foreignKey: "id",
+        as: "product_type",
+      });
+      this.belongsTo(models.Store, {
+        foreignKey: "store_id",
+        as: "store",
+        foreignKeyConstraint: true,
+      });
+      this.belongsTo(models.User, {
+        foreignKey: "user_id",
+        as: "user",
+        foreignKeyConstraint: true,
+      });
+      this.hasMany(models.Cart, {
+        foreignKey: "product_id",
+        as: "cart",
+      });
     }
   }
   Product.init(

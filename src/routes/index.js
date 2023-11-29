@@ -5,7 +5,7 @@ const profile = require("./profile/profile.route");
 const docs = require("./docs/docs.route");
 const google = require("./google/google.route");
 const media = require("./media/media.route");
-const shop = require("./shop/cart.route");
+const cart = require("./shop/cart.route");
 const product = require("./product/product.route");
 
 router.get("/", (req, res) => {
@@ -17,7 +17,7 @@ router.use("/profiles", profile);
 router.use("/docs", docs);
 router.use("/google", google);
 router.use("/media", media);
-router.use("/cart", shop);
+router.use("/cart", cart);
 router.use("/product", product);
 
 module.exports = router;
