@@ -1,11 +1,11 @@
-const add = require("./add-item.controller");
-const get = require("./get-item.controller");
-const remove = require("./remove-item.controller");
-const checkout = require("./checkout.controller");
+const addItem = require("./add-item.controller");
+const getItems = require("./get-item.controller");
+const removeItem = require("./remove-item.controller");
+const checkoutItem = require("./checkout-item.controller");
 
 module.exports = {
-  add,
-  get,
-  remove,
-  checkout,
+  addItem,
+  getItems,
+  removeItem,
+  checkoutItem,
 };

@@ -4,29 +4,31 @@ const middleware = require("../../middlewares");
 const { MODULE } = require("../../utils/enum.utils");
 
 router.post(
-  "/cart/add",
+  "/",
   middleware.restrict,
-  middleware.rbac(MODULE.SHOP, true, false),
-  controller.add
+  // middleware.rbac(MODULE.SHOP, true, false),
+  controller.addItem
 );
 
 router.get(
-  "/cart/:user_id",
+  "/",
   middleware.restrict,
   middleware.rbac(MODULE.SHOP, true, false),
-  controller.get
+  controller.getItems
 );
 
 router.delete(
-  "/cart/:id/:user_id",
+  "/",
   middleware.restrict,
   middleware.rbac(MODULE.SHOP, true, false),
-  controller.remove
+  controller.removeItem
 );
 
 router.post(
-  "/cart/checkout/:user_id",
+  "/checkout",
   middleware.restrict,
   middleware.rbac(MODULE.SHOP, true, false),
-  controller.checkout
+  controller.checkoutItem
 );
+
+module.exports = router;
