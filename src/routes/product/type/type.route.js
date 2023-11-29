@@ -1,40 +1,37 @@
 const router = require("express").Router();
-const typeRouter = require("./type/type.route");
-const controllers = require("../../controllers");
-const middleware = require("../../middlewares");
-const { MODULE } = require("../../utils/enum.utils");
+const controllers = require("../../../controllers/product");
+const middleware = require("../../../middlewares");
+const { MODULE } = require("../../../utils/enum.utils");
 
 router.get(
   "/",
   middleware.restrict,
   // middleware.rbac(MODULE.PRODUCT, true, false),
-  controllers.product.getAll
+  controllers.productType.getAllType
 )
 router.get(
   "/:id",
   middleware.restrict,
   // middleware.rbac(MODULE.PRODUCT, true, false),
-  controllers.product.getOne
+  controllers.productType.getOneType
 )
 router.post(
   "/", 
   middleware.restrict,
   // middleware.rbac(MODULE.PRODUCT, true, false),
-  controllers.product.create
+  controllers.productType.createType
 )
 router.put(
   "/:id",
   middleware.restrict,
   // middleware.rbac(MODULE.PRODUCT, true, false),
-  controllers.product.update
+  controllers.productType.updateType
 )
 router.delete(
   "/:id",
   middleware.restrict,
   // middleware.rbac(MODULE.PRODUCT, true, false),
-  controllers.product.deleteProduct
+  controllers.productType.deleteType
 )
-
-router.use("/type", typeRouter)
 
 module.exports = router;
