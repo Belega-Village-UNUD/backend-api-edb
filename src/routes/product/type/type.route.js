@@ -8,30 +8,30 @@ router.get(
   middleware.restrict,
   // middleware.rbac(MODULE.PRODUCT, true, false),
   controllers.productType.getAllType
-)
+);
 router.get(
   "/:id",
   middleware.restrict,
   // middleware.rbac(MODULE.PRODUCT, true, false),
   controllers.productType.getOneType
-)
+);
 router.post(
-  "/", 
+  "/",
   middleware.restrict,
   // middleware.rbac(MODULE.PRODUCT, true, false),
   controllers.productType.createType
-)
+);
 router.put(
   "/:id",
   middleware.restrict,
   // middleware.rbac(MODULE.PRODUCT, true, false),
   controllers.productType.updateType
-)
+);
 router.delete(
   "/:id",
   middleware.restrict,
   // middleware.rbac(MODULE.PRODUCT, true, false),
   controllers.productType.deleteType
-)
+);
 
 module.exports = router;

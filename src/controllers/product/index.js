@@ -1,16 +1,16 @@
-const getAll = require("./get-all.controller")
-const getOne = require("./get-one.controller")
-const create = require("./create.controller");
-const update = require("./update.controller");
+const getAllProduct = require("./get-all.controller");
+const getOneProduct = require("./get-one.controller");
+const createProduct = require("./create.controller");
+const updateProduct = require("./update.controller");
 const deleteProduct = require("./delete.controller");
 
 const productType = require("./type");
 
 module.exports = {
-  getAll,
-  getOne,
-  create,
-  update,
+  getAllProduct,
+  getOneProduct,
+  createProduct,
+  updateProduct,
   deleteProduct,
   productType,
-}
+};

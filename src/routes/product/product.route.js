@@ -8,33 +8,33 @@ router.get(
   "/all",
   middleware.restrict,
   // middleware.rbac(MODULE.PRODUCT, true, false),
-  controllers.product.getAll
-)
+  controllers.product.getAllProduct
+);
 router.get(
   "/:id",
   middleware.restrict,
   // middleware.rbac(MODULE.PRODUCT, true, false),
-  controllers.product.getOne
-)
+  controllers.product.getOneProduct
+);
 router.post(
-  "/", 
+  "/",
   middleware.restrict,
   // middleware.rbac(MODULE.PRODUCT, true, false),
-  controllers.product.create
-)
+  controllers.product.createProduct
+);
 router.put(
   "/:id",
   middleware.restrict,
   // middleware.rbac(MODULE.PRODUCT, true, false),
-  controllers.product.update
-)
+  controllers.product.updateProduct
+);
 router.delete(
   "/:id",
   middleware.restrict,
   // middleware.rbac(MODULE.PRODUCT, true, false),
   controllers.product.deleteProduct
-)
+);
 
-router.use("/type", typeRouter)
+router.use("/types", typeRouter);
 
 module.exports = router;
