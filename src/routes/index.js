@@ -6,7 +6,6 @@ const docs = require("./docs/docs.route");
 const google = require("./google/google.route");
 const media = require("./media/media.route");
 const cart = require("./shop/cart.route");
-const product = require("./product/product.route");
 
 router.get("/", (req, res) => {
   return response(res, 200, true, "Server API is healthy");
@@ -18,6 +17,5 @@ router.use("/docs", docs);
 router.use("/google", google);
 router.use("/media", media);
 router.use("/cart", cart);
-router.use("/product", product);
 
 module.exports = router;
