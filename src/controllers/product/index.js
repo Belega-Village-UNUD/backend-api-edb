@@ -5,6 +5,7 @@ const updateProduct = require("./update.controller");
 const deleteProduct = require("./delete.controller");
 
 const productType = require("./type");
+const guestProduct = require("./guest");
 
 module.exports = {
   getAllProduct,
@@ -13,4 +14,5 @@ module.exports = {
   updateProduct,
   deleteProduct,
   productType,
+  guestProduct,
 };
