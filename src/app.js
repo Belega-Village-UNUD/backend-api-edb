@@ -9,7 +9,6 @@ const { metric } = require("./utils/metric.utils");
 const middlewares = require("./middlewares");
 const { response } = require("./utils/response.utils");
 const TIMEOUT = 5000;
-
 const app = express();
 
 app.use(cors());
@@ -19,7 +18,18 @@ app.use(middlewares.requestCount, middlewares.responseTime);
 app.use("/api", router);
 
 app.get("/", (req, res) => {
-  return response(res, 200, true, "Server is healthy");
+  Prometheus.apiCount.inc();
+  response(res, 200, true, "Server API is Healthy", null);
+});
+
+app.get("/metrics/json", async (req, res) => {
+  const metrics = await metric(res);
+  response(res, 200, true, null, metrics);
+});
+
+app.get("/metrics", async (req, res) => {
+  res.set("Content-Type", Prometheus.client.register.contentType);
+  res.end(await Prometheus.client.register.metrics());
 });
 
 app.listen(process.env.PORT, async () => {
