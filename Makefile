@@ -1,14 +1,17 @@
 build:
-	docker build . --no-cache -t belega-village-unud/backend-ecommerce-desa-belega:v1
+	docker build . --file docker/Dockerfile -t belega-village-unud/backend-api-edb:v1 -t belega-village-unud/backend-api-edb:latest
 
 up:
-	docker compose --env-file .env up -d
+	docker compose -p backend-ecommerce-desa-belega --file docker/docker-compose.yml --env-file .env up -d
 
 down:
-	docker compose down 
+	docker compose -p backend-ecommerce-desa-belega --file docker/docker-compose.yml --env-file .env down 
+
+rm:
+	docker compose -p backend-ecommerce-desa-belega --file docker/docker-compose.yml --env-file .env rm 
 
 ps:
-	docker compose ps 
+	docker compose -p backend-ecommerce-desa-belega --file docker/docker-compose.yml --env-file .env ps 
 
 ipapp:
 	docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' app-ecommerce-desa-belega
