@@ -2,9 +2,9 @@ version: "3.4"
 services:
   app:
     container_name: backend-ecommerce-desa-belega
-    image: belega-village-unud/backend-ecommerce-desa-belega:v1
+    image: belega-village-unud/backend-api-edb:v1
     restart: always
-    env_file: .env
+    env_file: ../.env
     ports:
       - ${PORT}:${PORT}
     networks:
@@ -53,6 +53,19 @@ services:
     volumes:
       - ecommerce-data:/etc/sqlpad/ecommerce-data
 
+  prometheus:
+    container_name: prometheus-ecommerce-desa-belega
+    image: prom/prometheus
+    ports:
+      - ${PROMETHEUS_PORT}:9090
+    networks:
+      - ecommerce-desa-belega
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+    volumes:
+      - ../prometheus:/etc/prometheus
+      - prometheus-config:/prometheus
+
 networks:
   ecommerce-desa-belega:
     driver: bridge
@@ -62,3 +75,6 @@ volumes:
     driver: local
   ecommerce-data:
     driver: local
+  prometheus-config:
+    driver: local
+
