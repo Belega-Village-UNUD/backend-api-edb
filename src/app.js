@@ -4,6 +4,9 @@ const cors = require("cors");
 const router = require("./routes");
 const bodyParser = require("body-parser");
 const db = require("./models");
+const { Prometheus } = require("./configs/prometheus.config");
+const { metric } = require("./utils/metric.utils");
+const middlewares = require("./middlewares");
 const { response } = require("./utils/response.utils");
 const TIMEOUT = 5000;
 
@@ -12,6 +15,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(middlewares.requestCount, middlewares.responseTime);
 app.use("/api", router);
 
 app.get("/", (req, res) => {
