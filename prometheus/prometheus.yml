@@ -1,6 +1,5 @@
 # Global Configuration
 global:
-  scrape_interval: 15s # By default, scrape targets every 15 seconds.
   scrape_interval: 15s
   evaluation_interval: 15s
 
@@ -9,8 +8,6 @@ global:
   external_labels:
     monitor: 'codelab-monitor'
 
-# A scrape configuration containing exactly one endpoint to scrape:
-# Here it's Prometheus itself.
 # Prometheus Rules
 rule_files:
 - 'rules.yml'
@@ -20,15 +17,31 @@ alerting:
   alertmanagers:
   - static_configs:
     - targets: ['alertmanager:9093']
+
+# Data Scraping configuration
 scrape_configs:
-# The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
 - job_name: 'prometheus'
 
-  # Override the global default and scrape targets from this job every 5 seconds.
+  scrape_interval: 15s
+
+  static_configs:
+  - targets: ['prometheus:9090']
+
+- job_name: 'postgresql-database'
+
   scrape_interval: 5s
 
   static_configs:
-  - targets: ['backend-ecommerce-desa-belega:3333']
+  - targets: ['db:5432']
     labels:
-      group: 'backend-ecommerce-desa-belega-development'
+      group: 'development'
+
+- job_name: 'backend-api-edb'
+
+  scrape_interval: 5s
+
+  static_configs:
+  - targets: ['app:3333']
+    labels:
+      group: 'development'
 
