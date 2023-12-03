@@ -2,7 +2,7 @@ name: Create and publish API Docker image into github container registry
 
 on:
   push:
-    branches: ["staging"]
+    branches: ["EDP-66-api-monitoring"]
 
 env:
   REGISTRY: ghcr.io
