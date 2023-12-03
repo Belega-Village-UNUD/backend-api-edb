@@ -59,10 +59,14 @@ services:
     image: prom/prometheus
     ports:
       - ${PROMETHEUS_PORT}:9090
+    expose:
+      - ${PROMETHEUS_PORT}
     networks:
       - ecommerce-desa-belega
     command:
       - --config.file=/etc/prometheus/prometheus.yml
+    depends_on:
+      - app
     volumes:
       - ../prometheus:/etc/prometheus
       - prometheus-config:/prometheus
