@@ -86,6 +86,18 @@ services:
     networks:
       - ecommerce-desa-belega
     
+  nginx:
+    container_name: nginx-ecommerce-desa-belega
+    image: nginx:latest
+    ports:
+      - 80:80
+    volumes:
+      - ../nginx:/etc/nginx/conf.d
+    networks:
+      - ecommerce-desa-belega
+    depends_on:
+      - app
+
 networks:
   ecommerce-desa-belega:
     driver: bridge
@@ -98,3 +110,5 @@ volumes:
   prometheus-config:
     driver: local
 
+  alertmanager-config:
+    driver: local
