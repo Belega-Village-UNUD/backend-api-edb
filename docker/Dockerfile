@@ -6,7 +6,7 @@ COPY package*.json ./
 
 RUN npm install
 
-COPY ../src ./src
+COPY src src
 
 FROM gcr.io/distroless/nodejs16 as environment
 
