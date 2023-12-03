@@ -4,6 +4,9 @@ build:
 up:
 	docker compose -p backend-ecommerce-desa-belega --file docker/docker-compose.yml --env-file .env up -d
 
+restart:
+	docker compose -p backend-ecommerce-desa-belega --file docker/docker-compose.yml --env-file .env restart $(SERVICE)
+
 down:
 	docker compose -p backend-ecommerce-desa-belega --file docker/docker-compose.yml --env-file .env down 
 
