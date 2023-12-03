@@ -109,6 +109,5 @@ volumes:
     driver: local
   prometheus-config:
     driver: local
-
   alertmanager-config:
     driver: local
