@@ -27,7 +27,7 @@ const responseTime = async (req, res, next) => {
     res.on("finish", () => {
       duration = Date.now() - start;
       Prometheus.httpRequestDurationMicroseconds
-        .labels(req.method, req.route.path, res.statusCode)
+        .labels(req.method, req.path, res.statusCode)
         .observe(duration);
     });
 
