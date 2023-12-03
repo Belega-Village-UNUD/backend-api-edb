@@ -71,6 +71,21 @@ services:
       - ../prometheus:/etc/prometheus
       - prometheus-config:/prometheus
 
+  alertmanager:
+    container_name: alertmanager-ecommerce-desa-belega
+    image: prom/alertmanager
+    ports:
+      - ${ALERTMANAGER_PORT}:9093
+    command:
+      - --config.file=/etc/alertmanager/alertmanager.yml
+    depends_on:
+      - prometheus
+    volumes:
+      - ../alertmanager:/etc/alertmanager
+      - alertmanager-config:/etc/alertmanager
+    networks:
+      - ecommerce-desa-belega
+    
 networks:
   ecommerce-desa-belega:
     driver: bridge
