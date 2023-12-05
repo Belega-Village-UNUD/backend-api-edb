@@ -91,12 +91,23 @@ services:
     image: nginx:latest
     ports:
       - 80:80
+      - 443:443
     volumes:
-      - ../nginx:/etc/nginx/conf.d
+      - ../../nginx:/etc/nginx/conf.d/:ro
+      - ../../certbot/www:/var/www/certbot/:ro
     networks:
       - ecommerce-desa-belega
     depends_on:
       - app
+
+  certbot:
+    container_name: certbot-ecommerce-desa-belega
+    image: certbot:certbot
+    volumes:
+      - ../../certbot/conf:/etc/letsencrypt/:rw
+      - ../../certbot/www:/etc/www/certbot/:rw
+    depends_on:
+      - nginx
 
 networks:
   ecommerce-desa-belega:
