@@ -1,5 +1,5 @@
 build:
-	docker build . --file docker/Dockerfile -t belega-village-unud/backend-api-edb:v1 -t belega-village-unud/backend-api-edb:latest
+	docker build . --file docker/Dockerfile -t ghcr.io/belega-village-unud/backend-api-edb:v1 -t ghcr.io/belega-village-unud/backend-api-edb:latest
 
 up:
 	docker compose -p belega --file docker/service/docker-compose.yml --env-file .env up -d
@@ -9,10 +9,14 @@ up:
 restart:
 	docker compose -p belega --file docker/service/docker-compose.yml --env-file .env restart $(SERVICE)
 
+restart_nginx:
+	docker compose -p belega --file docker/ssl/docker-compose.yml --env-file .env restart nginx
+
 down:
 	docker compose -p belega --file docker/service/docker-compose.yml --env-file .env down 
 	docker compose -p belega --file docker/prometheus/docker-compose.yml --env-file .env down 
 	docker compose -p belega --file docker/ssl/docker-compose.yml --env-file .env down nginx 
+
 
 rm:
 	docker compose -p belega --file docker/service/docker-compose.yml --env-file .env rm 
