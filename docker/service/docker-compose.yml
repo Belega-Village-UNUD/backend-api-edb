@@ -2,7 +2,7 @@ version: "3.4"
 services:
   app:
     container_name: backend-ecommerce-desa-belega
-    image: belega-village-unud/backend-api-edb:v1
+    image: ghcr.io/belega-village-unud/backend-api-edb:v1
     env_file:
       - ../../.env
     restart: always
