@@ -1,5 +1,16 @@
 version: "3.4"
 services:
+  duckdns:
+    container_name: duckdns-ecommerce-desa-belega
+    image: lscr.io/linuxserver/duckdns:latest
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Jakarta
+      - SUBDOMAINS=belega
+      - TOKEN=${DUCKDNS_TOKEN}
+    restart: unless-stopped
+
   nginx:
     container_name: nginx-ecommerce-desa-belega
     image: nginx:latest
