@@ -1,0 +1,41 @@
+version: "3.4"
+services:
+  prometheus:
+    container_name: prometheus-ecommerce-desa-belega
+    image: prom/prometheus
+    ports:
+      - ${PROMETHEUS_PORT}:9090
+    expose:
+      - ${PROMETHEUS_PORT}
+    networks:
+      - belega_service
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+    volumes:
+      - ../../prometheus:/etc/prometheus
+      - prometheus-config:/prometheus
+
+  alertmanager:
+    container_name: alertmanager-ecommerce-desa-belega
+    image: prom/alertmanager
+    ports:
+      - ${ALERTMANAGER_PORT}:9093
+    command:
+      - --config.file=/etc/alertmanager/alertmanager.yml
+    depends_on:
+      - prometheus
+    volumes:
+      - ../../alertmanager:/etc/alertmanager
+      - alertmanager-config:/etc/alertmanager
+    networks:
+      - belega_service
+
+networks:
+  belega_service:
+    external: true
+
+volumes:
+  prometheus-config:
+    driver: local
+  alertmanager-config:
+    driver: local
