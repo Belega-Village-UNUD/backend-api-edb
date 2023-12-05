@@ -1,0 +1,28 @@
+version: "3.4"
+services:
+  nginx:
+    container_name: nginx-ecommerce-desa-belega
+    image: nginx:latest
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ../../nginx:/etc/nginx/conf.d/:ro
+      - ../../certbot/www:/var/www/certbot/:ro
+    networks:
+      - belega_service
+
+  certbot:
+    container_name: certbot-ecommerce-desa-belega
+    image: certbot/certbot:latest
+    volumes:
+      - ../../certbot/conf:/etc/letsencrypt/:rw
+      - ../../certbot/www:/var/www/certbot/:rw
+    depends_on:
+      - nginx
+    networks:
+      - belega_service
+
+networks:
+  belega_service:
+    external: true
