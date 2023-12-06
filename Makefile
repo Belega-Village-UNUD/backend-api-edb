@@ -33,9 +33,11 @@ ipdb:
 ipsqlpad:
 	docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' sqlpad-ecommerce-desa-belega
 
-cert:
+gen_key:
 	# generate ssl key 
 	openssl dhparam -out ./nginx/dhparam/dhparam-2048.pem 2048
+
+ssl:
 	docker compose -p belega --file docker/ssl/docker-compose.yml --env-file .env up nginx certbot
 
 add-docker:
