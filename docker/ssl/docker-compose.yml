@@ -23,18 +23,25 @@ services:
       - ../../nginx/conf.d:/etc/nginx/conf.d
       - ../../nginx/dhparam:/etc/nginx/dhparam
       - ../../certbot/conf:/etc/letsencrypt
-      - ../../certbot/www:/var/www/certbot
     networks:
       - belega_service
 
   certbot:
     container_name: certbot-ecommerce-desa-belega
-    image: certbot/certbot:latest
-    command: certonly --webroot -w /var/www/certbot --force-renewal --email ${ADMIN_EMAIL} --agree-tos --no-eff-email -d belega.duckdns.org 
+    image: infinityofspace/certbot_dns_duckdns:latest
+    command:
+      - certonly
+      - --non-interactive
+      - --preferred-challenges dns
+      - --email ${ADMIN_EMAIL}
+      - --agree-tos
+      - --authenticator dns-duckdns
+      - --dns-duckdns-token ${DUCKDNS_TOKEN}
+      - --dns-duckdns-propagation-seconds 60
+      - -d ${HOST}
     volumes:
       - ../../certbot/conf:/etc/letsencrypt
       - ../../certbot/logs:/var/log/letsencrypt
-      - ../../certbot/www:/var/www/certbot
     networks:
       - belega_service
 
