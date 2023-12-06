@@ -10,6 +10,8 @@ services:
       - SUBDOMAINS=belega
       - TOKEN=${DUCKDNS_TOKEN}
     restart: unless-stopped
+    networks:
+      - belega_service
 
   nginx:
     container_name: nginx-ecommerce-desa-belega
@@ -18,17 +20,21 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - ../../nginx:/etc/nginx/conf.d/:ro
-      - ../../certbot/www:/var/www/certbot/:ro
+      - ../../nginx/conf.d:/etc/nginx/conf.d/:ro
+      - ../../nginx/dhparam:/etc/nginx/dhparam/:ro
+      - ../../certbot/conf:/etc/nginx/ssl/:ro
+      - ../../certbot/data:/usr/share/nginx/html/letsencrypt:ro
     networks:
       - belega_service
 
   certbot:
     container_name: certbot-ecommerce-desa-belega
     image: certbot/certbot:latest
+    command: certonly --webroot --webroot-path=/usr/share/nginx/html/letsencrypt --email ${ADMIN_EMAIL} --agree-tos --no-eff-email -d ${HOST}
     volumes:
       - ../../certbot/conf:/etc/letsencrypt/:rw
-      - ../../certbot/www:/var/www/certbot/:rw
+      - ../../certbot/logs:/var/log/letsencrypt/:rw
+      - ../../certbot/data:/usr/share/nginx/html/letsencrypt:rw
     depends_on:
       - nginx
     networks:
