@@ -22,19 +22,19 @@ services:
     volumes:
       - ../../nginx/conf.d:/etc/nginx/conf.d
       - ../../nginx/dhparam:/etc/nginx/dhparam
-      - ../../certbot/conf:/etc/nginx/ssl
-      - ../../certbot/data:/usr/share/nginx/html/letsencrypt
+      - ../../certbot/conf:/etc/letsencrypt
+      - ../../certbot/www:/var/www/certbot
     networks:
       - belega_service
 
   certbot:
     container_name: certbot-ecommerce-desa-belega
     image: certbot/certbot:latest
-    command: certonly --webroot --webroot-path=/usr/share/nginx/html/letsencrypt --email ${ADMIN_EMAIL} --agree-tos --no-eff-email -d ${HOST}
+    command: certonly --webroot -w /var/www/certbot --force-renewal --email ${ADMIN_EMAIL} --agree-tos --no-eff-email -d belega.duckdns.org 
     volumes:
       - ../../certbot/conf:/etc/letsencrypt
       - ../../certbot/logs:/var/log/letsencrypt
-      - ../../certbot/data:/usr/share/nginx/html/letsencrypt
+      - ../../certbot/www:/var/www/certbot
     networks:
       - belega_service
 
