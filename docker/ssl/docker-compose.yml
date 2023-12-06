@@ -20,10 +20,10 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - ../../nginx/conf.d:/etc/nginx/conf.d/:ro
-      - ../../nginx/dhparam:/etc/nginx/dhparam/:ro
-      - ../../certbot/conf:/etc/nginx/ssl/:ro
-      - ../../certbot/data:/usr/share/nginx/html/letsencrypt:ro
+      - ../../nginx/conf.d:/etc/nginx/conf.d
+      - ../../nginx/dhparam:/etc/nginx/dhparam
+      - ../../certbot/conf:/etc/nginx/ssl
+      - ../../certbot/data:/usr/share/nginx/html/letsencrypt
     networks:
       - belega_service
 
@@ -32,11 +32,9 @@ services:
     image: certbot/certbot:latest
     command: certonly --webroot --webroot-path=/usr/share/nginx/html/letsencrypt --email ${ADMIN_EMAIL} --agree-tos --no-eff-email -d ${HOST}
     volumes:
-      - ../../certbot/conf:/etc/letsencrypt/:rw
-      - ../../certbot/logs:/var/log/letsencrypt/:rw
-      - ../../certbot/data:/usr/share/nginx/html/letsencrypt:rw
-    depends_on:
-      - nginx
+      - ../../certbot/conf:/etc/letsencrypt
+      - ../../certbot/logs:/var/log/letsencrypt
+      - ../../certbot/data:/usr/share/nginx/html/letsencrypt
     networks:
       - belega_service
 
