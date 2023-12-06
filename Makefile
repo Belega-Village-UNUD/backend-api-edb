@@ -35,3 +35,6 @@ ipsqlpad:
 
 cert:
 	docker compose -p belega --file docker/ssl/docker-compose.yml run --rm certbot certonly --webroot --webroot-path /var/www/certbot/ --dry-run -d testing.instance.asia-southeast2-a.c.belega-village.unud.com
+	# generate ssl key 
+	openssl dhparam -out ./nginx/dhparam/dhparam-2048.pem 2048
+	docker compose -p belega --file docker/ssl/docker-compose.yml --env-file .env up nginx certbot
