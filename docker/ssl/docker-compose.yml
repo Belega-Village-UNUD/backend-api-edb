@@ -44,6 +44,15 @@ services:
     networks:
       - belega_service
 
+  certbot_cron:
+    build: .
+    container_name: certbot-cron-ecommerce-desa-belega
+    restart: unless-stopped
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    environment:
+      - CERTBOT_CONTAINER_NAME=certbot-ecommerce-desa-belega
+
 networks:
   belega_service:
     external: true
