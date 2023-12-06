@@ -38,7 +38,7 @@ gen_key:
 	openssl dhparam -out ./nginx/dhparam/dhparam-2048.pem 2048
 
 ssl:
-	docker compose -p belega --file docker/ssl/docker-compose.yml --env-file .env up nginx certbot
+	docker compose -p belega --file docker/ssl/docker-compose.yml --env-file .env up nginx certbot -d
 
 add-docker:
 	sudo apt-get update
