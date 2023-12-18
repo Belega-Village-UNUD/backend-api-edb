@@ -19,7 +19,7 @@ router.put(
 router.post(
   "/avatar",
   middleware.restrict,
-  image.single("avatar"),
+  image.single("product"),
   controller.upAvatar
 );
 router.delete("/", controller.deleteUser);
