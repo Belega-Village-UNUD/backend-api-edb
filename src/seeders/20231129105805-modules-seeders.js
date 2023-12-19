@@ -21,33 +21,18 @@ module.exports = {
 
     for (let property in MODULE) {
       const module = await Module.findOne({ where: { name: property } });
-      const roleSeller = await Role.findOne({ where: { name: ROLE.SELLER } });
       var roleUser = await Role.findOne({ where: { name: ROLE.USER } });
 
-      const access = await Access.findOne({
-        where: { role_id: roleSeller.id, module_id: module.id },
-      });
-
-      if (!access) {
-        await Access.create({
-          id: nanoid(10),
-          role_id: roleSeller.id,
-          module_id: module.id,
-          read: true,
-          write: true,
-        });
-      }
-
-      const accessUser = await Access.findOne({
+      const shopAccessUser = await Access.findOne({
         where: { role_id: roleUser.id, module_id: module.id },
       });
-      if (!accessUser) {
+      if (!shopAccessUser) {
         await Access.create({
           id: nanoid(10),
           role_id: roleUser.id,
           module_id: module.id,
-          read: false,
-          write: false,
+          read: true,
+          write: true,
         });
       }
     }
