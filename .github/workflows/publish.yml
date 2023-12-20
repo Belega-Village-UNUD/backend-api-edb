@@ -38,7 +38,7 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }} github actions to run publish docker image to github packages
-			- name: SAST Trivy Checks
+      - name: SAST Trivy Checks
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/${{ steps.meta.outputs.lables }}:${{ steps.meta.outpus.tags }}
