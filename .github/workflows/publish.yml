@@ -43,8 +43,13 @@ jobs:
     permissions:
       contents: read
     steps:
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
       - name: echo output
-        run: echo "${{ needs.build-and-push-image.meta.outputs.tags }}"
+        run: echo "${{ steps.meta.outputs.tags }}"
       #- name: SAST Trivy Checks
       #  uses: aquasecurity/trivy-action@master
       #  with:
