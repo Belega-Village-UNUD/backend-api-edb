@@ -2,7 +2,7 @@ name: Create and publish a API to Cloud Run
 
 on:
   push:
-    branches: ["EDP-67-sast-on-container"]
+    branches: [""]
 
 env:
   IMAGE_NAME: belega-commerce-api-image
