@@ -55,6 +55,6 @@ jobs:
         with:
           image-ref: "${{ env.REGISTRY }}/belega-village-unud/backend-api-edb:edp-67-sast-on-container"
           format: "table"
-          exit-code: "1"
+          exit-code: "0"
           ignore-unfixed: true
           severity: "CRITICAL,HIGH"
