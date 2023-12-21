@@ -1,4 +1,4 @@
-name: Publish API Docker image into github container registry
+name: Publish
 
 on:
   push:
@@ -57,4 +57,4 @@ jobs:
           format: "table"
           exit-code: "0"
           ignore-unfixed: true
-          severity: "CRITICAL,HIGH"
+          severity: "CRITICAL,HIGH,MEDIUM"
