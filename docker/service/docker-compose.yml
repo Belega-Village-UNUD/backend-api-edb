@@ -2,13 +2,14 @@ version: "3.4"
 services:
   app:
     container_name: backend-ecommerce-desa-belega
-    image: belega-village-unud/backend-ecommerce-desa-belega:v1
+    image: ghcr.io/belega-village-unud/backend-api-edb:v1
+    env_file:
+      - ../../.env
     restart: always
-    env_file: .env
     ports:
       - ${PORT}:${PORT}
     networks:
-      - ecommerce-desa-belega
+      - service
     depends_on:
       - db
 
@@ -22,7 +23,7 @@ services:
     ports:
       - ${DEV_DB_PORT}:5432
     networks:
-      - ecommerce-desa-belega
+      - service
     volumes:
       - db-data:/var/lib/postgresql/data
 
@@ -49,12 +50,12 @@ services:
       SQLPAD_CONNECTIONS__ecommerce-belega__multiStatementTransactionEnabled: "true"
       SQLPAD_CONNECTIONS__ecommerce-belega__idleTimeoutSeconds: 86400
     networks:
-      - ecommerce-desa-belega
+      - service
     volumes:
       - ecommerce-data:/etc/sqlpad/ecommerce-data
 
 networks:
-  ecommerce-desa-belega:
+  service:
     driver: bridge
 
 volumes:
