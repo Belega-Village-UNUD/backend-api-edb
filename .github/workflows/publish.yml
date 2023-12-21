@@ -53,7 +53,7 @@ jobs:
       - name: SAST Trivy Checks
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:edp-67-sast-on-container"
+          image-ref: "${{ env.REGISTRY }}/belega-village-unud/backend-api-edb:edp-67-sast-on-container"
           format: "table"
           exit-code: "1"
           ignore-unfixed: true
