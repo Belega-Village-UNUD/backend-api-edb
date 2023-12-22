@@ -69,6 +69,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      security-events: write
+      actions: read
     steps:
       - name: SAST Trivy Container Checks
         uses: aquasecurity/trivy-action@master
