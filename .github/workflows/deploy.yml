@@ -2,9 +2,8 @@ name: Deploy
 
 on:
   workflow_run:
-    workflows: ["Publish"]
-    types:
-      - completed
+    workflows: [Publish]
+    types: [completed]
 
 env:
   IMAGE_NAME: belega-commerce-api-image
