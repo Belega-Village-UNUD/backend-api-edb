@@ -13,7 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      security-events: write
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
       - name: SAST Trivy Repository Checks
         uses: aquasecurity/trivy-action@master
         with:
