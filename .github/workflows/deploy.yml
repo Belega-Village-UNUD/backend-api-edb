@@ -1,6 +1,8 @@
 name: Deploy
 
 on:
+  push:
+    branches: ["EDP-67-sast-on-container"]
   workflow_run:
     workflows: [Publish]
     types: [completed]
