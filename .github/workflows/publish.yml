@@ -86,3 +86,32 @@ jobs:
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: "trivy-results-container.sarif"
+
+  deploy:
+    needs: sast-container-checks
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+      packages: read
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Google Auth
+        id: auth
+        uses: "google-github-actions/auth@v1"
+        with:
+          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
+          service_account: ${{ secrets.CLOUD_RUN_SA }}
+      - name: Docker configuration
+        id: docker-config
+        run: |-
+          gcloud auth print-access-token \
+            --impersonate-service-account ${{ secrets.CLOUD_RUN_SA }} | docker login \
+            -u oauth2accesstoken \
+            --password-stdin https://${{ secrets.REGION }}-docker.pkg.dev
+      - name: Deploy App
+        id: deploy
+        run: |
+          gcloud compute instances list
