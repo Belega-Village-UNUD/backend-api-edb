@@ -1,11 +1,10 @@
 name: Deploy
 
 on:
-  push:
-    branches: ["EDP-67-sast-on-container"]
   workflow_run:
     workflows: [Publish]
     types: [completed]
+    branches: ["EDP-67-sast-on-container"]
 
 env:
   IMAGE_NAME: belega-commerce-api-image
