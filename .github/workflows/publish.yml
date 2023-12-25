@@ -76,10 +76,9 @@ jobs:
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: "${{ env.REGISTRY }}/belega-village-unud/backend-api-edb:edp-67-sast-on-container"
-          format: "template"
+          format: "sarif"
           exit-code: "0"
           ignore-unfixed: true
-          template: "@/contrib/sarif.tpl"
           output: "trivy-results-container.sarif"
           severity: "CRITICAL,HIGH,MEDIUM"
 
