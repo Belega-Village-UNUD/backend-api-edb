@@ -5,8 +5,10 @@ on:
     branches: ["EDP-67-sast-on-container"]
 
 env:
-  IMAGE_NAME: belega-commerce-api-image
-  REPOSITORY: ${{ github.repository }}
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  INSTANCE_NAME: belega-village-unud
+  ZONE: asia-southeast2-a
 
 jobs:
   deploy:
