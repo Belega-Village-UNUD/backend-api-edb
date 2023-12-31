@@ -11,13 +11,11 @@ env:
   ZONE: asia-southeast2-a
 
 jobs:
-  deploy:
+  build-and-push-image:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     permissions:
       contents: read
       packages: write
-      id-token: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
