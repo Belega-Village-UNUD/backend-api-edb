@@ -99,29 +99,4 @@ jobs:
         id: deploy
         run: |
           gcloud compute instances list
-      #  uses: google-github-actions/deploy-cloudrun@v1
-      #  with:
-      #    service: ${{ secrets.SERVICE_NAME }}
-      #    region: ${{ secrets.REGION }}
-      #    image: ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE_NAME }}:latest
-      #    env_vars: |
-      #      NODE_ENV=${{ secrets.NODE_ENV }}
-      #      STAGING_DB_USERNAME=${{ secrets.STAGING_DB_USERNAME }}
-      #      STAGING_DB_NAME=${{ secrets.STAGING_DB_NAME }}
-      #      STAGING_DB_PASSWORD=${{ secrets.STAGING_DB_PASSWORD }}
-      #      STAGING_DB_HOST=${{ secrets.STAGING_DB_HOST }}
-      #      STAGING_DB_PORT=${{ secrets.STAGING_DB_PORT }}
-      #      JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}
-      #      JWT_EXPIRES=${{ secrets.JWT_EXPIRES }}
-      #      JWT_OTP_KEY=${{ secrets.JWT_OTP_KEY }}
-      #      JWT_OTP_EXPIRES=${{ secrets.JWT_OTP_EXPIRES }}
-      #      GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
-      #      GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
-      #      GOOGLE_REDIRECT_URI=${{ secrets.GOOGLE_REDIRECT_URI }}
-      #      GOOGLE_REFRESH_TOKEN=${{ secrets.GOOGLE_REFRESH_TOKEN }}
-      #      GOOGLE_EMAIL=${{ secrets.GOOGLE_EMAIL }}
-      #      BELEGA_ADMIN_EMAIL=${{ secrets.BELEGA_ADMIN_EMAIL }}
-      #      BELEGA_ADMIN_PASSWORD=${{ secrets.BELEGA_ADMIN_PASSWORD }}
-      #      IMAGEKIT_PUBLIC_KEY=${{ secrets.IMAGEKIT_PUBLIC_KEY }}
-      #      IMAGEKIT_PRIVATE_KEY=${{ secrets.IMAGEKIT_PRIVATE_KEY }}
-      #      IMAGEKIT_URL_ENDPOINT=${{ secrets.IMAGEKIT_URL_ENDPOINT }}
+
