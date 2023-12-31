@@ -68,12 +68,33 @@ jobs:
         with:
           sarif_file: "trivy-results-container.sarif"
 
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+      packages: read
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@
+
       - name: Google Auth
         id: auth
         uses: "google-github-actions/auth@v1"
         with:
           workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
           service_account: ${{ secrets.CLOUD_RUN_SA }}
+
+      - name: SSH to Compute Engine
+        id: compute-ssh
+        uses: "google-github-actions/ssh-compute@v1"
+        with:
+          instance_name: ${{ env.INSTANCE_NAME }}
+          zone: ${{ env.ZONE }}
+          ssh_private_key: ${{ secrets.SERVICE_ACCOUNT_SECRET_SSH_KEY }}
+          command: "echo 'Successfully connected to Compute Engine.'"
+
       - name: Deploy App
         id: deploy
         run: |
