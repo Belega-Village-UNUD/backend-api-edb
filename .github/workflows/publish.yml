@@ -4,10 +4,6 @@ on:
   push:
     branches: ["EDP-67-sast-on-container"]
 
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
-
 jobs:
   sast-repo-checks:
     runs-on: ubuntu-latest
