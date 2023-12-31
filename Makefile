@@ -55,3 +55,7 @@ add-docker:
 	sudo usermod -aG docker $USER
 	newgrp docker
 	sudo apt install make
+
+gen_ssh_key:
+	ssh-keygen -t rsa -f ~/.ssh/backend-api-edb-sa@belega-village-unud.iam.gserviceaccount.com -C backend-api-edb-sa@belega-village-unud.iam.gserviceaccount.com -b 2048
+
