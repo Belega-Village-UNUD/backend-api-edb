@@ -77,7 +77,7 @@ jobs:
       id-token: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@
+        uses: actions/checkout@v4
 
       - name: Google Auth
         id: auth
