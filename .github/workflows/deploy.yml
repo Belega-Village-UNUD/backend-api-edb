@@ -13,6 +13,7 @@ env:
 jobs:
   build-and-push-image:
     runs-on: ubuntu-latest
+    environment: staging
     permissions:
       contents: read
       packages: write
@@ -47,6 +48,7 @@ jobs:
 
   sast-container-checks:
     needs: build-and-push-image
+    environment: staging
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -71,6 +73,7 @@ jobs:
   deploy:
     needs: sast-container-checks
     runs-on: ubuntu-latest
+    environment: staging
     permissions:
       contents: read
       actions: read
