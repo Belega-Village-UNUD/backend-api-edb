@@ -69,6 +69,7 @@ jobs:
           sarif_file: "trivy-results-container.sarif"
 
   deploy:
+    needs: sast-container-checks
     runs-on: ubuntu-latest
     permissions:
       contents: read
