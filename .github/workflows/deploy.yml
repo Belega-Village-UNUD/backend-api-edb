@@ -7,7 +7,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  INSTANCE_NAME: belega-village-unud
+  INSTANCE_NAME: belega-instance
   ZONE: asia-southeast2-a
 
 jobs:
