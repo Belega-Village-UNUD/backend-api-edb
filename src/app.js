@@ -24,6 +24,9 @@ Sentry.init({
   profilesSampleRate: 1.0,
 });
 
+app.use(Sentry.Handlers.requestHandler());
+app.use(Sentry.Handlers.tracingHandler());
+
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -45,8 +48,6 @@ app.get("/metrics", async (req, res) => {
   res.end(await Prometheus.client.register.metrics());
 });
 
-app.use(Sentry.Handlers.requestHandler());
-app.use(Sentry.Handlers.tracingHandler());
 app.use(Sentry.Handlers.errorHandler());
 
 app.use(function onError(err, req, res, next) {
