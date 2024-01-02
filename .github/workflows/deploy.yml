@@ -11,6 +11,33 @@ env:
   ZONE: asia-southeast2-a
 
 jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: staging
+    permissions:
+      contents: read
+      actions: read
+      packages: read
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Google Auth
+        id: auth
+        uses: "google-github-actions/auth@v1"
+        with:
+          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
+          service_account: ${{ secrets.CLOUD_RUN_SA }}
+
+      - name: SSH to Compute Engine and Deploy
+        id: compute-ssh-deploy
+        uses: "google-github-actions/ssh-compute@v1"
+        with:
+          instance_name: ${{ env.INSTANCE_NAME }}
+          zone: ${{ env.ZONE }}
+          ssh_private_key: ${{ secrets.SERVICE_ACCOUNT_SECRET_SSH_KEY }}
+          command: "docker ps"
 #  build-and-push-image:
 #    runs-on: ubuntu-latest
 #    environment: staging
@@ -69,32 +96,32 @@ jobs:
 #        uses: github/codeql-action/upload-sarif@v2
 #        with:
 #          sarif_file: "trivy-results-container.sarif"
-
-  deploy:
-    needs: sast-container-checks
-    runs-on: ubuntu-latest
-    environment: staging
-    permissions:
-      contents: read
-      actions: read
-      packages: read
-      id-token: write
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Google Auth
-        id: auth
-        uses: "google-github-actions/auth@v1"
-        with:
-          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
-          service_account: ${{ secrets.CLOUD_RUN_SA }}
-
-      - name: SSH to Compute Engine and Deploy
-        id: compute-ssh-deploy
-        uses: "google-github-actions/ssh-compute@v1"
-        with:
-          instance_name: ${{ env.INSTANCE_NAME }}
-          zone: ${{ env.ZONE }}
-          ssh_private_key: ${{ secrets.SERVICE_ACCOUNT_SECRET_SSH_KEY }}
-          command: "docker ps"
+#
+#  deploy:
+#    needs: sast-container-checks
+#    runs-on: ubuntu-latest
+#    environment: staging
+#    permissions:
+#      contents: read
+#      actions: read
+#      packages: read
+#      id-token: write
+#    steps:
+#      - name: Checkout repository
+#        uses: actions/checkout@v4
+#
+#      - name: Google Auth
+#        id: auth
+#        uses: "google-github-actions/auth@v1"
+#        with:
+#          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
+#          service_account: ${{ secrets.CLOUD_RUN_SA }}
+#
+#      - name: SSH to Compute Engine and Deploy
+#        id: compute-ssh-deploy
+#        uses: "google-github-actions/ssh-compute@v1"
+#        with:
+#          instance_name: ${{ env.INSTANCE_NAME }}
+#          zone: ${{ env.ZONE }}
+#          ssh_private_key: ${{ secrets.SERVICE_ACCOUNT_SECRET_SSH_KEY }}
+#          command: "docker ps"
