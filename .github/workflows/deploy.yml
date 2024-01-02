@@ -37,7 +37,7 @@ jobs:
           instance_name: ${{ env.INSTANCE_NAME }}
           zone: ${{ env.ZONE }}
           ssh_private_key: ${{ secrets.SERVICE_ACCOUNT_SECRET_SSH_KEY }}
-          command: "sudo docker ps"
+          command: "cd backend-api-edb; bash shell/deploy.sh;"
 #  build-and-push-image:
 #    runs-on: ubuntu-latest
 #    environment: staging
