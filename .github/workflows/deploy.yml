@@ -97,4 +97,4 @@ jobs:
           instance_name: ${{ env.INSTANCE_NAME }}
           zone: ${{ env.ZONE }}
           ssh_private_key: ${{ secrets.SERVICE_ACCOUNT_SECRET_SSH_KEY }}
-          command: "ls -la"
+          command: "sh $HOME/backend-api-edb/shell/deploy.sh"
