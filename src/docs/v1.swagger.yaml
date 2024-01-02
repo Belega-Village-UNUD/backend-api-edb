@@ -5,7 +5,7 @@ info:
     This is the API Collection for Belega Commerce using Express JS, it runs Google API
   version: 1.0.0
 servers:
-- url: https://belega-commerce-api-staging-tku2lejm6q-et.a.run.app
+- url: https://belega.duckdns.org
   description: Staging server
 - url: http://localhost:3333
   description: Local server
