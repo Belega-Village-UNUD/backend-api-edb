@@ -1,4 +1,6 @@
 require("dotenv").config();
+const Sentry = require("@sentry/node");
+const { ProfilingIntegration } = require("@sentry/profiling-node");
 const express = require("express");
 const cors = require("cors");
 const router = require("./routes");
@@ -10,6 +12,17 @@ const middlewares = require("./middlewares");
 const { response } = require("./utils/response.utils");
 const TIMEOUT = 5000;
 const app = express();
+
+Sentry.init({
+  dsn: process.env.DSN_SENTRY,
+  integrations: [
+    new Sentry.Integrations.Http({ tracing: true }),
+    new Sentry.Integrations.Express({ app }),
+    new ProfilingIntegration(),
+  ],
+  tracesSampleRate: 1.0,
+  profilesSampleRate: 1.0,
+});
 
 app.use(cors());
 app.use(express.json());
@@ -30,6 +43,21 @@ app.get("/metrics/json", async (req, res) => {
 app.get("/metrics", async (req, res) => {
   res.set("Content-Type", Prometheus.client.register.contentType);
   res.end(await Prometheus.client.register.metrics());
+});
+
+app.use(Sentry.Handlers.requestHandler());
+app.use(Sentry.Handlers.tracingHandler());
+app.use(Sentry.Handlers.errorHandler());
+
+app.use(function onError(err, req, res, next) {
+  // The error id is attached to `res.sentry` to be returned
+  // and optionally displayed to the user for support.
+  res.statusCode = 500;
+  // res.end(res.sentry + "\n");
+  res.status(500).json({
+    status: false,
+    message: err,
+  });
 });
 
 app.listen(process.env.PORT, async () => {
