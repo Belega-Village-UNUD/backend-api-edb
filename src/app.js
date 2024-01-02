@@ -1,4 +1,6 @@
 require("dotenv").config();
+const Sentry = require("@sentry/node");
+const { ProfilingIntegration } = require("@sentry/profiling-node");
 const express = require("express");
 const cors = require("cors");
 const router = require("./routes");
