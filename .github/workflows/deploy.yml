@@ -39,6 +39,7 @@ jobs:
           ssh_private_key: ${{ secrets.SERVICE_ACCOUNT_SECRET_SSH_KEY }}
           command: "pwd"
           user: ${{ secrets.GCP_INSTANCE_USER }}
+          command: "cd backend-api-edb; git status"
 #  build-and-push-image:
 #    runs-on: ubuntu-latest
 #    environment: staging
