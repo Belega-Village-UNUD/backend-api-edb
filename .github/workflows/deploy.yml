@@ -102,5 +102,7 @@ jobs:
       - name: Deploy App
         id: deploy
         run: |
-          gcloud compute instances list
-
+          cd backend-api-edb;
+          git pull;
+          make build;
+          make deploy;
