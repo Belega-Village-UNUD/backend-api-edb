@@ -90,19 +90,11 @@ jobs:
           workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
           service_account: ${{ secrets.CLOUD_RUN_SA }}
 
-      - name: SSH to Compute Engine
-        id: compute-ssh
+      - name: SSH to Compute Engine and Deploy
+        id: compute-ssh-deploy
         uses: "google-github-actions/ssh-compute@v1"
         with:
           instance_name: ${{ env.INSTANCE_NAME }}
           zone: ${{ env.ZONE }}
           ssh_private_key: ${{ secrets.SERVICE_ACCOUNT_SECRET_SSH_KEY }}
           command: "echo 'Successfully connected to Compute Engine.'"
-
-      - name: Deploy App
-        id: deploy
-        run: |
-          cd backend-api-edb;
-          git pull;
-          make build;
-          make deploy;
