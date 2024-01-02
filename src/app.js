@@ -45,6 +45,10 @@ app.get("/metrics", async (req, res) => {
   res.end(await Prometheus.client.register.metrics());
 });
 
+app.use(Sentry.Handlers.requestHandler());
+app.use(Sentry.Handlers.tracingHandler());
+app.use(Sentry.Handlers.errorHandler());
+
 app.listen(process.env.PORT, async () => {
   try {
     try {
