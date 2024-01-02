@@ -1,8 +1,6 @@
-#!/bin/bash
+#!/usr/bin/bash
 
-git clone https://github.com/Belega-Village-UNUD/backend-api-edb.git
-cd backend-api-edb
-git checkout EDP-67-sast-on-container
-docker pull 
-make up
-docker ps 
+git pull origin EDP-67-sast-on-container;
+make build up;
+docker ps;
+
