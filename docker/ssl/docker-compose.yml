@@ -28,6 +28,7 @@ services:
 
   certbot:
     container_name: certbot-ecommerce-desa-belega
+    user: ${USER}
     image: infinityofspace/certbot_dns_duckdns:latest
     command: certonly
       --non-interactive
