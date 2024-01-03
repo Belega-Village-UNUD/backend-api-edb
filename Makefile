@@ -39,6 +39,9 @@ gen_key:
 ssl:
 	docker compose -p belega --file docker/ssl/docker-compose.yml --env-file .env up nginx -d
 
+dns:
+	docker compose -p belega --file docker/ssl/docker-compose.yml --env-file .env up -d
+
 add-docker:
 	sudo apt-get update
 	sudo apt-get -y  install ca-certificates curl gnupg
