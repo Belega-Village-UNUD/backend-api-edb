@@ -2,7 +2,7 @@ name: Deploy
 
 on:
   push:
-    branches: ["EDP-67-sast-on-container"]
+    branches: ["staging"]
 
 env:
   REGISTRY: ghcr.io
