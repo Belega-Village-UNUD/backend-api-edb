@@ -1,7 +1,6 @@
-const { User, Profile } = require("../../models");
-const { singleUpload } = require("../../utils/imagekit.utils");
-const { response } = require("../../utils/response.utils");
-const path = require("path");
+const { User, Profile } = require("../../../models");
+const { singleUpload } = require("../../../utils/imagekit.utils");
+const { response } = require("../../../utils/response.utils");
 
 const upAvatar = async (req, res) => {
   try {
