@@ -37,11 +37,10 @@ const verifyOTP = async (user, otp) => {
       message: "OTP expired, please request another OTP Code",
     };
 
-  const createdAt = moment(otpDB.createdAt);
-  const now = moment();
-  const minutesPass = now.diff(createdAt, "m");
+  const updatedAt = moment.utc(otpDB.updatedAt);
+  const now = moment().utc();
+  const minutesPass = now.diff(updatedAt, "m");
   if (minutesPass >= 1) {
-    console.log("OTP expired");
     return {
       success: false,
       message: "OTP expired, please request another OTP Code",
