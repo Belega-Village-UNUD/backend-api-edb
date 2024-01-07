@@ -40,6 +40,8 @@ const verifyOTP = async (user, otp) => {
   const createdAt = moment(otpDB.createdAt);
   const now = moment();
   const minutesPass = now.diff(createdAt, "m");
+  const updatedAt = moment.utc(otpDB.updatedAt);
+  const minutesPass = now.diff(updatedAt, "m");
   if (minutesPass >= 1) {
     console.log("OTP expired");
     return {
