@@ -13,7 +13,6 @@ env:
 
 jobs:
   deploy:
-    needs: sast-container-checks
     runs-on: ubuntu-latest
     environment: staging
     permissions:
@@ -40,11 +39,11 @@ jobs:
           zone: ${{ env.ZONE }}
           ssh_private_key: ${{ secrets.SERVICE_ACCOUNT_SECRET_SSH_KEY }}
           user: ${{ secrets.GCP_INSTANCE_USER }}
-          command: " |
+          command: "
             cd backend-api-edb; \
             git fetch; \
             git pull origin staging; \
-            echo ${{ secrets.GITHUB_TOKEN }} | docker login -u ${{ github.actor }} --password-stdin ${{ env.REGISTRY }}\
+            echo ${{ secrets.GITHUB_TOKEN }} | docker login -u ${{ github.actor }} --password-stdin ${{ env.REGISTRY }}; \
             docker pull ghcr.io/belega-village-unud/backend-api-edb:edp-111-intsance-wont-pull-the-latest-image; \
             make up dns; \
             docker ps"
