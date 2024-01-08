@@ -2,8 +2,7 @@ name: Deploy
 
 on:
   push:
-    branches: ["EDP-111-instance-wont-pull-the-latest-image"] # test in local branch
-    #branches: ["staging"]
+    branches: ["staging"]
 
 env:
   REGISTRY: ghcr.io
