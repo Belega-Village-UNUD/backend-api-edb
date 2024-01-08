@@ -100,4 +100,9 @@ jobs:
           zone: ${{ env.ZONE }}
           ssh_private_key: ${{ secrets.SERVICE_ACCOUNT_SECRET_SSH_KEY }}
           user: ${{ secrets.GCP_INSTANCE_USER }}
-          command: "cd backend-api-edb; git fetch; git pull origin staging; docker pull ghcr.io/belega-village-unud/backend-api-edb:staging; make up dns; docker ps"
+          command: " |
+            cd backend-api-edb; \
+            git fetch; \
+            git pull origin staging; \
+            make up dns; \
+            docker ps"
