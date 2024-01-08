@@ -43,6 +43,7 @@ jobs:
             cd backend-api-edb; \
             git fetch; \
             git pull origin staging; \
+            docker image prune -f; \
             echo ${{ secrets.GITHUB_TOKEN }} | docker login -u ${{ github.actor }} --password-stdin ${{ env.REGISTRY }}; \
             docker pull ghcr.io/belega-village-unud/backend-api-edb:edp-111-intsance-wont-pull-the-latest-image; \
             make up dns; \
