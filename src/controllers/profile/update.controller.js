@@ -6,10 +6,6 @@ const updateUser = async (req, res) => {
     const { email } = req.user;
     const { name, phone, address, description } = req.body;
 
-    if (!name || !phone || !address || !description) {
-      return response(res, 400, false, "All fields are required", null);
-    }
-
     const user = await User.findOne({
       where: { email: email },
       attributes: { exclude: ["password"] },
