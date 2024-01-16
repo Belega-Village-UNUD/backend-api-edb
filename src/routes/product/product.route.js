@@ -9,13 +9,13 @@ const { image } = require("../../configs/multer.config");
 router.get(
   "/all",
   middleware.restrict,
-  // middleware.rbac(MODULE.PRODUCT, true, true),
+  middleware.rbac(MODULE.PRODUCT, true, true),
   controllers.product.getAllProduct
 );
 router.get(
   "/:id",
   middleware.restrict,
-  // middleware.rbac(MODULE.PRODUCT, true, true),
+  middleware.rbac(MODULE.PRODUCT, true, true),
   controllers.product.getOneProduct
 );
 router.post(
@@ -35,13 +35,13 @@ router.post(
 router.put(
   "/:id",
   middleware.restrict,
-  // middleware.rbac(MODULE.PRODUCT, true, true),
+  middleware.rbac(MODULE.PRODUCT, true, true),
   controllers.product.updateProduct
 );
 router.delete(
   "/:id",
   middleware.restrict,
-  // middleware.rbac(MODULE.PRODUCT, true, true),
+  middleware.rbac(MODULE.PRODUCT, true, true),
   controllers.product.deleteProduct
 );
 
