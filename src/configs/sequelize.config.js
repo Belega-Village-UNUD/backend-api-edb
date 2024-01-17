@@ -35,7 +35,7 @@ module.exports = {
         /Deadlock/i,
         "SQLITE_BUSY",
       ],
-      max: 10,
+      max: 5,
     },
   },
   staging: {
@@ -53,7 +53,7 @@ module.exports = {
         /Deadlock/i,
         "SQLITE_BUSY",
       ],
-      max: 10,
+      max: 5,
     },
   },
   production: {
@@ -71,7 +71,7 @@ module.exports = {
         /Deadlock/i,
         "SQLITE_BUSY",
       ],
-      max: 10,
+      max: 5,
     },
   },
 };
