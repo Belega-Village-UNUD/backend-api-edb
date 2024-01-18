@@ -1,8 +1,17 @@
 const Midtrans = require("midtrans-client");
+const { User } = require("../../models");
 const { response } = require("../../utils/response.utils");
 
 const getTokenMidtrans = async (req, res) => {
   try {
+    const { email } = req.user;
+    const user = await User.findOne({
+      where: { email: email },
+      attributes: { exclude: ["password"] },
+    });
+
+    if (!user) return response(res, 404, false, "User not found", null);
+
     let snap = new Midtrans.Snap({
       isProduction: false,
       serverKey: process.env.MIDTRANS_SERVER_KEY,
@@ -23,8 +32,8 @@ const getTokenMidtrans = async (req, res) => {
       },
     };
 
-    const token = await snap.createTransactionToken(parameter);
-    return response(res, 201, true, "Get Token is Success", { token });
+    const midtrans_token = await snap.createTransactionToken(parameter);
+    return response(res, 201, true, "Get Token is Success", { midtrans_token });
   } catch (error) {
     return response(res, error.status || 500, false, error.message, null);
   }

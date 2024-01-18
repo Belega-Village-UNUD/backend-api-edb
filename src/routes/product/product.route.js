@@ -9,29 +9,29 @@ const { image } = require("../../configs/multer.config");
 router.get(
   "/all",
   middleware.restrict,
-  // middleware.rbac(MODULE.PRODUCT, true, true),
+  middleware.rbac(MODULE.PRODUCT, true, true),
   controllers.product.getAllProduct
 );
 router.get(
   "/:id",
   middleware.restrict,
-  // middleware.rbac(MODULE.PRODUCT, true, true),
+  middleware.rbac(MODULE.PRODUCT, true, true),
   controllers.product.getOneProduct
 );
 router.post(
   "/",
   middleware.restrict,
-  // middleware.rbac(MODULE.PRODUCT, true, true),
-  image.single("productImage"),
+  middleware.rbac(MODULE.PRODUCT, true, true),
+
   controllers.product.createProduct
 );
-// router.post(
-//   "/image",
-//   middleware.restrict,
-//   middleware.rbac(MODULE.PRODUCT, true, true),
-//   image.single("productImage"),
-//   controllers.product.uploadImage
-// );
+router.post(
+  "/image",
+  middleware.restrict,
+  middleware.rbac(MODULE.PRODUCT, true, true),
+  image.single("productImage"),
+  controllers.product.uploadImage
+);
 router.put(
   "/:id",
   middleware.restrict,

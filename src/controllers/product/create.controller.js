@@ -1,7 +1,6 @@
 const { nanoid } = require("nanoid");
 const { Product, User } = require("../../models");
 const { response } = require("../../utils/response.utils");
-const { singleUpload } = require("../../utils/imagekit.utils");
 
 const createProduct = async (req, res) => {
   try {
@@ -12,11 +11,6 @@ const createProduct = async (req, res) => {
       where: { id },
       attributes: { exclude: ["password"] },
     });
-    const upload = await singleUpload(req, res);
-    console.log(
-      "🚀 ~ file: create.controller.js:16 ~ createProduct ~ upload:",
-      upload
-    );
 
     const product = await Product.create({
       id: nanoid(10),
@@ -24,7 +18,6 @@ const createProduct = async (req, res) => {
       store_id: store_id,
       type_id: productTypeId,
       name_product: name_product,
-      image_product: upload.url,
       desc_product: description,
       price: price,
       stock: stock,

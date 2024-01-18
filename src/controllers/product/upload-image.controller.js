@@ -1,5 +1,6 @@
-const { response } = require("express");
 const { Product, User } = require("../../models");
+const { response } = require("../../utils/response.utils");
+const { singleUpload } = require("../../utils/imagekit.utils");
 
 const imageProduct = async (req, res) => {
   try {
@@ -17,7 +18,6 @@ const imageProduct = async (req, res) => {
     response(res, 200, upload.success, "Successfully Update Product Image", {
       user,
       product,
-      url: upload.url,
     });
   } catch (err) {
     return response(res, err.status || 500, false, err.message, null);
