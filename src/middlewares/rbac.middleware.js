@@ -2,7 +2,12 @@ const { Role, Module, Access } = require("../models");
 const { response } = require("../utils/response.utils");
 const { Op } = require("sequelize");
 
-const rbac = (moduleName, readAccess = false, writeAccess = false) => {
+const rbac = (
+  moduleName,
+  roleName,
+  readAccess = false,
+  writeAccess = false
+) => {
   return async (req, res, next) => {
     // ketik write access true dia tidak melihat read accessnya
     const { role } = req.user;
