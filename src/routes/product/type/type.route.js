@@ -1,37 +1,10 @@
 const router = require("express").Router();
-const controllers = require("../../../controllers/product");
-const middleware = require("../../../middlewares");
-const { MODULE, ROLE } = require("../../../utils/enum.utils");
+const guest = require("./guest/guest.route");
+const seller = require("./seller/seller.route");
+const buyer = require("./buyer/buyer.route");
 
-router.get(
-  "/all",
-  middleware.restrict,
-  middleware.rbac(MODULE.PRODUCT, ROLE.SELLER, true, true),
-  controllers.productType.getAllType
-);
-router.get(
-  "/:id",
-  middleware.restrict,
-  middleware.rbac(MODULE.PRODUCT, ROLE.SELLER, true, true),
-  controllers.productType.getOneType
-);
-router.post(
-  "/",
-  middleware.restrict,
-  middleware.rbac(MODULE.PRODUCT, ROLE.SELLER, true, true),
-  controllers.productType.createType
-);
-router.put(
-  "/:id",
-  middleware.restrict,
-  middleware.rbac(MODULE.PRODUCT, ROLE.SELLER, true, true),
-  controllers.productType.updateType
-);
-router.delete(
-  "/:id",
-  middleware.restrict,
-  middleware.rbac(MODULE.PRODUCT, ROLE.SELLER, true, true),
-  controllers.productType.deleteType
-);
+router.use("/guest", guest);
+router.use("/seller", seller);
+router.use("/buyer", buyer);
 
 module.exports = router;

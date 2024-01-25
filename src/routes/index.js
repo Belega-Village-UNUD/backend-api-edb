@@ -5,7 +5,8 @@ const profile = require("./profile/profile.route");
 const docs = require("./docs/docs.route");
 const google = require("./google/google.route");
 const media = require("./media/media.route");
-const products = require("./product/product.route");
+const product = require("./product/product.route");
+const typeProduct = require("./product/type/type.route");
 const cart = require("./shop/cart.route");
 const transaction = require("./transaction/transaction.route");
 
@@ -18,7 +19,10 @@ router.use("/profiles", profile);
 router.use("/docs", docs);
 router.use("/google", google);
 router.use("/media", media);
-router.use("/products", products);
+
+router.use("/product", product);
+router.use("/product/type", typeProduct);
+
 router.use("/cart", cart);
 router.use("/transaction", transaction);
 

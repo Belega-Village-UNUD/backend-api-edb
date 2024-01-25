@@ -1,13 +1,9 @@
-const getAllType = require("./get-all.controller");
-const getOneType = require("./get-one.controller");
-const createType = require("./create.controller");
-const updateType = require("./update.controller");
-const deleteType = require("./delete.controller");
+const guest = require("./guest");
+const seller = require("./seller");
+const buyer = require("./buyer");
 
 module.exports = {
-  getAllType,
-  getOneType,
-  createType,
-  updateType,
-  deleteType,
+  guest,
+  seller,
+  buyer,
 };

@@ -1,20 +1,27 @@
-const getAllProduct = require("./get-all.controller");
-const getOneProduct = require("./get-one.controller");
-const createProduct = require("./create.controller");
-const updateProduct = require("./update.controller");
-const deleteProduct = require("./delete.controller");
-const uploadImage = require("./upload-image.controller");
+// const getAllProduct = require("./get-all.controller");
+// const getOneProduct = require("./get-one.controller");
+// const createProduct = require("./create.controller");
+// const updateProduct = require("./update.controller");
+// const deleteProduct = require("./delete.controller");
+// const uploadImage = require("./upload-image.controller");
 
-const productType = require("./type");
-const guestProduct = require("./guest");
+const guest = require("./guest");
+const buyer = require("./buyer");
+const seller = require("./seller");
+
+const type = require("./type");
 
 module.exports = {
-  getAllProduct,
-  getOneProduct,
-  createProduct,
-  updateProduct,
-  deleteProduct,
-  uploadImage,
-  productType,
-  guestProduct,
+  // getAllProduct,
+  // getOneProduct,
+  // createProduct,
+  // updateProduct,
+  // deleteProduct,
+  // uploadImage,
+
+  guest,
+  buyer,
+  seller,
+
+  type,
 };
