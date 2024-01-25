@@ -11,11 +11,24 @@ const rbac = (
   return async (req, res, next) => {
     // ketik write access true dia tidak melihat read accessnya
     const { role } = req.user;
-    if (!role) return response(res, 401, false, "you're not authorized!", null);
+    let roleArray = Array.isArray(role) ? role : [role]; // Ensure role is an array
 
-    let roleDB = await Role.findOne({ where: { id: { [Op.in]: role } } });
+    if (!roleArray)
+      return response(res, 401, false, "you're not authorized!", null);
+    //let roleDB = await Role.findOne({ where: { id:  } });
+
+    let roleDB = await Role.findAll({
+      where: { id: { [Op.in]: roleArray } },
+      attributes: ["name"],
+    });
+    roleDB.forEach(({ name }) => {
+      console.log("🚀 ~ roleDB.forEach ~ name:", name);
+    });
 
     if (!roleDB) return response(res, 401, false, "you're not authorized!");
+
+    if (roleDB.name !== roleName)
+      return response(res, 401, false, "you're not authorized!");
 
     const module = await Module.findOne({ where: { name: moduleName } });
     if (!module) return response(res, 401, false, "you're not authorized!");
@@ -37,12 +50,6 @@ const rbac = (
 
     if (!access) return response(res, 401, false, "you're not authorized!");
 
-    console.log("rbac read :", readAccess);
-    console.log("user read :", access.read);
-
-    console.log("rbac write :", writeAccess);
-    console.log("user write :", access.write);
-
     if (readAccess && !access.read) {
       return response(res, 401, false, "you're not authorized");
     }
@@ -53,6 +60,7 @@ const rbac = (
 
     next();
   };
+  console.log("🚀 ~ return ~ roleDB:", roleDB);
 };
 
 module.exports = rbac;
