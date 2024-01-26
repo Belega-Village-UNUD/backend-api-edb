@@ -28,7 +28,7 @@ module.exports = {
     if (!admin) {
       const password = await bcrypt.hash(BELEGA_ADMIN_PASSWORD, 10);
       const roleAdmin = await Role.findOne({ where: { name: ROLE.ADMIN } });
-      const roleUser = await Role.findOne({ where: { name: ROLE.USER } });
+      const roleUser = await Role.findOne({ where: { name: ROLE.BUYER } });
 
       const admin = await User.create({
         id: nanoid(10),
@@ -52,7 +52,7 @@ module.exports = {
     for (let property in MODULE) {
       const module = await Module.findOne({ where: { name: property } });
       const roleAdmin = await Role.findOne({ where: { name: ROLE.ADMIN } });
-      var roleUser = await Role.findOne({ where: { name: ROLE.USER } });
+      var roleUser = await Role.findOne({ where: { name: ROLE.BUYER } });
 
       const access = await Access.findOne({
         where: { role_id: roleAdmin.id, module_id: module.id },

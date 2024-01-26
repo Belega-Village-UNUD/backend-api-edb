@@ -7,13 +7,13 @@ const { image, document } = require("../../configs/multer.config");
 router.get(
   "/",
   middleware.restrict,
-  middleware.rbac(MODULE.LANDING, ROLE.USER, true, false),
+  middleware.rbac(MODULE.LANDING, ROLE.BUYER, true, false),
   controller.whoami
 );
 router.put(
   "/",
   middleware.restrict,
-  middleware.rbac(MODULE.LANDING, ROLE.USER, true, false),
+  middleware.rbac(MODULE.LANDING, ROLE.BUYER, true, false),
   controller.updateUser
 );
 router.post(
