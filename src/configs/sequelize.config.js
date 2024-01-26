@@ -37,6 +37,7 @@ module.exports = {
       ],
       max: 5,
     },
+    logging: false,
   },
   staging: {
     username: STAGING_DB_USERNAME,
@@ -55,6 +56,7 @@ module.exports = {
       ],
       max: 5,
     },
+    logging: false,
   },
   production: {
     username: PROD_DB_USERNAME,
@@ -73,5 +75,6 @@ module.exports = {
       ],
       max: 5,
     },
+    logging: false,
   },
 };
