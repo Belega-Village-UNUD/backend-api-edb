@@ -2,7 +2,8 @@ const router = require("express").Router();
 const controllers = require("../../../controllers/product/seller");
 const middleware = require("../../../middlewares");
 const { MODULE, ROLE } = require("../../../utils/enum.utils");
-const { image } = require("../../configs/multer.config");
+//const { image } = require("../../../configs/multer.config");
+//const { image } = require("../../../configs/multer.config");
 
 router.get(
   "/all",
@@ -13,13 +14,13 @@ router.get(
 
 router.get("/:id", controllers.getOne);
 
-router.post(
-  "/image",
-  middleware.restrict,
-  middleware.rbac(MODULE.PRODUCT, true, true),
-  image.single("productImage"),
-  controllers.product.uploadImage
-);
+//router.post(
+//  "/image",
+//  middleware.restrict,
+//  middleware.rbac(MODULE.PRODUCT, true, true),
+//  image.single("productImage"),
+//  controllers.product.uploadImage
+//);
 // router.get(
 //   "/all",
 //   middleware.restrict,
