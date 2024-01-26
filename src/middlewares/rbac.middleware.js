@@ -15,28 +15,26 @@ const rbac = (
 
     if (!roleArray)
       return response(res, 401, false, "you're not authorized!", null);
-    //let roleDB = await Role.findOne({ where: { id:  } });
 
     let roleDB = await Role.findAll({
       where: { id: { [Op.in]: roleArray } },
       attributes: ["name"],
     });
-    roleDB.forEach(({ name }) => {
-      console.log("🚀 ~ roleDB.forEach ~ name:", name);
-    });
 
-    if (!roleDB) return response(res, 401, false, "you're not authorized!");
+    const userRole = roleDB
+      .map((item) => item.name)
+      .filter((item) => item === roleName);
 
-    if (roleDB.name !== roleName)
-      return response(res, 401, false, "you're not authorized!");
+    if (!userRole.length)
+      return response(res, 401, false, "you're not authorized!", null);
 
     const module = await Module.findOne({ where: { name: moduleName } });
     if (!module) return response(res, 401, false, "you're not authorized!");
 
     let access = null;
 
-    for (const role_id of role) {
-      roleDB = await Role.findOne({ where: { id: role_id } });
+    for (const role_name of userRole) {
+      roleDB = await Role.findOne({ where: { name: role_name } });
       if (!roleDB) continue;
       access = await Access.findOne({
         where: { role_id: roleDB.id, module_id: module.id },
@@ -60,7 +58,6 @@ const rbac = (
 
     next();
   };
-  console.log("🚀 ~ return ~ roleDB:", roleDB);
 };
 
 module.exports = rbac;
