@@ -12,6 +12,7 @@ services:
       - service
     depends_on:
       - db
+      - cache
 
   db:
     container_name: database-ecommerce-desa-belega
@@ -54,6 +55,18 @@ services:
     volumes:
       - ecommerce-data:/etc/sqlpad/ecommerce-data
 
+  cache:
+    container_name: cache-backend-ecommerce-desa-belega
+    restart: always
+    image: redis:6.2-alpine
+    command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
+    ports:
+      - ${REDIS_PORT}:6379
+    networks:
+      - service
+    volumes:
+      - cache-data:/data
+
 networks:
   service:
     driver: bridge
@@ -63,3 +76,6 @@ volumes:
     driver: local
   ecommerce-data:
     driver: local
+  cache-db-data:
+    driver: local
+
