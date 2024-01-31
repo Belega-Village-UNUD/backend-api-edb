@@ -57,9 +57,11 @@ services:
 
   cache:
     container_name: cache-backend-ecommerce-desa-belega
-    restart: always
     image: redis:6.2-alpine
+    restart: always
     command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
     ports:
       - ${REDIS_PORT}:6379
     networks:
@@ -76,6 +78,6 @@ volumes:
     driver: local
   ecommerce-data:
     driver: local
-  cache-db-data:
+  cache-data:
     driver: local
 
