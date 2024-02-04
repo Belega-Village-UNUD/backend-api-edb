@@ -1,7 +1,7 @@
-const { ProductType } = require("../../../../models");
-const { response } = require("../../../../utils/response.utils");
+const { ProductType } = require("../../../models");
+const { response } = require("../../../utils/response.utils");
 
-const deleteSellerType = async (req, res) => {
+const deleteType = async (req, res) => {
   try {
     const { id } = req.params;
     const checkProductType = await ProductType.findOne({ where: { id } });
@@ -21,4 +21,4 @@ const deleteSellerType = async (req, res) => {
   }
 };
 
-module.exports = deleteSellerType;
+module.exports = deleteType;

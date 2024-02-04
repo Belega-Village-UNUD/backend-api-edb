@@ -1,7 +1,7 @@
-const { ProductType } = require("../../../../models");
-const { response } = require("../../../../utils/response.utils");
+const { ProductType } = require("../../../models");
+const { response } = require("../../../utils/response.utils");
 
-const updateSellerType = async (req, res) => {
+const updateType = async (req, res) => {
   try {
     const { id } = req.params;
     const { name, material } = req.body;
@@ -23,4 +23,4 @@ const updateSellerType = async (req, res) => {
   }
 };
 
-module.exports = updateSellerType;
+module.exports = updateType;

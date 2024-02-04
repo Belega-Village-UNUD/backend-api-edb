@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const controllers = require("../../../controllers/product/buyer");
+const controllers = require("../../../controllers/product");
 const middleware = require("../../../middlewares");
 const { MODULE, ROLE } = require("../../../utils/enum.utils");
 

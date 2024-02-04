@@ -1,7 +1,7 @@
-const { ProductType } = require("../../../../models");
-const { response } = require("../../../../utils/response.utils");
+const { ProductType } = require("../../../models");
+const { response } = require("../../../utils/response.utils");
 
-const getOneSellerType = async (req, res) => {
+const getOneType = async (req, res) => {
   try {
     const { id } = req.params;
     const type = await ProductType.findOne({ where: { id } });
@@ -14,4 +14,4 @@ const getOneSellerType = async (req, res) => {
   }
 };
 
-module.exports = getOneSellerType;
+module.exports = getOneType;

@@ -1,9 +1,13 @@
-const guest = require("./guest");
-const seller = require("./seller");
-const buyer = require("./buyer");
+const getAll = require("./get-all.controller");
+const getOne = require("./get-one.controller");
+const create = require("./create.controller");
+const update = require("./update.controller");
+const deleteType = require("./delete.controller");
 
 module.exports = {
-  guest,
-  seller,
-  buyer,
+  getAll,
+  getOne,
+  create,
+  update,
+  deleteType,
 };

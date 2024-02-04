@@ -1,8 +1,8 @@
 const { nanoid } = require("nanoid");
-const { ProductType } = require("../../../../models");
-const { response } = require("../../../../utils/response.utils");
+const { ProductType } = require("../../../models");
+const { response } = require("../../../utils/response.utils");
 
-const createSellerType = async (req, res) => {
+const createType = async (req, res) => {
   try {
     const { name, material } = req.body;
 
@@ -24,4 +24,4 @@ const createSellerType = async (req, res) => {
   }
 };
 
-module.exports = createSellerType;
+module.exports = createType;
