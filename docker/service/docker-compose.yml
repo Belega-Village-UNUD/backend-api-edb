@@ -38,7 +38,7 @@ services:
     restart: always
     ports:
       - ${PORT}:3000
-    volumes:
+    networks:
       - backend_service
     deploy:
       mode: replicated 
@@ -56,6 +56,8 @@ services:
       - POSTGRES_DB=${DEV_DB_NAME}
     ports:
       - ${DEV_DB_PORT}:5432
+    networks:
+      - backend_service
     volumes:
       - db-data:/var/lib/postgresql/data
 
@@ -66,7 +68,7 @@ services:
     command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
     environment:
       REDIS_PASSWORD: ${REDIS_PASSWORD}
-    volumes:
+    networks:
       - backend_service
     ports:
       - ${REDIS_PORT}:6379
