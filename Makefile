@@ -6,6 +6,13 @@ up:
 	docker compose -p belega --file docker/prometheus/docker-compose.yml --env-file .env up -d
 	docker compose -p belega --file docker/ssl/docker-compose.yml --env-file .env up nginx -d
 
+swarm:
+	docker stack deploy --compose-file=docker/service/docker-compose.yml backend_belega
+
+swarm-rm:
+	docker stack rm backend_belega
+
+
 restart:
 	docker compose -p belega --file docker/service/docker-compose.yml --env-file .env restart $(SERVICE)
 
