@@ -1,7 +1,6 @@
 const { nanoid } = require("nanoid");
-const { ProductType } = require("../../../models")
+const { ProductType } = require("../../../models");
 const { response } = require("../../../utils/response.utils");
-
 
 const createType = async (req, res) => {
   try {
@@ -20,7 +19,6 @@ const createType = async (req, res) => {
       "Product type has been created",
       productType
     );
-
   } catch (err) {
     return response(res, err.status || 500, false, err.message, null);
   }

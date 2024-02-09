@@ -1,20 +1,19 @@
-const getAllProduct = require("./get-all.controller");
-const getOneProduct = require("./get-one.controller");
-const createProduct = require("./create.controller");
-const updateProduct = require("./update.controller");
+const getAll = require("./get-all.controller");
+const getOne = require("./get-one.controller");
+const create = require("./create.controller");
+const update = require("./update.controller");
 const deleteProduct = require("./delete.controller");
-const uploadImage = require("./upload-image.controller");
+const imageProduct = require("./image-product.controller");
 
-const productType = require("./type");
-const guestProduct = require("./guest");
+const type = require("./type");
 
 module.exports = {
-  getAllProduct,
-  getOneProduct,
-  createProduct,
-  updateProduct,
+  getAll,
+  getOne,
+  create,
+  update,
   deleteProduct,
-  uploadImage,
-  productType,
-  guestProduct,
+  imageProduct,
+
+  type,
 };

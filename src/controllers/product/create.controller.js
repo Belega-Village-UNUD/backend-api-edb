@@ -5,12 +5,28 @@ const { response } = require("../../utils/response.utils");
 const createProduct = async (req, res) => {
   try {
     const { id } = req.user;
-    const { name_product, productTypeId, description, price, stock } = req.body;
-    const { store_id } = req.body;
+    const { store_id, name_product, productTypeId, description, price, stock } =
+      req.body;
+
+    if (
+      !store_id ||
+      !name_product ||
+      !productTypeId ||
+      !description ||
+      !price ||
+      !stock
+    ) {
+      return response(res, 400, false, "Invalid input data", null);
+    }
+
     const user = await User.findOne({
       where: { id },
       attributes: { exclude: ["password"] },
     });
+
+    if (!user) {
+      return response(res, 404, false, "User not found", null);
+    }
 
     const product = await Product.create({
       id: nanoid(10),

@@ -1,4 +1,4 @@
-const { ProductType } = require("../../../models")
+const { ProductType } = require("../../../models");
 const { response } = require("../../../utils/response.utils");
 
 const updateType = async (req, res) => {
@@ -6,11 +6,10 @@ const updateType = async (req, res) => {
     const { id } = req.params;
     const { name, material } = req.body;
     const checkType = await ProductType.findOne({ where: { id: id } });
-    if (!checkType) { return response(res, 404, false, `Product type ${id} not found`, null); }
-    await ProductType.update(
-      { name, material },
-      { where: { id: id } }
-    );
+    if (!checkType) {
+      return response(res, 404, false, `Product type ${id} not found`, null);
+    }
+    await ProductType.update({ name, material }, { where: { id: id } });
     const productType = await ProductType.findOne({ where: { id: id } });
     return response(
       res,
@@ -19,7 +18,6 @@ const updateType = async (req, res) => {
       `Product type ${id} has been updated`,
       productType
     );
-
   } catch (err) {
     return response(res, err.status || 500, false, err.message, null);
   }

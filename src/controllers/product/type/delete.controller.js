@@ -8,8 +8,14 @@ const deleteType = async (req, res) => {
     if (!checkProductType) {
       return response(res, 404, false, `Product Type ${id} Not Found`, null);
     }
-    await ProductType.destroy( { where: { id } } )
-    return response(res, 200, true, `Delete Product Type ${id} Successfull`, null);
+    await ProductType.destroy({ where: { id } });
+    return response(
+      res,
+      200,
+      true,
+      `Delete Product Type ${id} Successfull`,
+      null
+    );
   } catch (err) {
     return response(res, err.status || 500, false, err.message, null);
   }
