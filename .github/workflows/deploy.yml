@@ -103,6 +103,8 @@ jobs:
             git fetch; \
             git checkout staging; \
             git pull origin staging; \
+            npm i; \
+            npm run env:dec; \
             docker image prune -f; \
             echo ${{ secrets.GITHUB_TOKEN }} | docker login -u ${{ github.actor }} --password-stdin ${{ env.REGISTRY }}; \
             docker pull ghcr.io/belega-village-unud/backend-api-edb:staging; \
