@@ -39,7 +39,8 @@ services:
     ports:
       - ${PORT}:3000
     networks:
-      - backend_service
+      - service
+      - db
     deploy:
       mode: replicated
       replicas: 2
@@ -56,7 +57,7 @@ services:
     ports:
       - ${DEV_DB_PORT}:5432
     networks:
-      - backend_service
+      - db
     volumes:
       - db-data:/var/lib/postgresql/data
 
@@ -66,11 +67,9 @@ services:
     environment:
       REDIS_PASSWORD: ${REDIS_PASSWORD}
     networks:
-      - backend_service
+      - db
     ports:
       - ${REDIS_PORT}:6379
-    volumes:
-      - backend_service
     volumes:
       - cache-data:/data
 
@@ -85,11 +84,12 @@ services:
     labels:
       - "constraint:node==manager"
     networks:
-      - backend_service
+      - service
 
 
 networks:
-  backend_service:
+  service:
+  db:
 
 volumes:
   db-data:
