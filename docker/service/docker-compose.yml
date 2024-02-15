@@ -1,7 +1,6 @@
 version: "3.4"
 services:
   app:
-    container_name: backend-ecommerce-desa-belega
     image: ghcr.io/belega-village-unud/backend-api-edb:staging
     environment:
       - NODE_ENV=${NODE_ENV}
@@ -48,7 +47,6 @@ services:
       - cache
 
   db:
-    container_name: database-ecommerce-desa-belega
     image: postgres:latest
     environment:
       - POSTGRES_USER=${DEV_DB_USERNAME}
@@ -62,9 +60,7 @@ services:
       - db-data:/var/lib/postgresql/data
 
   cache:
-    container_name: cache-backend-ecommerce-desa-belega
     image: redis:6.2-alpine
-    restart: always
     command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
     environment:
       REDIS_PASSWORD: ${REDIS_PASSWORD}
@@ -76,6 +72,20 @@ services:
       - backend_service
     volumes:
       - cache-data:/data
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - 80:80
+    deploy:
+      mode: global
+    volumes:
+      - ../../nginx/conf.d:/etc/nginx/conf.d
+    labels:
+      - "constraint:node==manager"
+    networks:
+      - backend_service
+
 
 networks:
   backend_service:
