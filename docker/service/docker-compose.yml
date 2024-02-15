@@ -8,6 +8,7 @@ services:
       - DEV_DB_PASSWORD=${DEV_DB_PASSWORD}
       - DEV_DB_DB=${DEV_DB_NAME}
       - DEV_DB_NAME=${DEV_DB_NAME}
+      - DEV_DB_HOST=${DEV_DB_HOST}
       - DEV_DB_PORT=${DEV_DB_PORT}
       - JWT_SECRET_KEY=${JWT_SECRET_KEY}
       - JWT_EXPIRES=${JWT_EXPIRES}
@@ -34,14 +35,14 @@ services:
       - REDIS_HOST=${REDIS_HOST}
       - REDIS_PORT=${REDIS_PORT}
       - REDIS_PASSWORD=${REDIS_PASSWORD}
-    restart: always
+      - PORT=${PORT}
     ports:
       - ${PORT}:3000
     networks:
       - backend_service
     deploy:
-      mode: replicated 
-      replicas: 2 
+      mode: replicated
+      replicas: 2
     depends_on:
       - db
       - cache
