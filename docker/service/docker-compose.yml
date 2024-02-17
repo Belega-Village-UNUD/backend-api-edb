@@ -87,12 +87,13 @@ services:
     labels:
       - "constraint:node==manager"
     networks:
-      - service
+      - web_server
 
 
 networks:
   service:
   db:
+  web_server:
 
 volumes:
   db-data:
