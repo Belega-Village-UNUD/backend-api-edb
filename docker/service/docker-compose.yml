@@ -58,6 +58,9 @@ services:
       - ${DEV_DB_PORT}:5432
     networks:
       - db
+    deploy:
+      mode: replicated
+      replicas: 3
     volumes:
       - db-data:/var/lib/postgresql/data
 
