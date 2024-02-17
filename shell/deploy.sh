@@ -2,10 +2,9 @@
 
 set -e
 
-if [[ ! -e .env ]]; then 
+if [[ ! -e .env.dev ]]; then 
    npx senv decrypt .env.dev.enc -o .env.dev;
 fi
-
 
 export $(grep -v '^#' .env.dev | xargs)
 
