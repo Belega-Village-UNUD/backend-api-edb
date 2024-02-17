@@ -30,7 +30,9 @@
     "migrate:down:one": "sequelize db:migrate:undo",
     "migrate:down:all": "sequelize db:migrate:undo:all",
     "seed:up": "sequelize db:seed:all",
-    "seed:down": "sequelize db:seed:undo:all"
+    "seed:down": "sequelize db:seed:undo:all",
+    "env:enc": "sh shell/encrypt.sh",
+    "env:dec": "sh shell/decrypt.sh"
   },
   "devDependencies": {
     "dotenv": "^16.3.1",
@@ -39,6 +41,6 @@
     "eslint-plugin-import": "^2.28.1",
     "eslint-plugin-n": "^16.2.0",
     "eslint-plugin-promise": "^6.1.1",
-    "nodemon": "^3.0.1"
+    "senv": "^1.0.2"
   }
 }
