@@ -1,5 +1,10 @@
+generate_dot_env:
+	@if [[ ! -e .env ]]; then \
+		senv decrypt .env.enc .env; \
+	fi
+
 build:
-	docker build . --file docker/Dockerfile -t ghcr.io/belega-village-unud/backend-api-edb:v1 -t ghcr.io/belega-village-unud/backend-api-edb:latest
+	docker build . --file docker/Dockerfile -t ghcr.io/belega-village-unud/backend-api-edb:v1 -t ghcr.io/belega-village-unud/backend-api-edb:staging
 
 up:
 	docker compose -p belega --file docker/service/docker-compose.yml --env-file .env up -d
@@ -7,11 +12,10 @@ up:
 	docker compose -p belega --file docker/ssl/docker-compose.yml --env-file .env up nginx -d
 
 swarm:
-	docker stack deploy --compose-file=docker/service/docker-compose.yml backend_belega
+	docker stack deploy -c docker/service/docker-compose.yml backend_belega
 
 swarm-rm:
 	docker stack rm backend_belega
-
 
 restart:
 	docker compose -p belega --file docker/service/docker-compose.yml --env-file .env restart $(SERVICE)
