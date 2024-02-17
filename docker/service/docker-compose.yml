@@ -47,6 +47,7 @@ services:
     depends_on:
       - db
       - cache
+      - web_server
 
   db:
     image: postgres:latest
