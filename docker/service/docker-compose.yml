@@ -82,6 +82,9 @@ services:
       - 80:80
     deploy:
       mode: global
+      replicas: 1
+      restart_policy:
+        condition: on-failure
     volumes:
       - ../../nginx/conf.d:/etc/nginx/conf.d
     labels:
