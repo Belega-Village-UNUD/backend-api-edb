@@ -41,13 +41,13 @@ services:
     networks:
       - service
       - db
+      - web_server
     deploy:
       mode: replicated
       replicas: 2
     depends_on:
       - db
       - cache
-      - web_server
 
   db:
     image: postgres:latest
