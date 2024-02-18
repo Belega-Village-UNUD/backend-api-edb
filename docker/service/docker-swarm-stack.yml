@@ -110,3 +110,9 @@ services:
     networks:
       - web_server
 
+
+networks:
+  service:
+  db:
+  web_server:
+
