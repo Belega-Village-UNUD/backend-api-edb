@@ -1,0 +1,50 @@
+version: "3.4"
+services:
+  app:
+    image: ghcr.io/belega-village-unud/backend-api-edb:staging
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - DEV_DB_USERNAME=${DEV_DB_USERNAME}
+      - DEV_DB_PASSWORD=${DEV_DB_PASSWORD}
+      - DEV_DB_DB=${DEV_DB_NAME}
+      - DEV_DB_NAME=${DEV_DB_NAME}
+      - DEV_DB_HOST=${DEV_DB_HOST}
+      - DEV_DB_PORT=${DEV_DB_PORT}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - JWT_EXPIRES=${JWT_EXPIRES}
+      - JWT_RESET_PASSWORD_KEY=${JWT_RESET_PASSWORD_KEY}
+      - JWT_RESET_EXPIRES=${JWT_RESET_EXPIRES}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - GOOGLE_REDIRECT_URI=${GOOGLE_REDIRECT_URI}
+      - GOOGLE_REFRESH_TOKEN=${GOOGLE_REFRESH_TOKEN}
+      - GOOGLE_EMAIL=${GOOGLE_EMAIL}
+      - WIF_PROVIDER=${WIF_PROVIDER}
+      - CLOUD_RUN_SA=${CLOUD_RUN_SA}
+      - IMAGEKIT_PUBLIC_KEY=${IMAGEKIT_PUBLIC_KEY}
+      - IMAGEKIT_PRIVATE_KEY=${IMAGEKIT_PRIVATE_KEY}
+      - IMAGEKIT_URL_ENDPOINT=${IMAGEKIT_URL_ENDPOINT}
+      - PROMETHEUS_PORT=${PROMETHEUS_PORT}
+      - ALERTMANAGER_PORT=${ALERTMANAGER_PORT}
+      - TESTING_DOMAIN=${TESTING_DOMAIN}
+      - DUCKDNS_TOKEN=${DUCKDNS_TOKEN}
+      - MIDTRANS_MERCHANT_ID=${MIDTRANS_MERCHANT_ID}
+      - MIDTRANS_CLIENT_KEY=${MIDTRANS_CLIENT_KEY}
+      - MIDTRANS_SERVER_KEY=${MIDTRANS_SERVER_KEY}
+      - DSN_SENTRY=${DSN_SENTRY}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - PORT=${PORT}
+    ports:
+      - ${PORT}:3000
+    networks:
+      - service
+      - db
+      - web_server
+    deploy:
+      mode: replicated
+      replicas: 2
+    depends_on:
+      - db
+      - cache
