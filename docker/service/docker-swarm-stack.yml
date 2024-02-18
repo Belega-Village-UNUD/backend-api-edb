@@ -48,3 +48,40 @@ services:
     depends_on:
       - db
       - cache
+
+  db:
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=${DEV_DB_USERNAME}
+      - POSTGRES_PASSWORD=${DEV_DB_PASSWORD}
+      - POSTGRES_DB=${DEV_DB_NAME}
+      - POSTGRES_MODE=primary
+    ports:
+      - ${DEV_DB_PORT}:5432
+    networks:
+      - db
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  db_replica:
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=${DEV_DB_USERNAME}
+      - POSTGRES_PASSWORD=${DEV_DB_PASSWORD}
+      - POSTGRES_DB=${DEV_DB_NAME}
+      - POSTGRES_MODE=replica
+    ports:
+      - ${DEV_DB_PORT}:5432
+    networks:
+      - db
+    deploy:
+      placement:
+        constraints:
+          - node.role == worker
+    volumes:
+      - db-data-replica:/var/lib/postgresql/data
+
