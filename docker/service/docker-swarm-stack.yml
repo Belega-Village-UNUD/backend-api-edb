@@ -116,3 +116,11 @@ networks:
   db:
   web_server:
 
+volumes:
+  db-data:
+    driver: local
+  db-data-replica:
+    driver: local
+  cache-data:
+    driver: local
+
