@@ -11,6 +11,9 @@ up:
 	docker compose -p belega --file docker/prometheus/docker-compose.yml --env-file .env up -d
 	docker compose -p belega --file docker/ssl/docker-compose.yml --env-file .env up nginx -d
 
+deploy:
+	bash shell/deploy.sh
+
 swarm:
 	docker stack deploy -c docker/service/docker-compose.yml backend_belega
 
