@@ -101,10 +101,13 @@ services:
     image: nginx:latest
     ports:
       - 80:80
+      - 443:443
     deploy:
       mode: global
     volumes:
       - ../../nginx/conf.d:/etc/nginx/conf.d
+      - ../../nginx/dhparam:/etc/nginx/dhparam
+      - ../../certbot/letsencrypt:/etc/letsencrypt
     labels:
       - "constraint:node==manager"
     networks:
