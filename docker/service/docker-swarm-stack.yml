@@ -70,12 +70,12 @@ services:
   db_replica:
     image: postgres:latest
     environment:
-      - POSTGRES_USER=${DEV_DB_USERNAME}
-      - POSTGRES_PASSWORD=${DEV_DB_PASSWORD}
-      - POSTGRES_DB=${DEV_DB_NAME}
+      - POSTGRES_USER=${REP_DEV_DB_USERNAME}
+      - POSTGRES_PASSWORD=${REP_DEV_DB_PASSWORD}
+      - POSTGRES_DB=${REP_DEV_DB_NAME}
       - POSTGRES_MODE=replica
     ports:
-      - ${DEV_DB_PORT}:5432
+      - ${REP_DEV_DB_PORT}:5432
     networks:
       - db
     deploy:
