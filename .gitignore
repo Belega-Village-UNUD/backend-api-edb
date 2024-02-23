@@ -1,5 +1,10 @@
 .env
+.env.prod
+.env.dev
+.env.enc
+.env.pass
 node_modules
 certbot
 data_backup
 nginx/dhparam
+
