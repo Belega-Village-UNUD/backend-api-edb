@@ -82,6 +82,9 @@ services:
       placement:
         constraints:
           - node.role == worker
+    depends_on:
+      - db
+      - cache
     volumes:
       - db-data-replica:/var/lib/postgresql/data
 
@@ -94,6 +97,8 @@ services:
       - db
     ports:
       - ${REDIS_PORT}:6379
+    depends_on:
+      - db
     volumes:
       - cache-data:/data
 
