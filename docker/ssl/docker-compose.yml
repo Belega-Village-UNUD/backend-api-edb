@@ -2,9 +2,7 @@ version: "3.4"
 services:
   certbot:
     container_name: certbot
-    image: nginx:latest
-    ports:
-      - 80:80
+    image: infinityofspace/certbot_dns_duckdns:latest
     command: certonly
       --non-interactive
       --agree-tos
