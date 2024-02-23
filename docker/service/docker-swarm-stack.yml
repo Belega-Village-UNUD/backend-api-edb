@@ -49,6 +49,7 @@ services:
       - db
       - cache
 
+
   db:
     image: postgres:latest
     environment:
@@ -115,6 +116,8 @@ services:
       - ../../certbot/letsencrypt:/etc/letsencrypt
     labels:
       - "constraint:node==manager"
+    depends_on:
+      - app
     networks:
       - web_server
 
