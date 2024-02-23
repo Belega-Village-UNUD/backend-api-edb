@@ -1,21 +1,20 @@
 version: "3.4"
 services:
-  nginx:
-    container_name: nginx-ecommerce-desa-belega
+  certbot:
+    container_name: certbot
     image: nginx:latest
     ports:
       - 80:80
-    deploy:
-      mode: global 
+    command: certonly
+      --non-interactive
+      --agree-tos
+      --email ${ADMIN_EMAIL}
+      --preferred-challenges dns
+      --authenticator dns-duckdns
+      --dns-duckdns-token ${DUCKDNS_TOKEN}
+      --dns-duckdns-propagation-seconds 60
+      -d ${DOMAIN_NAME}
     volumes:
-      - ../../nginx/conf.d:/etc/nginx/conf.d
-      - ../../nginx/dhparam:/etc/nginx/dhparam
       - ../../certbot/letsencrypt:/etc/letsencrypt
-    labels:
-      - "constraint:node==testing-environment"
-    networks:
-      - backend_testing_service
+      - ../../certbot/logs:/var/log/etsencrypt
 
-networks:
-  backend_testing_service:
-    external: true
