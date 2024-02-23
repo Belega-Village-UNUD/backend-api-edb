@@ -10,7 +10,6 @@ export $(grep -v '^#' .env.dev | xargs)
 
 cp docker/service/docker-swarm-stack.yml docker/service/temp-docker-swarm-stack.yml;
 cp docker/ssl/docker-compose.yml docker/ssl/temp-docker-compose.yml;
-cp nginx/conf.d/nginx.conf nginx/conf.d/temp-nginx.conf;
 
 while IFS= read -r line; do
     var_name=$(echo "$line" | cut -d'=' -f1)
