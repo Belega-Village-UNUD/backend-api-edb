@@ -1,55 +1,20 @@
 version: "3.4"
 services:
   app:
+    container_name: backend-ecommerce-desa-belega
     image: ghcr.io/belega-village-unud/backend-api-edb:staging
-    environment:
-      - NODE_ENV=${NODE_ENV}
-      - DEV_DB_USERNAME=${DEV_DB_USERNAME}
-      - DEV_DB_PASSWORD=${DEV_DB_PASSWORD}
-      - DEV_DB_DB=${DEV_DB_NAME}
-      - DEV_DB_NAME=${DEV_DB_NAME}
-      - DEV_DB_HOST=${DEV_DB_HOST}
-      - DEV_DB_PORT=${DEV_DB_PORT}
-      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
-      - JWT_EXPIRES=${JWT_EXPIRES}
-      - JWT_RESET_PASSWORD_KEY=${JWT_RESET_PASSWORD_KEY}
-      - JWT_RESET_EXPIRES=${JWT_RESET_EXPIRES}
-      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
-      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
-      - GOOGLE_REDIRECT_URI=${GOOGLE_REDIRECT_URI}
-      - GOOGLE_REFRESH_TOKEN=${GOOGLE_REFRESH_TOKEN}
-      - GOOGLE_EMAIL=${GOOGLE_EMAIL}
-      - WIF_PROVIDER=${WIF_PROVIDER}
-      - CLOUD_RUN_SA=${CLOUD_RUN_SA}
-      - IMAGEKIT_PUBLIC_KEY=${IMAGEKIT_PUBLIC_KEY}
-      - IMAGEKIT_PRIVATE_KEY=${IMAGEKIT_PRIVATE_KEY}
-      - IMAGEKIT_URL_ENDPOINT=${IMAGEKIT_URL_ENDPOINT}
-      - PROMETHEUS_PORT=${PROMETHEUS_PORT}
-      - ALERTMANAGER_PORT=${ALERTMANAGER_PORT}
-      - TESTING_DOMAIN=${TESTING_DOMAIN}
-      - DUCKDNS_TOKEN=${DUCKDNS_TOKEN}
-      - MIDTRANS_MERCHANT_ID=${MIDTRANS_MERCHANT_ID}
-      - MIDTRANS_CLIENT_KEY=${MIDTRANS_CLIENT_KEY}
-      - MIDTRANS_SERVER_KEY=${MIDTRANS_SERVER_KEY}
-      - DSN_SENTRY=${DSN_SENTRY}
-      - REDIS_HOST=${REDIS_HOST}
-      - REDIS_PORT=${REDIS_PORT}
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
-      - PORT=${PORT}
+    env_file:
+      - ../../.env
+    restart: always
     ports:
-      - ${PORT}:3000
+      - ${PORT}:${PORT}
     networks:
       - service
-      - db
-      - web_server
-    deploy:
-      mode: replicated
-      replicas: 2
     depends_on:
       - db
-      - cache
 
   db:
+    container_name: database-ecommerce-desa-belega
     image: postgres:latest
     environment:
       - POSTGRES_USER=${DEV_DB_USERNAME}
@@ -58,49 +23,44 @@ services:
     ports:
       - ${DEV_DB_PORT}:5432
     networks:
-      - db
-    deploy:
-      mode: replicated
-      replicas: 3
+      - service
     volumes:
       - db-data:/var/lib/postgresql/data
 
-  cache:
-    image: redis:6.2-alpine
-    command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
+  sqlpad:
+    container_name: sqlpad-ecommerce-desa-belega
+    image: sqlpad/sqlpad:5
+    hostname: "sqlpad"
+    ports:
+      - ${SQLPAD_PORT}:3000
     environment:
-      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      SQLPAD_ADMIN: ${SQLPAD_ADMIN_EMAIL}
+      SQLPAD_ADMIN_PASSWORD: ${SQLPAD_ADMIN_PASSWORD}
+      SQLPAD_APP_LOG_LEVEL: debug
+      SQLPAD_WEB_LOG_LEVEL: warn
+      SQLPAD_DB_PATH: /etc/sqlpad/ecommerce-data
+      SQLPAD_SEED_DATA_PATH: /etc/sqlpad/seed-data
+      SQLPAD_CONNECTIONS__ecommerce-belega__name: Ecommerce Desa Belega
+      SQLPAD_CONNECTIONS__ecommerce-belega__driver: postgres
+      SQLPAD_CONNECTIONS__ecommerce-belega__host: ${STAGING_DB_HOST}
+      SQLPAD_CONNECTIONS__ecommerce-belega__database: ${STAGING_DB_NAME}
+      SQLPAD_CONNECTIONS__ecommerce-belega__username: ${STAGING_DB_USERNAME}
+      SQLPAD_CONNECTIONS__ecommerce-belega__password: ${STAGING_DB_PASSWORD}
+      SQLPAD_CONNECTIONS__ecommerce-belega__port: ${STAGING_DB_PORT}
+      SQLPAD_CONNECTIONS__ecommerce-belega__multiStatementTransactionEnabled: "true"
+      SQLPAD_CONNECTIONS__ecommerce-belega__idleTimeoutSeconds: 86400
     networks:
-      - db
-    ports:
-      - ${REDIS_PORT}:6379
+      - service
     volumes:
-      - cache-data:/data
-
-  nginx:
-    image: nginx:latest
-    ports:
-      - 80:80
-    deploy:
-      mode: global
-    volumes:
-      - ../../nginx/conf.d:/etc/nginx/conf.d
-    labels:
-      - "constraint:node==manager"
-    networks:
-      - web_server
-
+      - ecommerce-data:/etc/sqlpad/ecommerce-data
 
 networks:
   service:
-  db:
-  web_server:
+    driver: bridge
 
 volumes:
   db-data:
     driver: local
   ecommerce-data:
-    driver: local
-  cache-data:
     driver: local
 
