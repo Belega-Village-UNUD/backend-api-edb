@@ -18,3 +18,10 @@ services:
       - ../../certbot/letsencrypt:/etc/letsencrypt
       - ../../certbot/logs:/var/log/etsencrypt
 
+  certbot_cron:
+    build: .
+    container_name: certbot_cron
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - CERTBOT_CONTAINER_NAME=certbot
