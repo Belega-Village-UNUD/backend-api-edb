@@ -1,3 +1,4 @@
+/** 
 "use strict";
 var { ROLE, MODULE } = require("../utils/enum.utils");
 var { Role, Module, Access } = require("../models");
@@ -44,3 +45,4 @@ module.exports = {
     await queryInterface.bulkDelete("Roles", null, {});
   },
 };
+ */
