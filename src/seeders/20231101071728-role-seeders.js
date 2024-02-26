@@ -63,6 +63,18 @@ module.exports = {
         where: { role_id: roleAdmin.id, module_id: module.id },
       });
 
+      // check the buyer access
+      var roleBuyer = await Role.findOne({ where: { name: ROLE.BUYER } });
+      var buyerAccess = await Access.findOne({
+        where: { role_id: roleBuyer.id, module_id: module.id },
+      });
+
+      // check the seller access
+      var roleSeller = await Role.findOne({ where: { name: ROLE.SELLER } });
+      var sellerAccess = await Access.findOne({
+        where: { role_id: roleSeller.id, module_id: module.id },
+      });
+
       // if there's no module access defined in the database
       // then create the access expect
       // set the read and write to false for seller module
@@ -77,49 +89,36 @@ module.exports = {
       }
 
       // check the property value is it module SELLER or ADMIN.
-      if (property === MODULE.SELLER || property === MODULE.ADMIN) {
-        // check the buyer
-        var roleBuyer = await Role.findOne({ where: { name: ROLE.BUYER } });
-        var roleSeller = await Role.findOne({ where: { name: ROLE.SELLER } });
-        var buyerAccess = await Access.findOne({
-          where: { role_id: roleBuyer.id, module_id: module.id },
-        });
-        var sellerAccess = await Access.findOne({
-          where: { role_id: roleBuyer.id, module_id: module.id },
-        });
+      if (property === MODULE.ADMIN) {
         // check if the property is ADMIN module
-        if (property === MODULE.ADMIN) {
-          // create the seller access
-          if (!sellerAccess) {
-            await Access.create({
-              id: nanoid(10),
-              role_id: roleSeller.id,
-              module_id: module.id,
-              read: false,
-              write: false,
-            });
-          }
-          // create the buyer access
-          if (!buyerAccess) {
-            await Access.create({
-              id: nanoid(10),
-              role_id: roleBuyer.id,
-              module_id: module.id,
-              read: false,
-              write: false,
-            });
-          }
-        }
-      } else {
+        // create the seller access
         if (!sellerAccess) {
           await Access.create({
             id: nanoid(10),
             role_id: roleSeller.id,
-            module_id: nanoid(10),
-            read: true,
-            write: true,
+            module_id: module.id,
+            read: false,
+            write: false,
           });
         }
+        // create the buyer access
+        if (!buyerAccess) {
+          await Access.create({
+            id: nanoid(10),
+            role_id: roleBuyer.id,
+            module_id: module.id,
+            read: false,
+            write: false,
+          });
+        }
+      } else {
+        await Access.create({
+          id: nanoid(10),
+          role_id: roleSeller.id,
+          module_id: module.id,
+          read: true,
+          write: true,
+        });
       }
       if (property === MODULE.PRODUCT) {
         await Access.create({
@@ -130,13 +129,15 @@ module.exports = {
           write: false,
         });
       } else {
-        await Access.create({
-          id: nanoid(10),
-          role_id: roleBuyer.id,
-          module_id: module.id,
-          read: true,
-          write: true,
-        });
+        if (property !== MODULE.ADMIN) {
+          await Access.create({
+            id: nanoid(10),
+            role_id: roleBuyer.id,
+            module_id: module.id,
+            read: true,
+            write: true,
+          });
+        }
       }
     }
   },
