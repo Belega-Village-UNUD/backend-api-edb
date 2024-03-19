@@ -39,6 +39,11 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DECIMAL,
       },
+      quantity: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        defaultValue: 1,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
