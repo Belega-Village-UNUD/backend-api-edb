@@ -1,3 +1,4 @@
+const { nanoid } = require("nanoid");
 const { User, CustomDesign } = require("../../models");
 const { singleUpload } = require("../../utils/imagekit.utils");
 const { response } = require("../../utils/response.utils");
@@ -14,6 +15,7 @@ const upCustomDesign = async (req, res) => {
     const upload = await singleUpload(req, res);
 
     const customDesign = await CustomDesign.create({
+      id: nanoid(10),
       user_id: user.id,
       product_id: product_id,
       image_link: upload.url,
