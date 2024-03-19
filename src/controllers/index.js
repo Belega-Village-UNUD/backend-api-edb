@@ -4,6 +4,7 @@ const google = require("./google");
 const product = require("./product");
 const shop = require("./shop");
 const transaction = require("./transaction");
+const custom = require("./preorder");
 
 module.exports = {
   auth,
@@ -12,4 +13,5 @@ module.exports = {
   product,
   shop,
   transaction,
+  custom,
 };
