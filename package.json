@@ -19,18 +19,18 @@
     "pg": "^8.11.3",
     "pg-hstore": "^2.3.4",
     "prom-client": "^15.0.0",
-    "sequelize": "^6.33.0",
+    "sequelize": "^6.37.1",
     "swagger-ui-express": "^5.0.0",
     "yaml": "^2.3.4"
   },
   "scripts": {
     "dev": "node --watch src/app.js",
     "start": "node src/app.js",
-    "migrate:up": "sequelize db:migrate",
-    "migrate:down:one": "sequelize db:migrate:undo",
-    "migrate:down:all": "sequelize db:migrate:undo:all",
-    "seed:up": "sequelize db:seed:all",
-    "seed:down": "sequelize db:seed:undo:all"
+    "migrate:up": "npx sequelize db:migrate",
+    "migrate:down:one": "npx sequelize db:migrate:undo",
+    "migrate:down:all": "npx sequelize db:migrate:undo:all",
+    "seed:up": "npx sequelize db:seed:all",
+    "seed:down": "npx sequelize db:seed:undo:all"
   },
   "devDependencies": {
     "dotenv": "^16.3.1",
@@ -39,6 +39,7 @@
     "eslint-plugin-import": "^2.28.1",
     "eslint-plugin-n": "^16.2.0",
     "eslint-plugin-promise": "^6.1.1",
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.0.1",
+    "sequelize-cli": "^6.6.2"
   }
 }
