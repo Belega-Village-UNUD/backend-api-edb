@@ -27,9 +27,17 @@ const checkoutItem = async (req, res) => {
     product.stock -= qty;
     await product.save();
 
+    const cart = await Cart.findOne({
+      where: { user_id: user.id, product_id },
+    });
+    if (!cart) {
+      return response(res, 404, false, "Cart not found", null);
+    }
+
     const transaction = await Transaction.create({
       id: nanoid(10),
       user_id: user.id,
+      cart_id: cart.id,
       total_amount: product.price * qty,
       status: true,
     });
