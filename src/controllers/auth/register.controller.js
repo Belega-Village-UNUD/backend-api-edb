@@ -17,10 +17,10 @@ const register = async (req, res) => {
     if (userExist) return response(res, 400, false, "Email already used", null);
 
     const encryptedPassword = await bcrypt.hash(password, 10);
-    const userRole = await Role.findOne({ where: { name: ROLE.USER } });
+    const buyerRole = await Role.findOne({ where: { name: ROLE.BUYER } });
     const user = await User.create({
       id: nanoid(10),
-      role_id: [userRole.id], // create as an array for seller role
+      role_id: [buyerRole.id], // create as an array for seller role
       email,
       password: encryptedPassword,
       is_verified: false,

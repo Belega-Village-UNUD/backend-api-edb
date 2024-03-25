@@ -18,24 +18,6 @@ module.exports = {
         await Module.create({ id: nanoid(10), name: property });
       }
     }
-
-    for (let property in MODULE) {
-      const module = await Module.findOne({ where: { name: property } });
-      var roleUser = await Role.findOne({ where: { name: ROLE.USER } });
-
-      const shopAccessUser = await Access.findOne({
-        where: { role_id: roleUser.id, module_id: module.id },
-      });
-      if (!shopAccessUser) {
-        await Access.create({
-          id: nanoid(10),
-          role_id: roleUser.id,
-          module_id: module.id,
-          read: true,
-          write: true,
-        });
-      }
-    }
   },
 
   async down(queryInterface, Sequelize) {
