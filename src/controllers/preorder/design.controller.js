@@ -6,14 +6,14 @@ const { response } = require("../../utils/response.utils");
 const upCustomDesign = async (req, res) => {
   try {
     const { id } = req.user;
-    const { height, width, product_id, budget, quantity } = req.body;
+    const { height, width, product_id, budget, qty } = req.body;
     const user = await User.findOne({
       where: { id: id },
       attributes: { exclude: ["password"] },
     });
 
     const upload = await singleUpload(req, res);
-    const totalBudget = budget * quantity;
+    const totalBudget = budget * qty;
 
     const customDesign = await CustomDesign.create({
       id: nanoid(10),
@@ -23,7 +23,7 @@ const upCustomDesign = async (req, res) => {
       height: height,
       width: width,
       budget: totalBudget,
-      quantity: quantity,
+      qty: qty,
     });
 
     return response(

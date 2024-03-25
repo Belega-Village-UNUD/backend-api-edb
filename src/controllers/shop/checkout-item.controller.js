@@ -9,41 +9,68 @@ const checkoutItem = async (req, res) => {
       where: { id },
       attributes: { exclude: ["password"] },
     });
-    const { product_id, qty } = req.body;
 
-    const product = await Product.findOne({ where: { id: product_id } });
-    if (!product) {
-      return response(res, 404, false, "Product not found", null);
-    }
+    const items = req.body;
 
-    if (qty > product.stock) {
-      return response(res, 400, false, "Insufficient stock", null);
-    }
+    let totalAmount = 0;
+    const cartIds = [];
 
-    if (qty < 1) {
-      return response(res, 400, false, "Minimum quantity is 1", null);
-    }
+    for (const item of items) {
+      const { product_id, qty } = item;
 
-    product.stock -= qty;
-    await product.save();
+      const product = await Product.findOne({ where: { id: product_id } });
+      if (!product) {
+        return response(res, 404, false, "Product not found", null);
+      }
 
-    const cart = await Cart.findOne({
-      where: { user_id: user.id, product_id },
-    });
-    if (!cart) {
-      return response(res, 404, false, "Cart not found", null);
+      if (qty > product.stock) {
+        return response(
+          res,
+          400,
+          false,
+          `Insufficient stock for ${product.name_product}`,
+          null
+        );
+      }
+
+      if (qty < 1) {
+        return response(
+          res,
+          400,
+          false,
+          `Minimum quantity for ${product.name_product} is 1`,
+          null
+        );
+      }
+
+      product.stock -= qty;
+      await product.save();
+
+      const cart = await Cart.findOne({
+        where: { user_id: user.id, product_id },
+      });
+      if (!cart) {
+        return response(res, 404, false, "Cart not found", null);
+      }
+
+      cartIds.push(cart.id);
+      totalAmount += product.price * qty;
+
+      await Cart.destroy({ where: { user_id: user.id, product_id } });
     }
 
     const transaction = await Transaction.create({
       id: nanoid(10),
       user_id: user.id,
-      cart_id: cart.id,
-      total_amount: product.price * qty,
+      cart_id: cartIds,
+      total_amount: totalAmount,
       status: true,
     });
 
-    await Cart.destroy({ where: { user_id: user.id, product_id, qty } });
-    return response(res, 200, true, "Checkout successful", transaction);
+    return response(res, 200, true, "Checkout successful", {
+      totalAmount,
+      transaction,
+    });
   } catch (error) {
     return response(res, error.status || 500, false, error.message, null);
   }
