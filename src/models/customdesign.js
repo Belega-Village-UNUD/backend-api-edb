@@ -15,11 +15,13 @@ module.exports = (sequelize, DataTypes) => {
   }
   CustomDesign.init(
     {
-      user_id: DataTypes.UUID,
-      product_id: DataTypes.UUID,
+      user_id: DataTypes.STRING,
+      product_id: DataTypes.STRING,
       image_link: DataTypes.STRING,
       height: DataTypes.INTEGER,
       width: DataTypes.INTEGER,
+      budget: DataTypes.DECIMAL,
+      qty: DataTypes.INTEGER,
     },
     {
       sequelize,
