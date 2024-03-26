@@ -8,13 +8,10 @@ const getItems = async (req, res) => {
       where: { id },
       attributes: { exclude: ["password"] },
     });
-    const items = await Cart.findAll({ where: { user_id: user.id } });
-    const unit_price = await Product.findOne({
-      where: { user_id: user.id },
-      attributes: ["price"],
-    });
 
-    return response(res, 200, true, "Cart items fetched", items, unit_price);
+    const items = await Cart.findAll({ where: { user_id: user.id } });
+
+    return response(res, 200, true, "Cart items fetched", items);
   } catch (error) {
     return response(res, error.status || 500, false, error.message, null);
   }
