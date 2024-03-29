@@ -5,8 +5,6 @@ const { response } = require("../../utils/response.utils");
 const createProduct = async (req, res) => {
   try {
     const { id } = req.user;
-    const { store_id, name_product, productTypeId, description, price, stock } =
-      req.body;
 
     if (
       !store_id ||
@@ -28,6 +26,7 @@ const createProduct = async (req, res) => {
       return response(res, 404, false, "User not found", null);
     }
 
+    const { name_product, productTypeId, description, price, stock } = req.body;
     const product = await Product.create({
       id: nanoid(10),
       user_id: user.id,
