@@ -11,7 +11,7 @@ const addItem = async (req, res) => {
     });
     const { product_id, qty } = req.body;
 
-    const unit_price = await Product.findOne({
+    const product = await Product.findOne({
       where: { user_id: user.id },
       attributes: ["price"],
     });
@@ -21,7 +21,7 @@ const addItem = async (req, res) => {
       user_id: user.id,
       product_id,
       qty,
-      unit_price: unit_price,
+      unit_price: product.price,
     });
 
     const cart = await Cart.findAll({
