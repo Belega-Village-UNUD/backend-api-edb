@@ -55,8 +55,12 @@ const checkoutItem = async (req, res) => {
 
       cartIds.push(cart.id);
       totalAmount += product.price * qty;
-
-      await Cart.destroy({ where: { user_id: user.id, product_id } });
+      if (cart.qty > qty) {
+        cart.qty -= qty;
+        await cart.save();
+      } else {
+        await Cart.destroy({ where: { user_id: user.id, product_id } });
+      }
     }
 
     const transaction = await Transaction.create({
@@ -64,7 +68,7 @@ const checkoutItem = async (req, res) => {
       user_id: user.id,
       cart_id: cartIds,
       total_amount: totalAmount,
-      status: true,
+      status: "PENDING",
     });
 
     return response(res, 200, true, "Checkout successful", {
