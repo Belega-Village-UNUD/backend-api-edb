@@ -9,7 +9,15 @@ const getItems = async (req, res) => {
       attributes: { exclude: ["password"] },
     });
 
-    const items = await Cart.findAll({ where: { user_id: user.id } });
+    const items = await Cart.findAll({
+      where: { user_id: user.id },
+      include: [
+        {
+          model: Product,
+          as: "product",
+        },
+      ],
+    });
 
     return response(res, 200, true, "Cart items fetched", items);
   } catch (error) {
