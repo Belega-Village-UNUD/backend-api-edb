@@ -12,7 +12,7 @@ const addItem = async (req, res) => {
     const { product_id, qty } = req.body;
 
     const product = await Product.findOne({
-      where: { user_id: user.id },
+      where: { id: product_id },
       attributes: ["price"],
     });
 
