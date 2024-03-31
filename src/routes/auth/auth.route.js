@@ -1,9 +1,19 @@
 const router = require("express").Router();
+const { image } = require("../../configs/multer.config");
 const controllers = require("../../controllers");
 const middleware = require("../../middlewares");
 const { MODULE, ROLE } = require("../../utils/enum.utils");
 
 router.post("/register", controllers.auth.register);
+router.post(
+  "/register/seller",
+  middleware.restrict,
+  image.single("avatar"),
+  image.single("image"),
+  image.single("ktp"),
+  middleware.rbac(MODULE.AUTH, ROLE.BUYER, true, false),
+  controllers.auth.registerSeller
+);
 router.post("/login", controllers.auth.login);
 router.post(
   "/otp/verify",
