@@ -21,9 +21,25 @@ const registerSeller = async (req, res) => {
       return response(res, 404, false, "User not found", null);
     }
 
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("phone", phone);
+    formData.append("address", address);
+    formData.append("description", description);
+    //formData.append("ktp_link", req.file.buffer, req.file.originalname);
+    //formData.append("ktp_link", req.file.buffer, req.file.originalname);
+
     const avatar_link = await singleUpload(req, res);
     const image_link = await singleUpload(req, res);
     const ktp_link = await singleUpload(req, res);
+
+    const response = await fetch("/api/register-seller", {
+      method: "POST",
+      body: JSON.stringify({ user, formData }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
     if (!avatar_link || !image_link || !ktp_link) {
       return response(res, 400, false, "File upload failed", null);
@@ -37,8 +53,8 @@ const registerSeller = async (req, res) => {
     const store = await Store.create({
       id: nanoid(10),
       user_id: user.id,
-      avatar_link: avatar_link.url,
-      image_link: image_link.url,
+      avatar_link: ktp_link.url,
+      image_link: ktp_link.url,
       ktp_link: ktp_link.url,
       name,
       phone,
