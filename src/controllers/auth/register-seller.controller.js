@@ -1,7 +1,8 @@
-const { User, Store } = require("../../models");
+const { User, Store, Role } = require("../../models");
 const { response } = require("../../utils/response.utils");
 const { nanoid } = require("nanoid");
 const { singleUpload } = require("../../utils/imagekit.utils");
+const { ROLE } = require("../../utils/enum.utils");
 
 const registerSeller = async (req, res) => {
   try {
@@ -12,36 +13,41 @@ const registerSeller = async (req, res) => {
       return response(res, 400, false, "Invalid input data", null);
     }
 
-    const user = await User.findOne({
+    const userExist = await User.findOne({
       where: { id },
       attributes: { exclude: ["password"] },
     });
 
-    if (!user) {
+    if (!userExist) {
       return response(res, 404, false, "User not found", null);
     }
 
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("phone", phone);
-    formData.append("address", address);
-    formData.append("description", description);
-    //formData.append("ktp_link", req.file.buffer, req.file.originalname);
-    //formData.append("ktp_link", req.file.buffer, req.file.originalname);
+    const sellerRole = await Role.findOne({ where: { name: ROLE.SELLER } });
 
-    const avatar_link = await singleUpload(req, res);
-    const image_link = await singleUpload(req, res);
+    if (!sellerRole) {
+      return response(res, 404, false, "Role not found", null);
+    }
+
+    // Get the existing role_id array
+    const existingRoles = userExist.role_id || [];
+
+    // Add the seller role id to the array
+    const updatedRoles = [...existingRoles, sellerRole.id];
+
+    // Update the user's role_id with the new array
+    await User.update({ role_id: updatedRoles }, { where: { id: id } });
+
+    // const buyerRole = await Role.findOne({ where: { name: ROLE.SELLER } });
+
+    // if (!buyerRole) {
+    //   return response(res, 404, false, "Role not found", null);
+    // }
+
+    // await User.update({ role_id: [buyerRole.id] }, { where: { id: id } });
+
     const ktp_link = await singleUpload(req, res);
 
-    const response = await fetch("/api/register-seller", {
-      method: "POST",
-      body: JSON.stringify({ user, formData }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!avatar_link || !image_link || !ktp_link) {
+    if (!ktp_link) {
       return response(res, 400, false, "File upload failed", null);
     }
 
@@ -52,9 +58,9 @@ const registerSeller = async (req, res) => {
 
     const store = await Store.create({
       id: nanoid(10),
-      user_id: user.id,
-      avatar_link: ktp_link.url,
-      image_link: ktp_link.url,
+      user_id: userExist.id,
+      avatar_link: null,
+      image_link: null,
       ktp_link: ktp_link.url,
       name,
       phone,
@@ -65,10 +71,10 @@ const registerSeller = async (req, res) => {
 
     return response(
       res,
-      201,
+      200,
       true,
-      "Register Seller Succces, please wait for your store verification",
-      { store }
+      "Register Seller Success, please wait for your store verification",
+      { store, user: userExist }
     );
   } catch (err) {
     console.error(err);

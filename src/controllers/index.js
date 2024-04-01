@@ -5,6 +5,7 @@ const product = require("./product");
 const shop = require("./shop");
 const transaction = require("./transaction");
 const custom = require("./preorder");
+const store = require("./store");
 
 module.exports = {
   auth,
@@ -14,4 +15,5 @@ module.exports = {
   shop,
   transaction,
   custom,
+  store,
 };

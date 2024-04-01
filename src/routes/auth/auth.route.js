@@ -8,8 +8,6 @@ router.post("/register", controllers.auth.register);
 router.post(
   "/register/seller",
   middleware.restrict,
-  image.single("avatar"),
-  image.single("image"),
   image.single("ktp"),
   middleware.rbac(MODULE.AUTH, ROLE.BUYER, true, false),
   controllers.auth.registerSeller

@@ -9,6 +9,7 @@ const product = require("./product/product.route");
 const typeProduct = require("./product/type/type.route");
 const cart = require("./shop/cart.route");
 const transaction = require("./transaction/transaction.route");
+const store = require("./store/store.route");
 
 router.get("/", (req, res) => {
   return response(res, 200, true, "Server API is healthy");
@@ -25,5 +26,7 @@ router.use("/product/type", typeProduct);
 
 router.use("/cart", cart);
 router.use("/transaction", transaction);
+
+router.use("/store", store);
 
 module.exports = router;
