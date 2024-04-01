@@ -1,5 +1,5 @@
 const { nanoid } = require("nanoid");
-const { Cart, User } = require("../../models");
+const { Cart, User, Product } = require("../../models");
 const { response } = require("../../utils/response.utils");
 
 const addItem = async (req, res) => {
@@ -11,11 +11,17 @@ const addItem = async (req, res) => {
     });
     const { product_id, qty } = req.body;
 
-    const createdCart = await Cart.create({
+    const product = await Product.findOne({
+      where: { id: product_id },
+      attributes: ["price"],
+    });
+
+    await Cart.create({
       id: nanoid(10),
       user_id: user.id,
       product_id,
       qty,
+      unit_price: product.price,
     });
 
     const cart = await Cart.findAll({

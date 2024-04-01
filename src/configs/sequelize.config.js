@@ -1,4 +1,5 @@
 require("dotenv").config();
+const Sequelize = require("sequelize");
 
 const {
   DEV_DB_USERNAME,
@@ -26,6 +27,17 @@ module.exports = {
     host: DEV_DB_HOST,
     dialect: "postgres",
     port: DEV_DB_PORT,
+    retry: {
+      match: [
+        Sequelize.ConnectionError,
+        Sequelize.ConnectionTimedOutError,
+        Sequelize.TimeoutError,
+        /Deadlock/i,
+        "SQLITE_BUSY",
+      ],
+      max: 5,
+    },
+    logging: false,
   },
   staging: {
     username: STAGING_DB_USERNAME,
@@ -34,6 +46,17 @@ module.exports = {
     host: STAGING_DB_HOST,
     dialect: "postgres",
     port: STAGING_DB_PORT,
+    retry: {
+      match: [
+        Sequelize.ConnectionError,
+        Sequelize.ConnectionTimedOutError,
+        Sequelize.TimeoutError,
+        /Deadlock/i,
+        "SQLITE_BUSY",
+      ],
+      max: 5,
+    },
+    logging: false,
   },
   production: {
     username: PROD_DB_USERNAME,
@@ -42,5 +65,16 @@ module.exports = {
     host: PROD_DB_HOST,
     dialect: "postgres",
     port: PROD_DB_PORT,
+    retry: {
+      match: [
+        Sequelize.ConnectionError,
+        Sequelize.ConnectionTimedOutError,
+        Sequelize.TimeoutError,
+        /Deadlock/i,
+        "SQLITE_BUSY",
+      ],
+      max: 5,
+    },
+    logging: false,
   },
 };

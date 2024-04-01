@@ -1,0 +1,58 @@
+version: "3.4"
+services:
+  duckdns:
+    container_name: duckdns-ecommerce-desa-belega
+    image: lscr.io/linuxserver/duckdns:latest
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Jakarta
+      - SUBDOMAINS=belega
+      - TOKEN=${DUCKDNS_TOKEN}
+    restart: unless-stopped
+    networks:
+      - belega_service
+
+  nginx:
+    container_name: nginx-ecommerce-desa-belega
+    image: nginx:latest
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ../../nginx/conf.d:/etc/nginx/conf.d
+      - ../../nginx/dhparam:/etc/nginx/dhparam
+      - ../../certbot/letsencrypt:/etc/letsencrypt
+    networks:
+      - belega_service
+
+  certbot:
+    container_name: certbot-ecommerce-desa-belega
+    image: infinityofspace/certbot_dns_duckdns:latest
+    command: certonly
+      --non-interactive
+      --agree-tos
+      --email ${ADMIN_EMAIL}
+      --preferred-challenges dns
+      --authenticator dns-duckdns
+      --dns-duckdns-token ${DUCKDNS_TOKEN}
+      --dns-duckdns-propagation-seconds 60
+      -d ${HOST}
+    volumes:
+      - ../../certbot/letsencrypt:/etc/letsencrypt
+      - ../../certbot/logs:/var/log/letsencrypt
+    networks:
+      - belega_service
+
+  certbot_cron:
+    build: .
+    container_name: certbot-cron-ecommerce-desa-belega
+    restart: unless-stopped
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    environment:
+      - CERTBOT_CONTAINER_NAME=certbot-ecommerce-desa-belega
+
+networks:
+  belega_service:
+    external: true
