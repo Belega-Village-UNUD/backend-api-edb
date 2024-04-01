@@ -8,7 +8,6 @@ const registerSeller = async (req, res) => {
     const { id } = req.user;
     const { name, phone, address, description } = req.body;
 
-    // Validate input data
     if (!name || !phone || !address || !description) {
       return response(res, 400, false, "Invalid input data", null);
     }
