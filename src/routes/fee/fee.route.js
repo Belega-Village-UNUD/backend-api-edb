@@ -4,18 +4,16 @@ const controllers = require("../../controllers");
 const middleware = require("../../middlewares");
 const { MODULE, ROLE } = require("../../utils/enum.utils");
 
-router.post(
-  "/avatar",
+router.get(
+  "/",
   middleware.restrict,
-  image.single("avatar"),
-  middleware.rbac(MODULE.AUTH, ROLE.SELLER, true, false),
+  middleware.rbac(MODULE.AUTH, ROLE.BUYER, true, false),
   controllers.store.avatarStore
 );
 router.post(
-  "/image",
+  "/",
   middleware.restrict,
-  image.single("image"),
-  middleware.rbac(MODULE.AUTH, ROLE.SELLER, true, false),
+  middleware.rbac(MODULE.AUTH, ROLE.BUYER, true, false),
   controllers.store.imageStore
 );
 

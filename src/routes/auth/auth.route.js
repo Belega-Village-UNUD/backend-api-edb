@@ -9,7 +9,7 @@ router.post(
   "/register/seller",
   middleware.restrict,
   image.single("ktp"),
-  middleware.rbac(MODULE.AUTH, ROLE.BUYER, true, false),
+  middleware.rbac(MODULE.AUTH, ROLE.BUYER, true, true),
   controllers.auth.registerSeller
 );
 router.post("/login", controllers.auth.login);

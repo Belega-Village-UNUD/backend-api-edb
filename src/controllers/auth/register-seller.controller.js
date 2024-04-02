@@ -13,12 +13,12 @@ const registerSeller = async (req, res) => {
       return response(res, 400, false, "Invalid input data", null);
     }
 
-    const userExist = await User.findOne({
+    const user = await User.findOne({
       where: { id },
       attributes: { exclude: ["password"] },
     });
 
-    if (!userExist) {
+    if (!user) {
       return response(res, 404, false, "User not found", null);
     }
 
@@ -28,22 +28,10 @@ const registerSeller = async (req, res) => {
       return response(res, 404, false, "Role not found", null);
     }
 
-    // Get the existing role_id array
     const existingRoles = userExist.role_id || [];
-
-    // Add the seller role id to the array
     const updatedRoles = [...existingRoles, sellerRole.id];
 
-    // Update the user's role_id with the new array
     await User.update({ role_id: updatedRoles }, { where: { id: id } });
-
-    // const buyerRole = await Role.findOne({ where: { name: ROLE.SELLER } });
-
-    // if (!buyerRole) {
-    //   return response(res, 404, false, "Role not found", null);
-    // }
-
-    // await User.update({ role_id: [buyerRole.id] }, { where: { id: id } });
 
     const ktp_link = await singleUpload(req, res);
 
@@ -74,7 +62,7 @@ const registerSeller = async (req, res) => {
       200,
       true,
       "Register Seller Success, please wait for your store verification",
-      { store, user: userExist }
+      { store }
     );
   } catch (err) {
     console.error(err);
