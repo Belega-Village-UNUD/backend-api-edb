@@ -4,26 +4,13 @@ const { response } = require("../../utils/response.utils");
 const getItems = async (req, res) => {
   try {
     const { id } = req.user;
-    const user = await User.findOne({
-      where: { id },
-      attributes: { exclude: ["password"] },
-    });
-
-    const items = await Cart.findAll({
-      where: { user_id: user.id },
+    const cartItems = await Cart.findAll({
+      where: { user_id: id },
+      attributes: ["id", "qty"],
       include: [
         {
           model: Product,
           as: "product",
-        },
-      ],
-    });
-
-    const cartItems = await Promise.all(
-      items.map(async (item) => {
-        const { id, quantity, product_id } = item;
-        const product = await Product.findOne({
-          where: { id: product_id },
           attributes: [
             "id",
             "image_product",
@@ -40,14 +27,9 @@ const getItems = async (req, res) => {
               attributes: ["id", "name", "phone", "address", "description"],
             },
           ],
-        });
-        return {
-          id,
-          quantity,
-          product,
-        };
-      })
-    );
+        },
+      ],
+    });
 
     return response(res, 200, true, "Cart items fetched", cartItems);
   } catch (error) {
