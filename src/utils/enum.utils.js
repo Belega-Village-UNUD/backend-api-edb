@@ -13,6 +13,8 @@ const MODULE = {
   LANDING: "LANDING",
   ADMIN: "ADMIN",
   SELLER: "SELLER",
+  STORE: "STORE",
+  FEE: "FEE",
 };
 
 module.exports = { ROLE, MODULE };
