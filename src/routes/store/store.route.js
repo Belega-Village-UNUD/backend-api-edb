@@ -8,14 +8,14 @@ router.post(
   "/avatar",
   middleware.restrict,
   image.single("avatar"),
-  middleware.rbac(MODULE.AUTH, ROLE.SELLER, true, false),
+  middleware.rbac(MODULE.STORE, ROLE.SELLER, true, true),
   controllers.store.avatarStore
 );
 router.post(
   "/image",
   middleware.restrict,
   image.single("image"),
-  middleware.rbac(MODULE.AUTH, ROLE.SELLER, true, false),
+  middleware.rbac(MODULE.STORE, ROLE.SELLER, true, true),
   controllers.store.imageStore
 );
 

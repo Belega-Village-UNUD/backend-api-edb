@@ -1,4 +1,4 @@
-const { User, Store } = require("../../models");
+const { Store } = require("../../models");
 const { singleUpload } = require("../../utils/imagekit.utils");
 const { response } = require("../../utils/response.utils");
 

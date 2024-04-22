@@ -6,6 +6,7 @@ const shop = require("./shop");
 const transaction = require("./transaction");
 const custom = require("./preorder");
 const store = require("./store");
+const fee = require("./fee");
 
 module.exports = {
   auth,
@@ -16,4 +17,5 @@ module.exports = {
   transaction,
   custom,
   store,
+  fee,
 };
