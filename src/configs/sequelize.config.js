@@ -37,7 +37,7 @@ module.exports = {
       ],
       max: 5,
     },
-    logging: false,
+    logging: true,
   },
   staging: {
     username: STAGING_DB_USERNAME,
