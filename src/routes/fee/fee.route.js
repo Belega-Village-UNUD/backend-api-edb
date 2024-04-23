@@ -41,4 +41,11 @@ router.delete(
   controllers.fee.deleteFee
 );
 
+router.post(
+  "/charged",
+  middleware.restrict,
+  middleware.rbac(MODULE.FEE, ROLE.ADMIN, true, true),
+  controllers.fee.charged
+);
+
 module.exports = router;
