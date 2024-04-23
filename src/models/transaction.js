@@ -13,10 +13,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "transaction_id",
         as: "detail_transaction",
       });
-      //this.hasOne(models.Cart, {
-      //  foreignKey: "cart_id",
-      //  as: "cart",
-      //});
+      this.belongsTo(models.Cart, {
+        foreignKey: "cart_id",
+        as: "cart",
+      });
       this.belongsTo(models.User, {
         foreignKey: "user_id",
         as: "user",
