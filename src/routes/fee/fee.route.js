@@ -1,5 +1,4 @@
 const router = require("express").Router();
-const { image } = require("../../configs/multer.config");
 const controllers = require("../../controllers");
 const middleware = require("../../middlewares");
 const { MODULE, ROLE } = require("../../utils/enum.utils");
@@ -46,6 +45,18 @@ router.post(
   middleware.restrict,
   middleware.rbac(MODULE.FEE, ROLE.ADMIN, true, true),
   controllers.fee.charged
+);
+router.get(
+  "/history/all",
+  middleware.restrict,
+  middleware.rbac(MODULE.FEE, ROLE.ADMIN, true, true),
+  controllers.fee.getAllHistory
+);
+router.get(
+  "/history/:id",
+  middleware.restrict,
+  middleware.rbac(MODULE.FEE, ROLE.ADMIN, true, true),
+  controllers.fee.getOneHistory
 );
 
 module.exports = router;
