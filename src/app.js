@@ -10,7 +10,7 @@ const { Prometheus } = require("./configs/prometheus.config");
 const { metric } = require("./utils/metric.utils");
 const middlewares = require("./middlewares");
 const { response } = require("./utils/response.utils");
-const TIMEOUT = 5000;
+const TIMEOUT = 10000;
 const app = express();
 
 Sentry.init({
