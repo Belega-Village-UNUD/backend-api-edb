@@ -30,6 +30,7 @@ module.exports = (sequelize, DataTypes) => {
       phone: DataTypes.STRING,
       address: DataTypes.STRING,
       description: DataTypes.TEXT,
+      is_verified: DataTypes.ENUM("WAITING", "FEE", "VERIFIED", "DECLINED"),
       unverified_reason: DataTypes.TEXT,
     },
     {
