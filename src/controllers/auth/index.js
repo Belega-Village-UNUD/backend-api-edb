@@ -6,7 +6,9 @@ const resetPassword = require("./reset-password.controller");
 const verifyUser = require("./verify-user.controller");
 const resendOTP = require("./resend-otp.controller");
 const getOTP = require("./get-otp.controller");
-const registerSeller = require("./register-seller.controller");
+const registerStore = require("./register-store.controller");
+const verifyStore = require("./verify-store.controller");
+const declinedStore = require("./declined-store.controller");
 
 module.exports = {
   register,
@@ -17,5 +19,7 @@ module.exports = {
   verifyUser,
   resendOTP,
   getOTP,
-  registerSeller,
+  registerStore,
+  verifyStore,
+  declinedStore,
 };

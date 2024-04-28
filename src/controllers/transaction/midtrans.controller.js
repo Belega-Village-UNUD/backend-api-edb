@@ -33,10 +33,8 @@ const getTokenMidtrans = async (req, res) => {
     };
 
     const midtrans_token = await snap.createTransactionToken(parameter);
-    console.log("🚀 ~ getTokenMidtrans ~ midtrans_token:", midtrans_token)
     return response(res, 201, true, "Get Token is Success", { midtrans_token });
   } catch (error) {
-    console.log("🚀 ~ getTokenMidtrans ~ error:", error)
     return response(res, error.status || 500, false, error.message, null);
   }
 };

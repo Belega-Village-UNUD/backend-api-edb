@@ -6,10 +6,11 @@ const getOneFee = async (req, res) => {
     const { id } = req.params;
     const fee = await Fee.findOne({ where: { id } });
 
-    if (fee.length === 0) {
-      return response(res, 404, false, `Fee ${id} Not Found`, null);
+    if (!fee) {
+      return response(res, 404, false, `Fee Not Found`, null);
     }
-    return response(res, 200, true, `Get Fee ${id} Successfull`, fee);
+
+    return response(res, 200, true, `Get ${fee.name} Successfull`, fee);
   } catch (err) {
     return response(res, err.status || 500, false, err.message, null);
   }

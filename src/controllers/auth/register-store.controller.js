@@ -4,7 +4,7 @@ const { nanoid } = require("nanoid");
 const { singleUpload } = require("../../utils/imagekit.utils");
 const { ROLE } = require("../../utils/enum.utils");
 
-const registerSeller = async (req, res) => {
+const registerStore = async (req, res) => {
   try {
     const { id } = req.user;
     const { name, phone, address, description } = req.body;
@@ -54,14 +54,15 @@ const registerSeller = async (req, res) => {
       phone,
       address,
       description,
-      unverified_reason: "Waiting for verification",
+      unverified_reason: null,
+      is_verified: "WAITING",
     });
 
     return response(
       res,
       200,
       true,
-      "Register Seller Success, please wait for your store verification",
+      "Register Store Success, please wait for your store verification",
       { store }
     );
   } catch (err) {
@@ -70,4 +71,4 @@ const registerSeller = async (req, res) => {
   }
 };
 
-module.exports = registerSeller;
+module.exports = registerStore;

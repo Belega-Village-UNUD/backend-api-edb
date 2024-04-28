@@ -5,13 +5,6 @@ const middleware = require("../../middlewares");
 const { MODULE, ROLE } = require("../../utils/enum.utils");
 
 router.post("/register", controllers.auth.register);
-router.post(
-  "/register/seller",
-  middleware.restrict,
-  image.single("ktp"),
-  middleware.rbac(MODULE.AUTH, ROLE.BUYER, true, true),
-  controllers.auth.registerSeller
-);
 router.post("/login", controllers.auth.login);
 router.post(
   "/otp/verify",
@@ -38,6 +31,25 @@ router.put(
   middleware.restrict,
   middleware.rbac(MODULE.AUTH, ROLE.BUYER, true, false),
   controllers.auth.changePassword
+);
+router.post(
+  "/register/store",
+  middleware.restrict,
+  image.single("ktp"),
+  middleware.rbac(MODULE.AUTH, ROLE.BUYER, true, true),
+  controllers.auth.registerStore
+);
+router.put(
+  "/verify-store",
+  middleware.restrict,
+  middleware.rbac(MODULE.AUTH, ROLE.ADMIN, true, true),
+  controllers.auth.verifyStore
+);
+router.put(
+  "/declined-store",
+  middleware.restrict,
+  middleware.rbac(MODULE.AUTH, ROLE.ADMIN, true, true),
+  controllers.auth.declinedStore
 );
 
 module.exports = router;
