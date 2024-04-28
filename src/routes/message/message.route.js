@@ -4,10 +4,10 @@ const middleware = require("../../middlewares");
 const { MODULE, ROLE } = require("../../utils/enum.utils");
 
 router.get(
-  "/message-store",
+  "/store",
   middleware.restrict,
   middleware.rbac(MODULE.MESSAGE, ROLE.BUYER, true, true),
-  controller.sendMessage
+  controller.sendMessageGreetSeller
 );
 
 module.exports = router;
