@@ -1,7 +1,7 @@
 const { User, Profile, Store } = require("../../models");
 const { response } = require("../../utils/response.utils");
 
-const sendMessage = async (req, res) => {
+const sendMessageGreetSeller = async (req, res) => {
   try {
     const { id } = req.user;
     const user = await User.findOne({
@@ -36,5 +36,5 @@ const sendMessage = async (req, res) => {
   }
 };
 
-module.exports = sendMessage;
+module.exports = sendMessageGreetSeller;
 
