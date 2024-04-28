@@ -10,5 +10,13 @@ router.get(
   controller.sendMessageGreetSeller
 );
 
+
+router.get(
+  "/product",
+  middleware.restrict,
+  middleware.rbac(MODULE.MESSAGE, ROLE.BUYER, true, true),
+  controller.sendMessageAskProduct
+);
+
 module.exports = router;
 

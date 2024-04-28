@@ -1,5 +1,7 @@
-const sendMessage = require("./message.controller");
+const sendMessageGreetSeller = require("./greet.controller");
+const sendMessageAskProduct = require("./ask.controller");
 
 module.exports = {
-  sendMessage,
+  sendMessageGreetSeller,
+  sendMessageAskProduct,
 };
