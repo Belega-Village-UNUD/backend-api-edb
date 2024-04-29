@@ -25,7 +25,7 @@ const sendOTP = async (user, subject) => {
 
     await sendEmail(user.email, subject, template);
   } catch (err) {
-    console.log(err);
+    throw err;
   }
 };
 

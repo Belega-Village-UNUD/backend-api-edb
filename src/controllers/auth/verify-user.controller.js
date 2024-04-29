@@ -26,7 +26,6 @@ const verifyUser = async (req, res) => {
       token,
     });
   } catch (err) {
-    console.log(err);
     return response(res, err.status || 500, false, err.message, null);
   }
 };
