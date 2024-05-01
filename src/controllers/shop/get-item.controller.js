@@ -11,23 +11,29 @@ const getItems = async (req, res) => {
       attributes: ["id"],
     });
 
+    //console.log(`allCarts is array? ${Array.isArray(allCarts)}`); // Corrected this line
 
     const checkoutedCarts = allCarts.map((cart) => cart.id);
-    console.log("🚀 ~ getItems ~ checkoutedCarts:", checkoutedCarts)
-    console.log("🚀 ~ getItems ~ typeof(checkoutedCarts):", typeof checkoutedCarts)
+    console.log("🚀 ~ getItems ~ checkoutedCarts:", checkoutedCarts);
+
     // check the transactions
     const transactions = await Transaction.findAll({
       where: {
-        cart_id: { [Op.or]: checkoutedCarts},
+        cart_id: { [Op.in]: checkoutedCarts },
         user_id: id,
       },
     });
+
+    let listCarts = [];
+    transactions.map((transaction) => listCarts.push(transaction.cart_id));
+    console.log("🚀 ~ getItems ~ listCarts:", listCarts);
+    console.log("🚀 ~ getItems ~ listCarts:", typeof listCarts);
 
     // filter cart that has not been in the transaction module
     const cartItems = await Cart.findAll({
       where: {
         id: {
-          [Op.notLike]: transactions.map((transaction) => transaction.cart_id),
+          [Op.notIn]: listCarts,
         },
         user_id: id,
       },
@@ -55,6 +61,7 @@ const getItems = async (req, res) => {
     });
     return response(res, 200, true, "Cart items fetched", cartItems);
   } catch (error) {
+    console.log("🚀 ~ getItems ~ error:", error);
     return response(res, error.status || 500, false, error.message, null);
   }
 };

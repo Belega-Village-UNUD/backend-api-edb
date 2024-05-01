@@ -10,14 +10,23 @@ const checkoutItem = async (req, res) => {
       attributes: { exclude: ["password"] },
     });
 
-    const item = req.body;
+    const items = req.body;
 
     const transactions = [];
 
-    //for (const item of items) {
-      const { product_id, qty } = item;
+    for (const item of items) {
+      const { cart_id, qty } = item;
 
-      const product = await Product.findOne({ where: { id: product_id } });
+      const cart = await Cart.findOne({
+        where: { id: cart_id },
+      });
+      console.log(cart.id);
+      console.log(typeof cart.id);
+      if (!cart) {
+        return response(res, 404, false, "Cart not found", null);
+      }
+
+      const product = await Product.findOne({ where: { id: cart.product_id } });
       if (!product) {
         return response(res, 404, false, "Product not found", null);
       }
@@ -45,26 +54,28 @@ const checkoutItem = async (req, res) => {
       product.stock -= qty;
       await product.save();
 
-      const cart = await Cart.findOne({
-        where: { user_id: user.id, product_id },
-      });
-      if (!cart) {
-        return response(res, 404, false, "Cart not found", null);
-      }
+      // const cart = await Cart.findOne({
+      //   where: { user_id: user.id, product_id },
+      // });
+
+      // if (!cart) {
+      //   return response(res, 404, false, "Cart not found", null);
+      // }
 
       const totalAmount = product.price * qty;
       if (cart.qty > qty) {
         cart.qty -= qty;
         await cart.save();
+      } else {
+        //await Cart.destroy({ where: { user_id: user.id, product_id } });
+        cart.qty = 0;
       }
-      //else {
-      //  //await Cart.destroy({ where: { user_id: user.id, product_id } });
-      //}
+      await cart.save();
 
       const transaction = await Transaction.create({
         id: nanoid(10),
         user_id: user.id,
-        cart_id: [cart.id],
+        cart_id: cart.id,
         total_amount: totalAmount,
         status: "PENDING",
       });
@@ -73,7 +84,7 @@ const checkoutItem = async (req, res) => {
         totalAmount,
         transaction,
       });
-    //}
+    }
 
     return response(res, 200, true, "Checkout successful", transactions);
   } catch (error) {
