@@ -17,9 +17,21 @@ const verifyStore = async (req, res) => {
     });
     if (!store) return response(res, 404, false, "Store not found", null);
 
-    await db.sequelize.query(
-      `update "Stores" s set is_verified = 'VERIFIED' where s.user_id='${user_id}'`
+    const isStoreVerified = await Store.update(
+      {
+        unverified_reason: null,
+        is_verified: "VERIFIED",
+      },
+      {
+        where: { user_id: user_id },
+      }
     );
+    if (!isStoreVerified) {
+      throw {
+        status: 500,
+        message: "Failed to verify store",
+      };
+    }
 
     return response(
       res,

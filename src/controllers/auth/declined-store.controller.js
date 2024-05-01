@@ -22,10 +22,6 @@ const declinedStore = async (req, res) => {
       { where: { user_id } }
     );
 
-    await db.sequelize.query(
-      `update "Stores" s set is_verified = 'DECLINED' where s.user_id='${user_id}'`
-    );
-
     return response(
       res,
       200,
