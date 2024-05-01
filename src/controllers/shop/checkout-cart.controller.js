@@ -10,9 +10,12 @@ const checkoutCart = async (req, res) => {
       attributes: { exclude: ["password"] },
     });
 
+    const items = req.body;
+
     const transactions = [];
 
     for (const item of items) {
+      const { cart_id } = item;
 
       const cart = await Cart.findOne({
         where: { id: cart_id },
