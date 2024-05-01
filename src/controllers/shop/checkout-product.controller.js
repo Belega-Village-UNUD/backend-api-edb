@@ -2,7 +2,7 @@ const { nanoid } = require("nanoid");
 const { Cart, User, Product, Transaction } = require("../../models");
 const { response } = require("../../utils/response.utils");
 
-const checkoutItem = async (req, res) => {
+const checkoutProduct = async (req, res) => {
   try {
     const { id } = req.user;
     const user = await User.findOne({
@@ -15,14 +15,17 @@ const checkoutItem = async (req, res) => {
     const transactions = [];
 
     for (const item of items) {
-      const { cart_id, qty } = item;
+      const { cart_id } = item;
 
       const cart = await Cart.findOne({
         where: { id: cart_id },
       });
+
       if (!cart) {
         return response(res, 404, false, "Cart not found", null);
       }
+
+      const qty = cart.qty;
 
       const product = await Product.findOne({ where: { id: cart.product_id } });
       if (!product) {
@@ -52,20 +55,11 @@ const checkoutItem = async (req, res) => {
       product.stock -= qty;
       await product.save();
 
-      // const cart = await Cart.findOne({
-      //   where: { user_id: user.id, product_id },
-      // });
-
-      // if (!cart) {
-      //   return response(res, 404, false, "Cart not found", null);
-      // }
-
       const totalAmount = product.price * qty;
       if (cart.qty > qty) {
         cart.qty -= qty;
         await cart.save();
       } else {
-        //await Cart.destroy({ where: { user_id: user.id, product_id } });
         cart.qty = 0;
       }
       await cart.save();
@@ -90,4 +84,4 @@ const checkoutItem = async (req, res) => {
   }
 };
 
-module.exports = checkoutItem;
+module.exports = checkoutProduct;
