@@ -25,6 +25,14 @@ const checkoutCart = async (req, res) => {
         return response(res, 404, false, "Cart not found", null);
       }
 
+      const checkTransaction = await Transaction.findOne({
+        where: { cart_id: cart.id, user_id: user.id },
+      });
+
+      if (checkTransaction) {
+        return response(res, 400, false, "Cart already checked out", null);
+      }
+
       const qty = cart.qty;
 
       const product = await Product.findOne({ where: { id: cart.product_id } });
