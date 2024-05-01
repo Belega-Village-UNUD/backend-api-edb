@@ -20,8 +20,6 @@ const checkoutItem = async (req, res) => {
       const cart = await Cart.findOne({
         where: { id: cart_id },
       });
-      console.log(cart.id);
-      console.log(typeof cart.id);
       if (!cart) {
         return response(res, 404, false, "Cart not found", null);
       }
@@ -88,7 +86,6 @@ const checkoutItem = async (req, res) => {
 
     return response(res, 200, true, "Checkout successful", transactions);
   } catch (error) {
-    console.log("🚀 ~ checkoutItem ~ error:", error);
     return response(res, error.status || 500, false, error.message, null);
   }
 };

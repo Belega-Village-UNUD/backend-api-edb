@@ -7,7 +7,6 @@ const getAllTransactions = async (req, res) => {
     const { id: user_id } = req.user;
 
     const store = await Store.findOne({ where: { user_id } });
-    console.log("🚀 ~ getAllTransactions ~ store:", store);
 
     if (!store) return response(res, 404, false, "Store not found", null);
 
