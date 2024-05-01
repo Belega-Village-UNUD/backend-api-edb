@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
   Transaction.init(
     {
       user_id: DataTypes.STRING,
-      cart_id: DataTypes.ARRAY(DataTypes.STRING),
+      cart_id: DataTypes.STRING,
       total_amount: DataTypes.DECIMAL,
       status: DataTypes.ENUM("PENDING", "PAYABLE", "SUCCESS", "CANCEL"),
     },
