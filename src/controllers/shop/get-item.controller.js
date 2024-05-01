@@ -5,23 +5,26 @@ const { Op, ENUM, sequelize } = require("sequelize");
 const getItems = async (req, res) => {
   try {
     const { id } = req.user;
-    // check all Carts from this users to get the id of cart
-    const allCarts = await Cart.findAll({
-      where: { user_id: id },
+
+    // get the user
+    const user = await User.findOne({
+      where: {
+        id: id,
+      },
       attributes: ["id"],
     });
 
-    //console.log(`allCarts is array? ${Array.isArray(allCarts)}`); // Corrected this line
+    if (!user) {
+      return response(res, 404, false, "User not found", null);
+    }
 
-    const checkoutedCarts = allCarts.map((cart) => cart.id);
-    console.log("🚀 ~ getItems ~ checkoutedCarts:", checkoutedCarts);
-
-    // check the transactions
+    // get all the cart id the has been in transactions
     const transactions = await Transaction.findAll({
       where: {
-        cart_id: { [Op.in]: checkoutedCarts },
-        user_id: id,
+        user_id: user.id,
       },
+      attributes: ["id", "cart_id"],
+      raw: true,
     });
 
     let listCarts = [];
@@ -33,7 +36,7 @@ const getItems = async (req, res) => {
     const cartItems = await Cart.findAll({
       where: {
         id: {
-          [Op.notIn]: listCarts,
+          [Op.notIn]: transactions.map((transaction) => transaction.cart_id),
         },
         user_id: id,
       },
