@@ -1,6 +1,6 @@
 const { Cart, User, Product, Store, Transaction } = require("../../models");
 const { response } = require("../../utils/response.utils");
-const { Op, ENUM, sequelize } = require("sequelize");
+const { Op } = require("sequelize");
 
 const getItems = async (req, res) => {
   try {
@@ -26,11 +26,6 @@ const getItems = async (req, res) => {
       attributes: ["id", "cart_id"],
       raw: true,
     });
-
-    let listCarts = [];
-    transactions.map((transaction) => listCarts.push(transaction.cart_id));
-    console.log("🚀 ~ getItems ~ listCarts:", listCarts);
-    console.log("🚀 ~ getItems ~ listCarts:", typeof listCarts);
 
     // filter cart that has not been in the transaction module
     const cartItems = await Cart.findAll({
@@ -64,7 +59,6 @@ const getItems = async (req, res) => {
     });
     return response(res, 200, true, "Cart items fetched", cartItems);
   } catch (error) {
-    console.log("🚀 ~ getItems ~ error:", error);
     return response(res, error.status || 500, false, error.message, null);
   }
 };
