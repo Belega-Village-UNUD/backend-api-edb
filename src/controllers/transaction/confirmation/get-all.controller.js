@@ -1,5 +1,12 @@
 const Sequelize = require("sequelize");
-const { Transaction, Cart, Product, Store } = require("../../../models");
+const {
+  Transaction,
+  Cart,
+  Product,
+  User,
+  Store,
+  Profile,
+} = require("../../../models");
 const { response } = require("../../../utils/response.utils");
 
 const getAllTransactions = async (req, res) => {
@@ -10,43 +17,57 @@ const getAllTransactions = async (req, res) => {
 
     if (!store) return response(res, 404, false, "Store not found", null);
 
-    const products = await Product.findAll({
-      where: { store_id: store.id },
-      attributes: ["id"],
-    });
-
-    const productIds = products.map((product) => product.id);
-
-    //const carts = await Cart.findAll({
-    //  where: {
-    //    product_id: {
-    //      [Sequelize.Op.in]: productIds,
-    //    },
-    //  },
-    //  attributes: ["id"],
-    //});
-
-    //const cartIds = carts.map((cart) => cart.id);
-
     const transactions = await Transaction.findAll({
+      attributes: ["id", "user_id", "status", "createdAt"],
+      include: [
+        {
+          model: Cart,
+          as: "cart",
+          attributes: ["id", "user_id", "product_id", "qty", "unit_price"],
+          include: [
+            {
+              model: User,
+              as: "user",
+              attributes: ["id", "email"],
+              include: [
+                {
+                  model: Profile,
+                  as: "userProfile",
+                  attributes: ["id", "name"],
+                },
+              ],
+            },
+            {
+              model: Product,
+              as: "product",
+              include: [
+                {
+                  model: Store,
+                  as: "store",
+                  attributes: ["id", "name"],
+                  include: [
+                    {
+                      model: User,
+                      as: "user",
+                      attributes: ["id", "email"],
+                      include: [
+                        {
+                          model: Profile,
+                          as: "userProfile",
+                          attributes: ["id", "name"],
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
       where: {
-        user_id,
-        //cart_id: {
-        //  [Sequelize.Op.contains]: cartIds,
-        //},
+        "$cart.product.store_id$": store.id,
       },
-      //include: [
-      //  {
-      //    model: Cart,
-      //    as: "cart",
-      //    include: [
-      //      {
-      //        model: Product,
-      //        as: "product",
-      //      },
-      //    ],
-      //  },
-      //],
     });
 
     if (!transactions || transactions.length === 0) {
