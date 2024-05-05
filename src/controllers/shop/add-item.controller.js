@@ -16,7 +16,7 @@ const addItem = async (req, res) => {
 
       const product = await Product.findOne({
         where: { id: product_id },
-        attributes: ["price", "stock", "name_product"],
+        attributes: ["id", "price", "stock", "name_product"],
       });
 
       if (qty === 0) {
@@ -31,36 +31,11 @@ const addItem = async (req, res) => {
 
       // Add checker if the existing cart item is more than the stock
       const existingCartItem = await Cart.findOne({
-        where: { user_id: user.id, product_id },
-        include: {
-          model: Transaction,
-          as: "transaction",
-          attributes: ["id"],
+        where: {
+          user_id: user.id,
+          product_id: product.id,
         },
       });
-
-      // if (existingCartItem && existingCartItem.transaction === null) {
-      //   if (existingCartItem.qty + qty > product.stock) {
-      //     return response(
-      //       res,
-      //       400,
-      //       false,
-      //       `Insufficient stock for ${product.name_product}`,
-      //       null
-      //     );
-      //   }
-      //   await existingCartItem.update({
-      //     qty: existingCartItem.qty + qty,
-      //   });
-      // } else {
-      //   await Cart.create({
-      //     id: nanoid(10),
-      //     user_id: user.id,
-      //     product_id,
-      //     qty,
-      //     unit_price: product.price,
-      //   });
-      // }
 
       if (existingCartItem) {
         if (existingCartItem.qty + qty > product.stock) {
