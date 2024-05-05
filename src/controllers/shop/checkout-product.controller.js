@@ -10,11 +10,9 @@ const checkoutProduct = async (req, res) => {
       attributes: { exclude: ["password"] },
     });
 
-    const items = req.body;
+    const { product_id, qty } = req.body;
 
-    const transactions = [];
 
-    for (const item of items) {
       const { cart_id } = item;
 
       const cart = await Cart.findOne({
@@ -76,7 +74,6 @@ const checkoutProduct = async (req, res) => {
         totalAmount,
         transaction,
       });
-    }
 
     return response(res, 200, true, "Checkout successful", transactions);
   } catch (error) {
