@@ -9,7 +9,7 @@ router.put(
   "/confirm/:transactionId",
   middleware.restrict,
   middleware.rbac(MODULE.TRANSACTION, ROLE.SELLER, true, true),
-  controller.confrimOrder
+  controller.confirmOrder
 );
 
 router.put(
