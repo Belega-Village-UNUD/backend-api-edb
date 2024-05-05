@@ -61,6 +61,13 @@ const checkoutProduct = async (req, res) => {
         cart.qty = 0;
       }
       await cart.save();
+    //     if (cart.qty > qty) {
+    //       cart.qty -= qty;
+    //       await cart.save();
+    //     } else {
+    //       cart.qty = 0;
+    //     }
+    //    await cart.save();
 
       const transaction = await Transaction.create({
         id: nanoid(10),
