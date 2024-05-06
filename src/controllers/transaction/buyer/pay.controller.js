@@ -84,8 +84,11 @@ const payTransaction = async (req, res) => {
     }
 
     if (transaction.status != "CANCEL") {
+      // TODO put midtrans transaction integration in here
       transaction.status = "SUCCESS";
       await transaction.save();
+      // TODO create notification here to seller
+      // TODO Email Notification
       const detailTransaction = await DetailTransaction.findOne({
         where: {
           transaction_id: transaction.id,
