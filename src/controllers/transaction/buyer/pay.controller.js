@@ -88,7 +88,17 @@ const payTransaction = async (req, res) => {
       transaction.status = "SUCCESS";
       await transaction.save();
       // TODO create notification here to seller
+      const notification = {
+        title: "Transfer Success",
+        message: `You have a new order from ${transaction.cart.user.userProfile.name} for product ${transaction.cart.product.name_product} with total price ${transaction.total_price}`,
+        transction_id: transaction.id,
+        type: "order",
+        user_id: transaction.cart.product.store.user.id,
+      };
+
       // TODO Email Notification
+      // await sendEmail(user.email, subject, template);
+
       const detailTransaction = await DetailTransaction.findOne({
         where: {
           transaction_id: transaction.id,
