@@ -1,29 +1,45 @@
-const { Cart, User, Product, Store } = require("../../models");
+const { Cart, User, Product, Store, Transaction } = require("../../models");
 const { response } = require("../../utils/response.utils");
+const { Op } = require("sequelize");
 
 const getItems = async (req, res) => {
   try {
     const { id } = req.user;
+
+    // get the user
     const user = await User.findOne({
-      where: { id },
-      attributes: { exclude: ["password"] },
+      where: {
+        id: id,
+      },
+      attributes: ["id"],
     });
 
-    const items = await Cart.findAll({
-      where: { user_id: user.id },
+    if (!user) {
+      return response(res, 404, false, "User not found", null);
+    }
+
+    // get all the cart id the has been in transactions
+    const transactions = await Transaction.findAll({
+      where: {
+        user_id: user.id,
+      },
+      attributes: ["id", "cart_id"],
+      raw: true,
+    });
+
+    // filter cart that has not been in the transaction module
+    const cartItems = await Cart.findAll({
+      where: {
+        id: {
+          [Op.notIn]: transactions.map((transaction) => transaction.cart_id),
+        },
+        user_id: id,
+      },
+      attributes: ["id", "qty"],
       include: [
         {
           model: Product,
           as: "product",
-        },
-      ],
-    });
-
-    const cartItems = await Promise.all(
-      items.map(async (item) => {
-        const { id, quantity, product_id } = item;
-        const product = await Product.findOne({
-          where: { id: product_id },
           attributes: [
             "id",
             "image_product",
@@ -33,22 +49,14 @@ const getItems = async (req, res) => {
             "desc_product",
             "type_id",
           ],
-          include: [
-            {
-              model: Store,
-              as: "store",
-              attributes: ["id", "name", "phone", "address", "description"],
-            },
-          ],
-        });
-        return {
-          id,
-          quantity,
-          product,
-        };
-      })
-    );
-
+          include: {
+            model: Store,
+            as: "store",
+            attributes: ["id", "name", "phone", "address", "description"],
+          },
+        },
+      ],
+    });
     return response(res, 200, true, "Cart items fetched", cartItems);
   } catch (error) {
     return response(res, error.status || 500, false, error.message, null);

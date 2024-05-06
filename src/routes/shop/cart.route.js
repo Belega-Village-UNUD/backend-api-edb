@@ -24,11 +24,25 @@ router.delete(
   controller.removeItem
 );
 
+router.delete(
+  "/all",
+  middleware.restrict,
+  middleware.rbac(MODULE.SHOP, ROLE.BUYER, true, true),
+  controller.removeAll
+);
+
 router.post(
   "/checkout",
   middleware.restrict,
   middleware.rbac(MODULE.SHOP, ROLE.BUYER, true, true),
-  controller.checkoutItem
+  controller.checkoutCart
+);
+
+router.post(
+  "/product/checkout",
+  middleware.restrict,
+  middleware.rbac(MODULE.SHOP, ROLE.BUYER, true, true),
+  controller.checkoutProduct
 );
 
 module.exports = router;
