@@ -83,3 +83,38 @@ const payTransaction = async (req, res) => {
       );
     }
 
+    if (transaction.status != "CANCEL") {
+      transaction.status = "SUCCESS";
+      await transaction.save();
+      const detailTransaction = await DetailTransaction.findOne({
+        where: {
+          transaction_id: transaction.id,
+        },
+      });
+
+      if (!detailTransaction) {
+        await DetailTransaction.create({
+          id: nanoid(10),
+          transaction_id: transaction.id,
+          product_id: transaction.cart.product_id,
+          qty: transaction.cart.qty,
+          unit_price: transaction.cart.unit_price,
+          total_price: transaction.cart.qty * transaction.total_price,
+          recipient_link: "https://www.google.com",
+        });
+      }
+    }
+
+    return response(
+      res,
+      200,
+      true,
+      "Transaction updated successfully",
+      transaction
+    );
+  } catch (error) {
+    return response(res, error.status || 500, false, error.message, null);
+  }
+};
+
+module.exports = payTransaction;
