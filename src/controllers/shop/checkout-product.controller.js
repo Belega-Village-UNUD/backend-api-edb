@@ -1,13 +1,26 @@
 const { nanoid } = require("nanoid");
-const { Cart, User, Product, Transaction } = require("../../models");
+const { Cart, User, Product, Transaction, Profile } = require("../../models");
 const { response } = require("../../utils/response.utils");
+const {
+  MIDTRANS_SERVER_KEY,
+  MIDTRANS_APP_URL,
+  FE_URL,
+} = require("../../utils/constan");
 
 const checkoutProduct = async (req, res) => {
   try {
     const { id } = req.user;
+
     const user = await User.findOne({
       where: { id },
       attributes: { exclude: ["password"] },
+      include: [
+        {
+          model: Profile,
+          as: "userProfile",
+          attributes: ["name", "phone"],
+        },
+      ],
     });
 
     const { product_id, qty } = req.body;
@@ -50,20 +63,67 @@ const checkoutProduct = async (req, res) => {
       unit_price: product.price,
     });
 
-    //     if (cart.qty > qty) {
-    //       cart.qty -= qty;
-    //       await cart.save();
-    //     } else {
-    //       cart.qty = 0;
-    //     }
-    //    await cart.save();
+    const transaction_id = `BLG-${nanoid(4)}-${nanoid(8)}`;
+    const authString = btoa(`${MIDTRANS_SERVER_KEY}:`);
+
+    const payload = {
+      transaction_details: {
+        order_id: transaction_id,
+        gross_amount: totalAmount,
+      },
+      item_details: [
+        {
+          id: product.id,
+          price: product.price,
+          quantity: qty,
+          name: product.name_product,
+        },
+      ],
+      customer_details: {
+        first_name: user.userProfile.name,
+        email: user.email,
+        phone: user.userProfile.phone,
+      },
+      callback: {
+        finish: `${FE_URL}/transaction/transaction_id=${transaction_id}`,
+        error: `${FE_URL}/transaction/transaction_id=${transaction_id}`,
+        pending: `${FE_URL}/transaction/transaction_id=${transaction_id}`,
+      },
+    };
+
+    const responsedMidtrans = await fetch(
+      `${MIDTRANS_APP_URL}/snap/v1/transactions`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Basic ${authString}`,
+        },
+        body: JSON.stringify(payload),
+      }
+    );
+
+    const data = await responsedMidtrans.json();
+
+    if (responsedMidtrans.status !== 201) {
+      return response(
+        res,
+        responsedMidtrans.status,
+        false,
+        "Failed to create transaction",
+        null
+      );
+    }
 
     const transaction = await Transaction.create({
-      id: nanoid(10),
+      id: transaction_id,
       user_id: user.id,
       cart_id: cart.id,
       total_amount: totalAmount,
       status: "PENDING",
+      token: data.token,
+      redirect_url: data.redirect_url,
     });
 
     let transactions = [];
