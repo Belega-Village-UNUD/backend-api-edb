@@ -27,7 +27,6 @@ const chargerFee = async (req, res) => {
 
     const store = await Store.findOne({ where: { id: store_id } });
 
-    console.log(store.name);
     if (!store) {
       return response(res, 404, false, `Store Not Found`, null);
     }

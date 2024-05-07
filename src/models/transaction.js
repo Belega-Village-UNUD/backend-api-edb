@@ -33,6 +33,8 @@ module.exports = (sequelize, DataTypes) => {
       cart_id: DataTypes.STRING,
       total_amount: DataTypes.DECIMAL,
       status: DataTypes.ENUM("PENDING", "PAYABLE", "SUCCESS", "CANCEL"),
+      token: DataTypes.STRING,
+      redirect_url: DataTypes.STRING,
     },
     {
       sequelize,

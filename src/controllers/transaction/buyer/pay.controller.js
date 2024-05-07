@@ -10,7 +10,29 @@ const {
   DetailTransaction,
 } = require("../../../models");
 const { response } = require("../../../utils/response.utils");
-const sendEmail = require("./nodemailer.config");
+// const sendEmail = require("./nodemailer.config");
+const crypto = require("crypto");
+const { MIDTRANS_SERVER_KEY } = require("../../../utils/constan");
+
+const updateStatusFromMidtrans = async (transaction_id, data) => {
+  const hash = crypto
+    .createHash("sha512")
+    .update(
+      `${transaction_id}${data.status_code}${data.gross_amount}${MIDTRANS_SERVER_KEY}`
+    )
+    .digest("hex");
+
+  if (data.signature_key !== hash) {
+    return (
+      response(res, 400, false, "Signature key is not match", null),
+      console.log("Signature key is not match")
+    );
+  }
+
+  let responseData = null;
+  let transactionStatus = data.transaction_status;
+  let fraudStatus = data.fraud_status;
+};
 
 const payTransaction = async (req, res) => {
   try {

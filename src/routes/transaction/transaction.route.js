@@ -7,14 +7,14 @@ const { MODULE, ROLE } = require("../../utils/enum.utils");
 router.post("/", middleware.restrict, controller.getTokenMidtrans);
 
 router.put(
-  "/confirm/:transactionId",
+  "/confirm/:id",
   middleware.restrict,
   middleware.rbac(MODULE.TRANSACTION, ROLE.SELLER, true, true),
   controller.confirmOrder
 );
 
 router.put(
-  "/decline/:transactionId",
+  "/decline/:id",
   middleware.restrict,
   middleware.rbac(MODULE.TRANSACTION, ROLE.SELLER, true, true),
   controller.declineOrder
