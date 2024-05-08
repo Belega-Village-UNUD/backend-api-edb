@@ -65,8 +65,10 @@ const checkoutCart = async (req, res) => {
 
       const totalAmount = product.price * qty;
 
+      const transaction_id = `BLG-${nanoid(4)}-${nanoid(8)}`;
+
       const transaction = await Transaction.create({
-        id: nanoid(10),
+        id: transaction_id,
         user_id: user.id,
         cart_id: cart.id,
         total_amount: totalAmount,
