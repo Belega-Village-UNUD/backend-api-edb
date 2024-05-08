@@ -5,6 +5,7 @@ const {
   Product,
   Transaction,
   Profile,
+  Store,
 } = require("../../../models");
 const { response } = require("../../../utils/response.utils");
 const {
@@ -15,7 +16,7 @@ const {
 
 const confirm = async (req, res) => {
   try {
-    const { transactionId } = req.params;
+    const { id: transactionId } = req.params;
 
     const { id } = req.user;
 
@@ -34,6 +35,7 @@ const confirm = async (req, res) => {
       );
     }
 
+    console.log(storeUserId.user_id);
     let transaction = await Transaction.findOne({
       attributes: ["id", "user_id", "status", "createdAt"],
       include: [
@@ -57,6 +59,19 @@ const confirm = async (req, res) => {
             {
               model: Product,
               as: "product",
+              include: [
+                {
+                  model: Store,
+                  as: "store",
+                  include: [
+                    {
+                      model: User,
+                      as: "user",
+                      include: [{ model: Profile, as: "userProfile" }],
+                    },
+                  ],
+                },
+              ],
             },
           ],
         },
@@ -124,6 +139,8 @@ const confirm = async (req, res) => {
 
     const data = await responsedMidtrans.json();
 
+    // ERROR HERE
+    console.log(JSON.stringify(data));
     if (responsedMidtrans.status !== 201) {
       return response(
         res,
@@ -141,6 +158,7 @@ const confirm = async (req, res) => {
 
     return response(res, 200, true, "Transaction confirmed", transaction);
   } catch (error) {
+    console.error(error);
     return response(res, error.status || 500, false, error.message, null);
   }
 };

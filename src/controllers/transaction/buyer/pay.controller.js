@@ -23,15 +23,19 @@ const updateStatusFromMidtrans = async (transaction_id, data) => {
     .digest("hex");
 
   if (data.signature_key !== hash) {
-    return (
-      response(res, 400, false, "Signature key is not match", null),
-      console.log("Signature key is not match")
-    );
+    return response(res, 400, false, "Signature key is not match", null);
   }
 
-  let responseData = null;
+  // let responseData = null;
   let transactionStatus = data.transaction_status;
   let fraudStatus = data.fraud_status;
+
+  if (transactionStatus == "capture") {
+    if (fraudStatus == "accept") {
+      let status = { status: "SUCCESS" };
+      return status;
+    }
+  }
 };
 
 const payTransaction = async (req, res) => {
@@ -105,9 +109,17 @@ const payTransaction = async (req, res) => {
       );
     }
 
-    if (transaction.status != "CANCEL") {
-      // TODO put midtrans transaction integration in here
-      transaction.status = "SUCCESS";
+    if (transaction.status == "PENDING" || transaction.status == "CANCEL") {
+      return response(res, 200, false, "Transaction not valid", null);
+    }
+
+    if (transaction.status == "PAYABLE") {
+      // TODO update status from midtrans panggil dari updateStatusFromMidtrans dengan return data SUCCESS
+      const midtrans = await updateStatusFromMidtrans(
+        transaction.id,
+        transaction_id
+      );
+      transaction.status = midtrans.status;
       await transaction.save();
       // TODO create notification here to seller
       const notification = {
