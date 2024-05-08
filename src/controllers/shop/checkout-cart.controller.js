@@ -73,6 +73,8 @@ const checkoutCart = async (req, res) => {
         cart_id: cart.id,
         total_amount: totalAmount,
         status: "PENDING",
+        token: null,
+        redirect_url: null,
       });
 
       transactions.push({

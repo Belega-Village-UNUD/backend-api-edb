@@ -64,57 +64,6 @@ const checkoutProduct = async (req, res) => {
     });
 
     const transaction_id = `BLG-${nanoid(4)}-${nanoid(8)}`;
-    const authString = btoa(`${MIDTRANS_SERVER_KEY}:`);
-
-    const payload = {
-      transaction_details: {
-        order_id: transaction_id,
-        gross_amount: totalAmount,
-      },
-      item_details: [
-        {
-          id: product.id,
-          price: product.price,
-          quantity: qty,
-          name: product.name_product,
-        },
-      ],
-      customer_details: {
-        first_name: user.userProfile.name,
-        email: user.email,
-        phone: user.userProfile.phone,
-      },
-      callback: {
-        finish: `${FE_URL}/transaction/transaction_id=${transaction_id}`,
-        error: `${FE_URL}/transaction/transaction_id=${transaction_id}`,
-        pending: `${FE_URL}/transaction/transaction_id=${transaction_id}`,
-      },
-    };
-
-    const responsedMidtrans = await fetch(
-      `${MIDTRANS_APP_URL}/snap/v1/transactions`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Basic ${authString}`,
-        },
-        body: JSON.stringify(payload),
-      }
-    );
-
-    const data = await responsedMidtrans.json();
-
-    if (responsedMidtrans.status !== 201) {
-      return response(
-        res,
-        responsedMidtrans.status,
-        false,
-        "Failed to create transaction",
-        null
-      );
-    }
 
     const transaction = await Transaction.create({
       id: transaction_id,
