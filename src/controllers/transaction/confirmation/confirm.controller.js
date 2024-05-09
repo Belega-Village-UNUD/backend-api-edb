@@ -35,9 +35,8 @@ const confirm = async (req, res) => {
       );
     }
 
-    console.log(storeUserId.user_id);
     let transaction = await Transaction.findOne({
-      attributes: ["id", "user_id", "status", "createdAt"],
+      attributes: ["id", "user_id", "total_amount", "status", "createdAt"],
       include: [
         {
           model: Cart,
@@ -139,8 +138,6 @@ const confirm = async (req, res) => {
 
     const data = await responsedMidtrans.json();
 
-    // ERROR HERE
-    console.log(JSON.stringify(data));
     if (responsedMidtrans.status !== 201) {
       return response(
         res,
@@ -158,7 +155,6 @@ const confirm = async (req, res) => {
 
     return response(res, 200, true, "Transaction confirmed", transaction);
   } catch (error) {
-    console.error(error);
     return response(res, error.status || 500, false, error.message, null);
   }
 };
