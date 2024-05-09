@@ -1,10 +1,19 @@
-const { Cart, Product } = require("../../models");
+const { Cart, Product, User } = require("../../models");
 const { response } = require("../../utils/response.utils");
 
 const removeItem = async (req, res) => {
   try {
     const { id } = req.user;
     const { product_id, qty } = req.body;
+
+    const user = await User.findOne({
+      where: { id },
+      attributes: { exclude: ["password"] },
+    });
+
+    if (!user) {
+      return response(res, 404, false, "User not found", null);
+    }
 
     const cart = await Cart.findOne({ where: { user_id: id, product_id } });
 
@@ -20,8 +29,8 @@ const removeItem = async (req, res) => {
       return response(res, 404, false, "There's no product of this id", null);
     }
 
-    product.stock += qty;
-    await product.save();
+    // product.stock += qty;
+    // await product.save();
 
     if (cart.qty > qty) {
       await cart.update({ qty: cart.qty - qty });

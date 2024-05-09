@@ -17,7 +17,6 @@ const {
 const confirm = async (req, res) => {
   try {
     const { id: transactionId } = req.params;
-
     const { id } = req.user;
 
     const storeUserId = await Store.findOne({

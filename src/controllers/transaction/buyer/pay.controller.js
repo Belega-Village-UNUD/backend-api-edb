@@ -114,7 +114,6 @@ const payTransaction = async (req, res) => {
     }
 
     if (transaction.status == "PAYABLE") {
-      // TODO update status from midtrans panggil dari updateStatusFromMidtrans dengan return data SUCCESS
       const midtrans = await updateStatusFromMidtrans(
         transaction.id,
         transaction_id

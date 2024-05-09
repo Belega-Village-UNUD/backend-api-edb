@@ -55,10 +55,6 @@ const removeAll = async (req, res) => {
       ],
     });
 
-    // const cart = await Cart.findAll({
-    //   where: { user_id: user.id },
-    // });
-
     if (carts.length === 0) {
       return response(res, 200, true, "No items in cart", null);
     }
@@ -71,8 +67,8 @@ const removeAll = async (req, res) => {
       if (!product) {
         return response(res, 404, false, "There's no product of this id", null);
       }
-      product.stock += cart.qty;
-      await product.save();
+      // product.stock += cart.qty;
+      // await product.save();
       await Cart.destroy({
         where: { id: cart.id },
       });
@@ -86,7 +82,6 @@ const removeAll = async (req, res) => {
       null
     );
   } catch (error) {
-    console.error(error);
     return response(res, error.status || 500, false, error.message, null);
   }
 };

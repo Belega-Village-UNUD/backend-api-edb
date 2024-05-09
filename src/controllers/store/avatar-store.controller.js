@@ -30,7 +30,6 @@ const avatarStore = async (req, res) => {
       avatar_url: upload.url,
     });
   } catch (err) {
-    console.error(err);
     return response(res, err.status || 500, false, err.message, null);
   }
 };
