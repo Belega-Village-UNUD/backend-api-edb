@@ -1,4 +1,3 @@
-const { where } = require("sequelize");
 const { Store, User } = require("../../models");
 const { singleUpload } = require("../../utils/imagekit.utils");
 const { response } = require("../../utils/response.utils");

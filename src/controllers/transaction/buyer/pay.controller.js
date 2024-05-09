@@ -1,4 +1,3 @@
-const Sequelize = require("sequelize");
 const { nanoid } = require("nanoid");
 const {
   Transaction,

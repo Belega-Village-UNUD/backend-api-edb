@@ -17,11 +17,18 @@ router.get(
   controller.getItems
 );
 
+router.put(
+  "/",
+  middleware.restrict,
+  middleware.rbac(MODULE.SHOP, ROLE.BUYER, true, true),
+  controller.increaseItem
+);
+
 router.delete(
   "/",
   middleware.restrict,
   middleware.rbac(MODULE.SHOP, ROLE.BUYER, true, true),
-  controller.removeItem
+  controller.reduceItem
 );
 
 router.delete(

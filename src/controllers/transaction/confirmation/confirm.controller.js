@@ -94,7 +94,6 @@ const confirm = async (req, res) => {
       );
     }
 
-    // TODO move midtrans here from checkout-product-controller.js
     const authString = btoa(`${MIDTRANS_SERVER_KEY}:`);
 
     const payload = {
@@ -114,11 +113,6 @@ const confirm = async (req, res) => {
         first_name: transaction.cart.user.userProfile.name,
         email: transaction.cart.user.email,
         phone: transaction.cart.user.userProfile.phone,
-      },
-      callback: {
-        finish: `${FE_URL}/transaction/transaction_id=${transaction.id}`,
-        error: `${FE_URL}/transaction/transaction_id=${transaction.id}`,
-        pending: `${FE_URL}/transaction/transaction_id=${transaction.id}`,
       },
     };
 
