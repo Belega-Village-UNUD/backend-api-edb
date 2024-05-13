@@ -9,7 +9,8 @@ const {
   DetailTransaction,
 } = require("../../../models");
 const { response } = require("../../../utils/response.utils");
-// const sendEmail = require("./nodemailer.config");
+const sendEmail = require("../../../configs/nodemailer.config");
+const emailTemplate = require("../../../utils/email-template.utils");
 const crypto = require("crypto");
 const { MIDTRANS_SERVER_KEY } = require("../../../utils/constan");
 
@@ -129,7 +130,15 @@ const payTransaction = async (req, res) => {
       };
 
       // TODO Email Notification
-      // await sendEmail(user.email, subject, template);
+      const template = await emailTemplate("payTransaction.template.ejs", {
+        transaction_id,
+      });
+
+      await sendEmail(
+        user.email,
+        `Transfer Invoice - ${transaction.id}`,
+        template
+      );
 
       const detailTransaction = await DetailTransaction.findOne({
         where: {
