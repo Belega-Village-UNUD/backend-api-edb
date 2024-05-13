@@ -1,6 +1,13 @@
 const nodemailer = require("nodemailer");
 const { getAccessToken } = require("./google.oauth.config");
 
+/**
+ *
+ * @param {*} to for whom the email is sent
+ * @param {*} subject the subject
+ * @param {*} html  the template
+ * @returns
+ */
 const sendEmail = async (to, subject, html) => {
   try {
     const accessToken = await getAccessToken();
