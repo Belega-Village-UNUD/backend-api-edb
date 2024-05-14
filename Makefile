@@ -3,8 +3,9 @@ build:
 
 up:
 	docker compose -p belega --file docker/service/docker-compose.yml --env-file .env up -d
+
+prometheus:
 	docker compose -p belega --file docker/prometheus/docker-compose.yml --env-file .env up -d
-	docker compose -p belega --file docker/ssl/docker-compose.yml --env-file .env up nginx -d
 
 restart:
 	docker compose -p belega --file docker/service/docker-compose.yml --env-file .env restart $(SERVICE)
