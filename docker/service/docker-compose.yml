@@ -7,7 +7,7 @@ services:
       - ../../.env
     restart: always
     ports:
-      - ${PORT}:${PORT}
+      - ${EXPOSE_PORT}:${PORT}
     networks:
       - service
     depends_on:
