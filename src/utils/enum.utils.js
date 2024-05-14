@@ -12,7 +12,9 @@ const MODULE = {
   TRANSACTION: "TRANSACTION",
   LANDING: "LANDING",
   ADMIN: "ADMIN",
-  SELLER: "SELLER",
+  STORE: "STORE",
+  FEE: "FEE",
+  MESSAGE: "MESSAGE",
 };
 
 module.exports = { ROLE, MODULE };
