@@ -27,33 +27,6 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
 
-  sqlpad:
-    container_name: sqlpad-ecommerce-desa-belega
-    image: sqlpad/sqlpad:5
-    hostname: "sqlpad"
-    ports:
-      - ${SQLPAD_PORT}:3000
-    environment:
-      SQLPAD_ADMIN: ${SQLPAD_ADMIN_EMAIL}
-      SQLPAD_ADMIN_PASSWORD: ${SQLPAD_ADMIN_PASSWORD}
-      SQLPAD_APP_LOG_LEVEL: debug
-      SQLPAD_WEB_LOG_LEVEL: warn
-      SQLPAD_DB_PATH: /etc/sqlpad/ecommerce-data
-      SQLPAD_SEED_DATA_PATH: /etc/sqlpad/seed-data
-      SQLPAD_CONNECTIONS__ecommerce-belega__name: Ecommerce Desa Belega
-      SQLPAD_CONNECTIONS__ecommerce-belega__driver: postgres
-      SQLPAD_CONNECTIONS__ecommerce-belega__host: ${STAGING_DB_HOST}
-      SQLPAD_CONNECTIONS__ecommerce-belega__database: ${STAGING_DB_NAME}
-      SQLPAD_CONNECTIONS__ecommerce-belega__username: ${STAGING_DB_USERNAME}
-      SQLPAD_CONNECTIONS__ecommerce-belega__password: ${STAGING_DB_PASSWORD}
-      SQLPAD_CONNECTIONS__ecommerce-belega__port: ${STAGING_DB_PORT}
-      SQLPAD_CONNECTIONS__ecommerce-belega__multiStatementTransactionEnabled: "true"
-      SQLPAD_CONNECTIONS__ecommerce-belega__idleTimeoutSeconds: 86400
-    networks:
-      - service
-    volumes:
-      - ecommerce-data:/etc/sqlpad/ecommerce-data
-
 networks:
   service:
     driver: bridge
