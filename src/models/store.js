@@ -32,6 +32,7 @@ module.exports = (sequelize, DataTypes) => {
       description: DataTypes.TEXT,
       is_verified: DataTypes.ENUM("WAITING", "FEE", "VERIFIED", "DECLINED"),
       unverified_reason: DataTypes.TEXT,
+      is_verified: DataTypes.ENUM("WAITING", "FEE", "VERIFIED", "DECLINED"),
     },
     {
       sequelize,

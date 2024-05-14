@@ -35,7 +35,13 @@ app.use("/api", router);
 
 app.get("/", (req, res) => {
   Prometheus.apiCount.inc();
-  response(res, 200, true, "Server API for Demonstration is Healthy, it is 200", null);
+  response(
+    res,
+    200,
+    true,
+    "Server API for Demonstration is Healthy, it is 200",
+    null
+  );
 });
 
 app.get("/metrics/json", async (req, res) => {

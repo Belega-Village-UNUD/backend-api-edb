@@ -1,13 +1,26 @@
 const { nanoid } = require("nanoid");
-const { Cart, User, Product, Transaction } = require("../../models");
+const { Cart, User, Product, Transaction, Profile } = require("../../models");
 const { response } = require("../../utils/response.utils");
+const {
+  MIDTRANS_SERVER_KEY,
+  MIDTRANS_APP_URL,
+  FE_URL,
+} = require("../../utils/constan");
 
 const checkoutProduct = async (req, res) => {
   try {
     const { id } = req.user;
+
     const user = await User.findOne({
       where: { id },
       attributes: { exclude: ["password"] },
+      include: [
+        {
+          model: Profile,
+          as: "userProfile",
+          attributes: ["name", "phone"],
+        },
+      ],
     });
 
     const { product_id, qty } = req.body;
@@ -50,20 +63,16 @@ const checkoutProduct = async (req, res) => {
       unit_price: product.price,
     });
 
-    //     if (cart.qty > qty) {
-    //       cart.qty -= qty;
-    //       await cart.save();
-    //     } else {
-    //       cart.qty = 0;
-    //     }
-    //    await cart.save();
+    const transaction_id = `BLG-${nanoid(4)}-${nanoid(8)}`;
 
     const transaction = await Transaction.create({
-      id: nanoid(10),
+      id: transaction_id,
       user_id: user.id,
       cart_id: cart.id,
       total_amount: totalAmount,
       status: "PENDING",
+      token: null,
+      redirect_url: null,
     });
 
     let transactions = [];

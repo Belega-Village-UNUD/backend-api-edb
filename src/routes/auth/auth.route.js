@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const { image } = require("../../configs/multer.config");
 const controllers = require("../../controllers");
 const middleware = require("../../middlewares");
 const { MODULE, ROLE } = require("../../utils/enum.utils");
@@ -30,6 +31,25 @@ router.put(
   middleware.restrict,
   middleware.rbac(MODULE.AUTH, ROLE.BUYER, true, false),
   controllers.auth.changePassword
+);
+router.post(
+  "/register/store",
+  middleware.restrict,
+  image.single("ktp"),
+  middleware.rbac(MODULE.AUTH, ROLE.BUYER, true, true),
+  controllers.auth.registerStore
+);
+router.put(
+  "/verify-store",
+  middleware.restrict,
+  middleware.rbac(MODULE.AUTH, ROLE.ADMIN, true, true),
+  controllers.auth.verifyStore
+);
+router.put(
+  "/declined-store",
+  middleware.restrict,
+  middleware.rbac(MODULE.AUTH, ROLE.ADMIN, true, true),
+  controllers.auth.declinedStore
 );
 
 module.exports = router;

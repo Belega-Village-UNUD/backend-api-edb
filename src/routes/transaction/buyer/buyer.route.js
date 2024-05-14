@@ -17,4 +17,11 @@ router.get(
   controllers.getOneBuyerTransactionHistory
 );
 
+router.put(
+  "/:id",
+  middleware.restrict,
+  middleware.rbac(MODULE.TRANSACTION, ROLE.BUYER, true, false),
+  controllers.payTransaction
+);
+
 module.exports = router;

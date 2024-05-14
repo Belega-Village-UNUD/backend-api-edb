@@ -106,5 +106,5 @@ jobs:
             docker image prune -f; \
             echo ${{ secrets.GITHUB_TOKEN }} | docker login -u ${{ github.actor }} --password-stdin ${{ env.REGISTRY }}; \
             docker pull ghcr.io/belega-village-unud/backend-api-edb:staging; \
-            make up dns; \
+            make up; \
             docker ps"

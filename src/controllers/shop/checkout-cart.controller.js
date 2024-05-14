@@ -64,20 +64,17 @@ const checkoutCart = async (req, res) => {
       await product.save();
 
       const totalAmount = product.price * qty;
-      if (cart.qty > qty) {
-        cart.qty -= qty;
-        await cart.save();
-      } else {
-        cart.qty = 0;
-      }
-      await cart.save();
+
+      const transaction_id = `BLG-${nanoid(4)}-${nanoid(8)}`;
 
       const transaction = await Transaction.create({
-        id: nanoid(10),
+        id: transaction_id,
         user_id: user.id,
         cart_id: cart.id,
         total_amount: totalAmount,
         status: "PENDING",
+        token: null,
+        redirect_url: null,
       });
 
       transactions.push({
