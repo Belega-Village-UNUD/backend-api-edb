@@ -6,29 +6,50 @@ const { MODULE, ROLE } = require("../../utils/enum.utils");
 router.post(
   "/",
   middleware.restrict,
-  middleware.rbac(MODULE.SHOP, ROLE.USER, true, true),
+  middleware.rbac(MODULE.SHOP, ROLE.BUYER, true, true),
   controller.addItem
 );
 
 router.get(
   "/",
   middleware.restrict,
-  middleware.rbac(MODULE.SHOP, ROLE.USER, true, true),
+  middleware.rbac(MODULE.SHOP, ROLE.BUYER, true, true),
   controller.getItems
+);
+
+router.put(
+  "/",
+  middleware.restrict,
+  middleware.rbac(MODULE.SHOP, ROLE.BUYER, true, true),
+  controller.increaseItem
 );
 
 router.delete(
   "/",
   middleware.restrict,
-  middleware.rbac(MODULE.SHOP, ROLE.USER, true, true),
-  controller.removeItem
+  middleware.rbac(MODULE.SHOP, ROLE.BUYER, true, true),
+  controller.reduceItem
+);
+
+router.delete(
+  "/all",
+  middleware.restrict,
+  middleware.rbac(MODULE.SHOP, ROLE.BUYER, true, true),
+  controller.removeAll
 );
 
 router.post(
   "/checkout",
   middleware.restrict,
-  middleware.rbac(MODULE.SHOP, ROLE.USER, true, true),
-  controller.checkoutItem
+  middleware.rbac(MODULE.SHOP, ROLE.BUYER, true, true),
+  controller.checkoutCart
+);
+
+router.post(
+  "/product/checkout",
+  middleware.restrict,
+  middleware.rbac(MODULE.SHOP, ROLE.BUYER, true, true),
+  controller.checkoutProduct
 );
 
 module.exports = router;

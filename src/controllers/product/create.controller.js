@@ -1,37 +1,39 @@
 const { nanoid } = require("nanoid");
-const { Product, User } = require("../../models");
+const { Product, User, Store } = require("../../models");
 const { response } = require("../../utils/response.utils");
 
 const createProduct = async (req, res) => {
   try {
     const { id } = req.user;
-    const { store_id, name_product, productTypeId, description, price, stock } =
-      req.body;
-
-    if (
-      !store_id ||
-      !name_product ||
-      !productTypeId ||
-      !description ||
-      !price ||
-      !stock
-    ) {
-      return response(res, 400, false, "Invalid input data", null);
-    }
 
     const user = await User.findOne({
       where: { id },
       attributes: { exclude: ["password"] },
     });
-
     if (!user) {
       return response(res, 404, false, "User not found", null);
+    }
+
+    const store = await Store.findOne({ where: { user_id: user.id } });
+    if (!store) {
+      return response(
+        res,
+        404,
+        false,
+        "Store not found, please register as a seller first!",
+        null
+      );
+    }
+    const { name_product, productTypeId, description, price, stock } = req.body;
+
+    if (!name_product || !productTypeId || !description || !price || !stock) {
+      return response(res, 400, false, "Invalid input data", null);
     }
 
     const product = await Product.create({
       id: nanoid(10),
       user_id: user.id,
-      store_id: store_id,
+      store_id: store.id,
       type_id: productTypeId,
       name_product: name_product,
       desc_product: description,

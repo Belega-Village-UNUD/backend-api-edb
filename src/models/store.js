@@ -9,12 +9,12 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Store.belongsTo(models.User, {
+      this.belongsTo(models.User, {
         foreignKey: "user_id",
         as: "user",
         foreignKeyConstraint: true,
       });
-      Store.hasMany(models.Product, {
+      this.hasMany(models.Product, {
         foreignKey: "store_id",
         as: "store",
       });
@@ -30,7 +30,9 @@ module.exports = (sequelize, DataTypes) => {
       phone: DataTypes.STRING,
       address: DataTypes.STRING,
       description: DataTypes.TEXT,
+      is_verified: DataTypes.ENUM("WAITING", "FEE", "VERIFIED", "DECLINED"),
       unverified_reason: DataTypes.TEXT,
+      is_verified: DataTypes.ENUM("WAITING", "FEE", "VERIFIED", "DECLINED"),
     },
     {
       sequelize,

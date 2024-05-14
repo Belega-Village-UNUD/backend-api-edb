@@ -20,7 +20,7 @@ const getOAuth2Token = async (req, res) => {
 
     return authorizationURL;
   } catch (err) {
-    console.log(err);
+    throw err;
   }
 };
 
@@ -41,7 +41,6 @@ const getAccessToken = async () => {
 
     return accessToken;
   } catch (err) {
-    console.log(err);
     throw err;
   }
 };

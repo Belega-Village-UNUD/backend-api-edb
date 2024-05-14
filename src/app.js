@@ -10,7 +10,7 @@ const { Prometheus } = require("./configs/prometheus.config");
 const { metric } = require("./utils/metric.utils");
 const middlewares = require("./middlewares");
 const { response } = require("./utils/response.utils");
-const TIMEOUT = 5000;
+const TIMEOUT = 10000;
 const app = express();
 
 Sentry.init({
@@ -35,7 +35,13 @@ app.use("/api", router);
 
 app.get("/", (req, res) => {
   Prometheus.apiCount.inc();
-  response(res, 200, true, "Server API for Demonstration is Healthy, it is 200", null);
+  response(
+    res,
+    200,
+    true,
+    "Server API for Demonstration is Healthy, it is 200",
+    null
+  );
 });
 
 app.get("/metrics/json", async (req, res) => {

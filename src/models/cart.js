@@ -11,11 +11,15 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       this.belongsTo(models.Product, {
         foreignKey: "product_id",
-        as: "products",
+        as: "product",
       });
       this.belongsTo(models.User, {
         foreignKey: "user_id",
-        as: "users",
+        as: "user",
+      });
+      this.hasMany(models.Transaction, {
+        foreignKey: "cart_id",
+        as: "transaction",
       });
     }
   }
@@ -24,6 +28,7 @@ module.exports = (sequelize, DataTypes) => {
       user_id: DataTypes.STRING,
       product_id: DataTypes.STRING,
       qty: DataTypes.INTEGER,
+      unit_price: DataTypes.DECIMAL,
     },
     {
       sequelize,
