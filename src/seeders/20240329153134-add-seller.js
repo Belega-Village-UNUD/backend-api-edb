@@ -10,17 +10,14 @@ module.exports = {
     const user_one = await User.findOne({
       where: { email: SELLER_ONE },
     });
-    console.log("🚀 ~ up ~ user_one:", user_one);
 
     const user_two = await User.findOne({
       where: { email: SELLER_TWO },
     });
-    console.log("🚀 ~ up ~ user_two:", user_two);
 
     const user_three = await User.findOne({
       where: { email: SELLER_THREE },
     });
-    console.log("🚀 ~ up ~ user_three:", user_three);
 
     const user = [user_one.id, user_two.id, user_three.id];
 

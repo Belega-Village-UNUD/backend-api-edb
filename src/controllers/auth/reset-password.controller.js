@@ -27,7 +27,6 @@ const resetPassword = async (req, res) => {
 
     return response(res, 200, true, "Sucessfully Reset Password", null);
   } catch (err) {
-    console.log(err);
     return response(res, err.status || 500, false, err.message, null);
   }
 };

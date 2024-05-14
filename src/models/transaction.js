@@ -13,10 +13,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "transaction_id",
         as: "detail_transaction",
       });
-      //this.hasOne(models.Cart, {
-      //  foreignKey: "cart_id",
-      //  as: "cart",
-      //});
+      this.belongsTo(models.Cart, {
+        foreignKey: "cart_id",
+        as: "cart",
+      });
       this.belongsTo(models.User, {
         foreignKey: "user_id",
         as: "user",
@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
   Transaction.init(
     {
       user_id: DataTypes.STRING,
-      cart_id: DataTypes.ARRAY(DataTypes.STRING),
+      cart_id: DataTypes.STRING,
       total_amount: DataTypes.DECIMAL,
       status: DataTypes.ENUM("PENDING", "PAYABLE", "SUCCESS", "CANCEL"),
     },
