@@ -8,13 +8,13 @@ router.get(
   "/all",
   middleware.restrict,
   middleware.rbac(MODULE.PRODUCT, ROLE.SELLER, true, true),
-  controllers.getAll
+  controllers.getAllProductSeller
 );
 router.get(
   "/:id",
   middleware.restrict,
   middleware.rbac(MODULE.PRODUCT, ROLE.SELLER, true, true),
-  controllers.getOne
+  controllers.getOneProductSeller
 );
 router.post(
   "/",

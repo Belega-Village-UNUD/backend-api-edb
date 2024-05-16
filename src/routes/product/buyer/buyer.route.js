@@ -7,14 +7,14 @@ router.get(
   "/all",
   middleware.restrict,
   middleware.rbac(MODULE.PRODUCT, ROLE.BUYER, true, false),
-  controllers.getAll
+  controllers.getAllProductBuyer
 );
 
 router.get(
   "/:id",
   middleware.restrict,
   middleware.rbac(MODULE.PRODUCT, ROLE.BUYER, true, false),
-  controllers.getOne
+  controllers.getOneProductBuyer
 );
 
 module.exports = router;
