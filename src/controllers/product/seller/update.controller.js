@@ -1,5 +1,5 @@
-const { response } = require("../../utils/response.utils");
-const { Product } = require("../../models");
+const { Product } = require("../../../models");
+const { response } = require("../../../utils/response.utils");
 
 const updateProduct = async (req, res) => {
   try {

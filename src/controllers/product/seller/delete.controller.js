@@ -1,5 +1,5 @@
-const { Product } = require("../../models");
-const { response } = require("../../utils/response.utils");
+const { Product } = require("../../../models");
+const { response } = require("../../../utils/response.utils");
 
 const deleteProduct = async (req, res) => {
   try {
