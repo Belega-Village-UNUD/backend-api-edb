@@ -1,9 +1,13 @@
 const { response } = require("../../../utils/response.utils");
 const { User, Product, Store, ProductType } = require("../../../models");
+const { Op } = require("sequelize");
 
 const getAllProduct = async (req, res) => {
   try {
+    // check the product that created by the user itself
+    const store = await Store.findOne({ where: { user_id: req.user.id } });
     const product = await Product.findAll({
+      where: { store_id: { [Op.not]: store.id } },
       attributes: [
         "id",
         "user_id",

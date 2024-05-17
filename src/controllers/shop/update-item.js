@@ -1,7 +1,8 @@
-const { Cart, Product, User, Transaction } = require("../../models");
+const { Cart, Product, User, Transaction, Store } = require("../../models");
 const { response } = require("../../utils/response.utils");
+const { Op } = require("sequelize");
 
-const reduceItem = async (req, res) => {
+const updateCart = async (req, res) => {
   try {
     const { id } = req.user;
     const { product_id, qty } = req.body;
@@ -66,18 +67,21 @@ const reduceItem = async (req, res) => {
       return response(res, 404, false, "There's no product of this id", null);
     }
 
-    // product.stock += qty;
-    // await product.save();
-
-    if (cart.qty > qty) {
-      await cart.update({ qty: cart.qty - qty });
-      return response(res, 200, true, "Success reduce item", null);
+    if (qty > product.stock) {
+      return response(
+        res,
+        400,
+        false,
+        `Insufficient stock for ${product.name_product}`,
+        null
+      );
     }
 
-    return response(res, 200, true, "Cart Item was Reduced", null);
+    await cart.update({ qty: qty });
+    return response(res, 200, true, "Success update your cart", cart);
   } catch (error) {
     return response(res, error.status || 500, false, error.message, null);
   }
 };
 
-module.exports = reduceItem;
+module.exports = updateCart;

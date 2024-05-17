@@ -1,12 +1,14 @@
 const { response } = require("../../../utils/response.utils");
 const { Product, ProductType, Store, User } = require("../../../models");
+const { Op } = require('sequelize');
 
 const getOneProduct = async (req, res) => {
   try {
     const { id } = req.params;
+    const store = await Store.findOne({ where: { user_id: req.user.id } });
 
     const product = await Product.findOne({
-      where: { id },
+      where: { id, store_id: {[Op.not]: store.id} },
       include: [
         {
           model: ProductType,
@@ -28,7 +30,7 @@ const getOneProduct = async (req, res) => {
     });
 
     if (!product) {
-      return response(res, 404, false, `Product ${id} Not Found`, null);
+      return response(res, 404, false, `Product Not Found`, null);
     }
     return response(res, 200, true, `Get Product ${id} Successfull`, product);
   } catch (err) {
