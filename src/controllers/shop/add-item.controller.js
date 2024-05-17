@@ -1,6 +1,7 @@
 const { nanoid } = require("nanoid");
-const { Cart, User, Product, Transaction } = require("../../models");
+const { Cart, User, Product, Transaction, Store } = require("../../models");
 const { response } = require("../../utils/response.utils");
+const { Op } = require("sequelize");
 
 const addItem = async (req, res) => {
   try {
@@ -10,14 +11,38 @@ const addItem = async (req, res) => {
       attributes: { exclude: ["password"] },
     });
     const products = req.body;
+    const transactions = await Transaction.findAll({
+      where: {
+        user_id: user.id,
+      },
+      attributes: ["id", "cart_id"],
+      raw: true,
+    });
 
     for (let i = 0; i < products.length; i++) {
       const { product_id, qty } = products[i];
 
+      const store = await Store.findOne({
+        where: { user_id: user.id },
+        attributes: ["id"],
+      });
+      console.log("🚀 ~ addItem ~ store:", store);
+
+      // check if the product is not from the user store (to prevent buy product from itself)
       const product = await Product.findOne({
-        where: { id: product_id },
+        where: { id: product_id, store_id: { [Op.not]: store.id } },
         attributes: ["id", "price", "stock", "name_product"],
       });
+      console.log("🚀 ~ addItem ~ product:", product);
+      if (!product) {
+        return response(
+          res,
+          403,
+          false,
+          "You cannot order from your own store",
+          product
+        );
+      }
 
       if (qty === 0) {
         return response(
@@ -29,9 +54,11 @@ const addItem = async (req, res) => {
         );
       }
 
-      // Add checker if the existing cart item is more than the stock
       const existingCartItem = await Cart.findOne({
         where: {
+          id: {
+            [Op.notIn]: transactions.map((transaction) => transaction.cart_id),
+          },
           user_id: user.id,
           product_id: product.id,
         },
@@ -62,7 +89,12 @@ const addItem = async (req, res) => {
     }
 
     const cart = await Cart.findAll({
-      where: { user_id: user.id },
+      where: {
+        id: {
+          [Op.notIn]: transactions.map((transaction) => transaction.cart_id),
+        },
+        user_id: user.id,
+      },
     });
 
     return response(res, 201, true, "Cart item added", cart);

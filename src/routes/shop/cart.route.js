@@ -21,14 +21,14 @@ router.put(
   "/",
   middleware.restrict,
   middleware.rbac(MODULE.SHOP, ROLE.BUYER, true, true),
-  controller.increaseItem
+  controller.updateCart
 );
 
 router.delete(
   "/",
   middleware.restrict,
   middleware.rbac(MODULE.SHOP, ROLE.BUYER, true, true),
-  controller.reduceItem
+  controller.removeOneItem
 );
 
 router.delete(
