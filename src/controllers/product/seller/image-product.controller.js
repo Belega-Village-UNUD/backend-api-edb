@@ -1,6 +1,6 @@
-const { Product, User } = require("../../models");
-const { response } = require("../../utils/response.utils");
-const { singleUpload } = require("../../utils/imagekit.utils");
+const { Product, User } = require("../../../models");
+const { response } = require("../../../utils/response.utils");
+const { singleUpload } = require("../../../utils/imagekit.utils");
 
 const imageProduct = async (req, res) => {
   try {

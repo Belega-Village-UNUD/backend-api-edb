@@ -1,6 +1,6 @@
 const { nanoid } = require("nanoid");
-const { Product, User, Store } = require("../../models");
-const { response } = require("../../utils/response.utils");
+const { Product, User, Store } = require("../../../models");
+const { response } = require("../../../utils/response.utils");
 
 const createProduct = async (req, res) => {
   try {
