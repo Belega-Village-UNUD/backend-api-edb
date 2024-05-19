@@ -1,5 +1,6 @@
 const { response } = require("../../utils/response.utils");
-const { Store, User } = require("../../models");
+const { Store, User, Role } = require("../../models");
+const { ROLE } = require("../../utils/enum.utils");
 const db = require("../../models");
 
 const verifyStore = async (req, res) => {
@@ -14,7 +15,15 @@ const verifyStore = async (req, res) => {
 
     const store = await Store.findOne({
       where: { user_id: user_id },
+      include: [
+        {
+          model: User,
+          as: "user",
+          attributes: ["id", "role_id", "is_verified"],
+        },
+      ],
     });
+
     if (!store) return response(res, 404, false, "Store not found", null);
 
     const isStoreVerified = await Store.update(
