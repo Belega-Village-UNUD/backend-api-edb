@@ -18,6 +18,7 @@ const addItem = async (req, res) => {
       attributes: ["id", "cart_id"],
       raw: true,
     });
+    let cart = null;
 
     for (let i = 0; i < products.length; i++) {
       const { product_id, qty } = products[i];
@@ -26,14 +27,12 @@ const addItem = async (req, res) => {
         where: { user_id: user.id },
         attributes: ["id"],
       });
-      console.log("🚀 ~ addItem ~ store:", store);
 
       // check if the product is not from the user store (to prevent buy product from itself)
       const product = await Product.findOne({
         where: { id: product_id, store_id: { [Op.not]: store.id } },
         attributes: ["id", "price", "stock", "name_product"],
       });
-      console.log("🚀 ~ addItem ~ product:", product);
       if (!product) {
         return response(
           res,
@@ -78,7 +77,7 @@ const addItem = async (req, res) => {
           qty: existingCartItem.qty + qty,
         });
       } else {
-        await Cart.create({
+        cart = await Cart.create({
           id: nanoid(10),
           user_id: user.id,
           product_id,
@@ -87,15 +86,6 @@ const addItem = async (req, res) => {
         });
       }
     }
-
-    const cart = await Cart.findAll({
-      where: {
-        id: {
-          [Op.notIn]: transactions.map((transaction) => transaction.cart_id),
-        },
-        user_id: user.id,
-      },
-    });
 
     return response(res, 201, true, "Cart item added", cart);
   } catch (error) {
