@@ -6,6 +6,7 @@ const getOneProduct = async (req, res) => {
     const { id } = req.params;
 
     const product = await Product.findOne({
+      where: { id: id },
       include: [
         {
           model: ProductType,
