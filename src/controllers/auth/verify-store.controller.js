@@ -54,7 +54,25 @@ const verifyStore = async (req, res) => {
         message: "Store has been verified",
       };
     }
+
+    const sellerRole = await Role.findOne({ where: { name: ROLE.SELLER } });
+
+    if (!sellerRole) {
+      return response(res, 404, false, "Role not found", null);
     }
+
+    const existingRoles = store.user.role_id;
+    const checkRoles = existingRoles.includes(sellerRole.id);
+    let updatedRoles = existingRoles;
+
+    if (!checkRoles) {
+      updatedRoles = [...existingRoles, sellerRole.id];
+    }
+
+    await User.update(
+      { role_id: updatedRoles },
+      { where: { id: store.user.id } }
+    );
 
     return response(
       res,
