@@ -9,6 +9,8 @@ const getOTP = require("./get-otp.controller");
 const registerStore = require("./register-store.controller");
 const verifyStore = require("./verify-store.controller");
 const declinedStore = require("./declined-store.controller");
+const allStore = require("./get-all-store.controller");
+const oneStore = require("./get-one-store.controller");
 
 module.exports = {
   register,
@@ -22,4 +24,6 @@ module.exports = {
   registerStore,
   verifyStore,
   declinedStore,
+  allStore,
+  oneStore,
 };

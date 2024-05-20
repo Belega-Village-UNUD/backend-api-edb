@@ -51,5 +51,17 @@ router.put(
   middleware.rbac(MODULE.AUTH, ROLE.ADMIN, true, true),
   controllers.auth.declinedStore
 );
+router.get(
+  "/store",
+  middleware.restrict,
+  middleware.rbac(MODULE.AUTH, ROLE.ADMIN, true, true),
+  controllers.auth.allStore
+);
+router.get(
+  "/store/:id",
+  middleware.restrict,
+  middleware.rbac(MODULE.AUTH, ROLE.ADMIN, true, true),
+  controllers.auth.oneStore
+);
 
 module.exports = router;
