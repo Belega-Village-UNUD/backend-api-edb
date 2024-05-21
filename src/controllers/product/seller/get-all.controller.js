@@ -46,7 +46,6 @@ const getAllProduct = async (req, res) => {
 
     return response(res, 200, true, `Get All Product Successfull`, product);
   } catch (err) {
-    console.error(err);
     return response(res, err.status || 500, false, err.message, null);
   }
 };
