@@ -24,4 +24,10 @@ router.put(
   controllers.payTransaction
 );
 
+router.put(
+  "/cancel/:id",
+  middleware.restrict,
+  middleware.rbac(MODULE.TRANSACTION, ROLE.BUYER, true, false),
+  controllers.cancelTransaction
+);
 module.exports = router;
