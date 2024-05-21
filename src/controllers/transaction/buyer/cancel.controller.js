@@ -117,6 +117,7 @@ const cancelTransaction = async (req, res) => {
       // TODO Email Notification for seller
       const template = await emailTemplate("cancelTransaction.template.ejs", {
         transaction,
+        reason,
       });
 
       await sendEmail(user.email, `Cancel Order - ${transaction.id}`, template);
@@ -126,7 +127,7 @@ const cancelTransaction = async (req, res) => {
       res,
       200,
       true,
-      "Transaction updated successfully",
+      "Transaction cancelled successfully, please check your email",
       transaction
     );
   } catch (error) {
