@@ -10,29 +10,29 @@ services:
       - ${EXPOSE_PORT}:${PORT}
     networks:
       - service
-    depends_on:
-      - db
+#    depends_on:
+#      - db
 
-  db:
-    container_name: database-ecommerce-desa-belega
-    image: postgres:latest
-    environment:
-      - POSTGRES_USER=${DEV_DB_USERNAME}
-      - POSTGRES_PASSWORD=${DEV_DB_PASSWORD}
-      - POSTGRES_DB=${DEV_DB_NAME}
-    ports:
-      - ${DEV_DB_PORT}:5432
-    networks:
-      - service
-    volumes:
-      - db-data:/var/lib/postgresql/data
+#   db:
+#     container_name: database-ecommerce-desa-belega
+#     image: postgres:latest
+#     environment:
+#       - POSTGRES_USER=${DEV_DB_USERNAME}
+#       - POSTGRES_PASSWORD=${DEV_DB_PASSWORD}
+#       - POSTGRES_DB=${DEV_DB_NAME}
+#     ports:
+#       - ${DEV_DB_PORT}:5432
+#     networks:
+#       - service
+#     volumes:
+#       - db-data:/var/lib/postgresql/data
 
 networks:
   service:
     driver: bridge
 
 volumes:
-  db-data:
-    driver: local
+#  db-data:
+#    driver: local
   ecommerce-data:
     driver: local

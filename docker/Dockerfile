@@ -1,4 +1,4 @@
-FROM node:16.0.0 as build
+FROM node:20.9.0 as build
 
 WORKDIR /app
 
@@ -8,7 +8,7 @@ RUN npm install
 
 COPY src src
 
-FROM gcr.io/distroless/nodejs16 as environment
+FROM gcr.io/distroless/nodejs20 as environment
 
 COPY --from=build /app /app
 
