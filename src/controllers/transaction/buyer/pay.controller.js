@@ -153,8 +153,8 @@ const payTransaction = async (req, res) => {
           product_id: transaction.cart.product_id,
           qty: transaction.cart.qty,
           unit_price: transaction.cart.unit_price,
-          total_price: transaction.cart.qty * transaction.total_price,
-          recipient_link: "https://www.google.com",
+          total_price: transaction.cart.qty * transaction.cart.unit_price,
+          recipient_link: "", // TODO create the receipt link for the template by upload image first and return the link
         });
       }
     }

@@ -8,7 +8,10 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      this.belongsTo(models.Transaction, {
+        foreignKey: "transaction_id",
+        as: "transaction",
+      });
     }
   }
   CancelledTransaction.init(
@@ -16,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
       transaction_id: DataTypes.STRING,
       sum_product: DataTypes.INTEGER,
       total_price: DataTypes.DECIMAL,
-      cancelled_reason: DataTypes.TEXT,
+      reason: DataTypes.TEXT,
     },
     {
       sequelize,
