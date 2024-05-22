@@ -1,5 +1,6 @@
 const { response } = require("../../utils/response.utils");
-const { Store, User } = require("../../models");
+const { Store, User, Role } = require("../../models");
+const { ROLE } = require("../../utils/enum.utils");
 const db = require("../../models");
 
 const verifyStore = async (req, res) => {
@@ -14,24 +15,64 @@ const verifyStore = async (req, res) => {
 
     const store = await Store.findOne({
       where: { user_id: user_id },
+      include: [
+        {
+          model: User,
+          as: "user",
+          attributes: ["id", "role_id", "is_verified"],
+        },
+      ],
     });
+
     if (!store) return response(res, 404, false, "Store not found", null);
 
-    const isStoreVerified = await Store.update(
-      {
-        unverified_reason: null,
-        is_verified: "VERIFIED",
-      },
-      {
-        where: { user_id: user_id },
-      }
-    );
+    if (store.user.is_verified != true) {
+      return response(
+        res,
+        404,
+        false,
+        "You must be verified to register a store",
+        null
+      );
+    }
+    const isStoreVerified = store.is_verified == "VERIFIED" ? true : false;
+    console.log("🚀 ~ verifyStore ~ isStoreVerified:", isStoreVerified);
+
     if (!isStoreVerified) {
+      await Store.update(
+        {
+          unverified_reason: null,
+          is_verified: "VERIFIED",
+        },
+        {
+          where: { user_id: user_id },
+        }
+      );
+    } else {
       throw {
-        status: 500,
-        message: "Failed to verify store",
+        status: 400,
+        message: "Store has been verified",
       };
     }
+
+    const sellerRole = await Role.findOne({ where: { name: ROLE.SELLER } });
+
+    if (!sellerRole) {
+      return response(res, 404, false, "Role not found", null);
+    }
+
+    const existingRoles = store.user.role_id;
+    const checkRoles = existingRoles.includes(sellerRole.id);
+    let updatedRoles = existingRoles;
+
+    if (!checkRoles) {
+      updatedRoles = [...existingRoles, sellerRole.id];
+    }
+
+    await User.update(
+      { role_id: updatedRoles },
+      { where: { id: store.user.id } }
+    );
 
     return response(
       res,
