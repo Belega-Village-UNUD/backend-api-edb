@@ -36,7 +36,6 @@ const verifyStore = async (req, res) => {
       );
     }
     const isStoreVerified = store.is_verified == "VERIFIED" ? true : false;
-    console.log("🚀 ~ verifyStore ~ isStoreVerified:", isStoreVerified);
 
     if (!isStoreVerified) {
       await Store.update(
