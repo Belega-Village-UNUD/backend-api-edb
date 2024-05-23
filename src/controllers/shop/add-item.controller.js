@@ -25,22 +25,35 @@ const addItem = async (req, res) => {
 
       const store = await Store.findOne({
         where: { user_id: user.id },
-        attributes: ["id"],
+        attributes: ["id", "user_id"],
       });
 
-      // check if the product is not from the user store (to prevent buy product from itself)
       const product = await Product.findOne({
-        where: { id: product_id, store_id: { [Op.not]: store.id } },
+        where: { id: product_id },
         attributes: ["id", "price", "stock", "name_product"],
+        include: [
+          {
+            model: Store,
+            as: "store",
+            attributes: ["id", "user_id", "is_verified"],
+          },
+        ],
       });
-      if (!product) {
-        return response(
-          res,
-          403,
-          false,
-          "You cannot order from your own store",
-          product
-        );
+
+      const storeIsnull = store === null ? true : false;
+
+      if (!storeIsnull) {
+        // check if the product is not from the user store (to prevent buy product from itself)
+        const checkStore = store.id === product.store.id ? true : false;
+        if (checkStore) {
+          return response(
+            res,
+            403,
+            false,
+            `You cannot buy from your own store`,
+            null
+          );
+        }
       }
 
       if (qty === 0) {
