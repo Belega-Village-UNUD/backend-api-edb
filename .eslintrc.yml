@@ -5,4 +5,4 @@ env:
 extends: [standard, prettier]
 parserOptions:
   ecmaVersion: latest
-rules: {semi: [2, 'always'], quotes: [2, 'single']}
+rules: {semi: [2, 'always'], quotes: [2, 'double'], camelcase: 0, eqeqeq: ["null"]}
