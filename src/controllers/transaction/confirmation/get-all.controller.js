@@ -94,7 +94,7 @@ const getAllTransactions = async (req, res) => {
       );
     }
 
-    await checkMidtransStatus(transactions);
+    // await checkMidtransStatus(transactions);
 
     return response(
       res,
