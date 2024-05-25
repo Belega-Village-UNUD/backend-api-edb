@@ -1,5 +1,8 @@
 build:
-	docker build . --file docker/Dockerfile -t ghcr.io/belega-village-unud/backend-api-edb:v1 -t ghcr.io/belega-village-unud/backend-api-edb:latest
+	docker build . --file docker/service/Dockerfile -t ghcr.io/belega-village-unud/backend-api-edb:v1 -t ghcr.io/belega-village-unud/backend-api-edb:latest
+
+build-staging:
+	docker build . --file docker/service/Dockerfile -t ghcr.io/belega-village-unud/backend-api-edb:staging-test
 
 up:
 	docker compose -p belega --file docker/service/docker-compose.yml --env-file .env up -d
