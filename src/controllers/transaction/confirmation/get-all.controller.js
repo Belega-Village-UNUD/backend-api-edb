@@ -1,4 +1,3 @@
-const Sequelize = require("sequelize");
 const {
   Transaction,
   Cart,
@@ -8,7 +7,14 @@ const {
   Profile,
 } = require("../../../models");
 const { response } = require("../../../utils/response.utils");
+const { checkMidtransStatus } = require("../../../utils/midtrans.utils");
 
+/**
+ *
+ * @param {*} req
+ * @param {*} res
+ * @returns
+ */
 const getAllTransactions = async (req, res) => {
   try {
     const { id: user_id } = req.user;
@@ -18,7 +24,15 @@ const getAllTransactions = async (req, res) => {
     if (!store) return response(res, 404, false, "Store not found", null);
 
     const transactions = await Transaction.findAll({
-      attributes: ["id", "user_id", "status", "createdAt"],
+      attributes: [
+        "id",
+        "user_id",
+        "status",
+        "createdAt",
+        "updatedAt",
+        "token",
+        "redirect_url",
+      ],
       include: [
         {
           model: Cart,
@@ -79,6 +93,8 @@ const getAllTransactions = async (req, res) => {
         null
       );
     }
+
+    // await checkMidtransStatus(transactions);
 
     return response(
       res,
