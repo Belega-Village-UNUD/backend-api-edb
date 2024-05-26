@@ -38,8 +38,8 @@ jobs:
           instance_name: ${{ env.INSTANCE_NAME }}
           zone: ${{ env.ZONE }}
           ssh_private_key: ${{ secrets.SERVICE_ACCOUNT_SECRET_SSH_KEY }}
-          user: ${{ secrets.GCP_INSTANCE_USER }}
-          command: "echo $(whoami)"
+          user: ${{ github.actor }}
+          command: "echo 'This is the directory $(pwd)'"
             
       - name: Test 
         id: compute-ssh-deploy-test
