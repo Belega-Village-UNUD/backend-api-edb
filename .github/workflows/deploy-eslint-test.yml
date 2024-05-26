@@ -39,11 +39,11 @@ jobs:
           zone: ${{ env.ZONE }}
           ssh_private_key: ${{ secrets.SERVICE_ACCOUNT_SECRET_SSH_KEY }}
           user: ${{ github.actor }}
-          command: "echo 'This is the directory $(pwd)'"
+          command: "cd ${{ env.REPOPATH }}"
             
       - name: Test 
         id: compute-ssh-deploy-test
         run: |-
-          echo '${{ steps.compute-ssh-deploy.outputs.stdout }}'
-          echo '${{ steps.compute-ssh-deploy.outputs.stderr }}'
+          git fetch
+          pwd
 
