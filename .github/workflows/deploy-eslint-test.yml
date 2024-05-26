@@ -8,6 +8,7 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
   INSTANCE_NAME: belega-instance
+  REPOPATH: /home/${{ github.actor }}/backend-api-edb
   ZONE: asia-southeast2-a
 
 jobs:
@@ -72,4 +73,4 @@ jobs:
 
       - name: SSH to Compute Engine and Deploy
         id: compute-ssh-deploy
-        run: 'gcloud compute ssh ${{ env.INSTANCE_NAME }} --zone ${{ env.ZONE }} --command "cd backend-api-edb; git fetch; git checkout EDP-181-java-script-sast-with-eslint; git pull origin EDP-181-java-script-sast-with-eslint; make build-staging; make up; docker ps"'
+        run: 'gcloud compute ssh ${{ env.INSTANCE_NAME }} --zone ${{ env.ZONE }} --command "cd ${{ env.REPOPATH }}; git fetch; git checkout EDP-181-java-script-sast-with-eslint; git pull origin EDP-181-java-script-sast-with-eslint; make build-staging; make up; docker ps"'
