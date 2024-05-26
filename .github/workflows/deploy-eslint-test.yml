@@ -39,13 +39,9 @@ jobs:
           zone: ${{ env.ZONE }}
           ssh_private_key: ${{ secrets.SERVICE_ACCOUNT_SECRET_SSH_KEY }}
           user: ${{ github.actor }}
-          command: "cd ${{ env.REPOPATH }}"
-            
-      - name: Test 
-        id: compute-ssh-deploy-test
-        run: |-
-          git fetch
-          git checkout EDP-181-java-script-sast-with-eslint
-          make build-staging
-          docker ps
+          command: |-
+            cd ${{ env.REPOPATH }}
+            git fetch
+            git checkout EDP-181-java-script-sast-with-eslint
+            make build-staging
 
