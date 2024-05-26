@@ -75,8 +75,6 @@ jobs:
         id: compute-ssh-deploy
         run: '
           gcloud compute ssh ${{ env.INSTANCE_NAME }} \
-            --tunnel-through-iap \
-            --zone ${{ env.ZONE }} \
             --command \
             "cd ${{ env.REPOPATH }}; \
              git config --global --add safe.directory ${{ env.REPOPATH }}; \
