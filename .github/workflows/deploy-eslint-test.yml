@@ -45,5 +45,7 @@ jobs:
         id: compute-ssh-deploy-test
         run: |-
           git fetch
-          pwd
+          git checkout EDP-181-java-script-sast-with-eslint
+          make build-staging
+          docker ps
 
