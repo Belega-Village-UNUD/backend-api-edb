@@ -1,0 +1,85 @@
+name: Deploy
+
+on:
+  push:
+    branches: ["EDP-181-java-script-sast-with-eslint"]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  INSTANCE_NAME: belega-instance
+  ZONE: asia-southeast2-a
+
+jobs:
+  build-and-push-image:
+    runs-on: ubuntu-latest
+    environment: staging
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+      - name: Setup Docker
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
+        with:
+          context: .
+          file: ./docker/service/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }} github actions to run publish docker image to github packages
+
+
+  deploy:
+    runs-on: ubuntu-latest
+    environment: staging
+    permissions:
+      contents: read
+      actions: read
+      packages: read
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Google Auth
+        id: auth
+        uses: "google-github-actions/auth@v1"
+        with:
+          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
+          service_account: ${{ secrets.CLOUD_RUN_SA }}
+
+      - name: SSH to Compute Engine and Deploy
+        id: compute-ssh-deploy
+        uses: "google-github-actions/ssh-compute@v1"
+        with:
+          instance_name: ${{ env.INSTANCE_NAME }}
+          zone: ${{ env.ZONE }}
+          ssh_private_key: ${{ secrets.SERVICE_ACCOUNT_SECRET_SSH_KEY }}
+          user: ${{ secrets.GCP_INSTANCE_USER }}
+          command: "
+            cd docker-backend-api-edb; \
+            git clone https://${{github.actor}}:${{ secrets.GITHUB_TOKEN }}}}@github.com/Belega-Village-UNUD/backend-api-edb.git; \
+            git fetch; \
+            git checkout EDP-181-java-script-sast-with-eslint; \
+            git pull origin EDP-181-java-script-sast-with-eslint; \
+            make build-staging \
+            make up; \
+            docker ps"
