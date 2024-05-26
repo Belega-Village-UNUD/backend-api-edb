@@ -72,4 +72,4 @@ jobs:
 
       - name: SSH to Compute Engine and Deploy
         id: compute-ssh-deploy
-        run: 'echo "Deploying Service" gcloud compute ssh ${{ github.actor }}:${{ env.INSTANCE_NAME }} --zone ${{ env.ZONE }} --command="cd backend-api-edb; git fetch; git checkout EDP-181-java-script-sast-with-eslint; git pull origin EDP-181-java-script-sast-with-eslint; make build-staging; make up; docker ps"'
+        run: 'gcloud compute ssh ${{ env.INSTANCE_NAME }} --zone ${{ env.ZONE }} --command "cd backend-api-edb; git fetch; git checkout EDP-181-java-script-sast-with-eslint; git pull origin EDP-181-java-script-sast-with-eslint; make build-staging; make up; docker ps"'
