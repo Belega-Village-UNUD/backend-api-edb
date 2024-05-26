@@ -61,7 +61,7 @@ jobs:
 
       - name: Google Auth
         id: auth
-        uses: "google-github-actions/auth@v1"
+        uses: "google-github-actions/auth@v2"
         with:
           workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
           service_account: ${{ secrets.CLOUD_RUN_SA }}
@@ -75,7 +75,7 @@ jobs:
           ssh_private_key: ${{ secrets.SERVICE_ACCOUNT_SECRET_SSH_KEY }}
           user: ${{ secrets.GCP_INSTANCE_USER }}
           command: "
-            cd docker-backend-api-edb; \
+            cd backend-api-edb; \
             git clone https://${{github.actor}}:${{ secrets.GITHUB_TOKEN }}@github.com/Belega-Village-UNUD/backend-api-edb.git; \
             git fetch; \
             git checkout EDP-181-java-script-sast-with-eslint; \
