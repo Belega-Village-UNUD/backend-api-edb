@@ -31,10 +31,6 @@ jobs:
           workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
           service_account: ${{ secrets.CLOUD_RUN_SA }}
 
-      - name: Setup gcloud SDK
-        id: setup-gcloud
-        uses: "google-github-actions/setup-gcloud@v2"
-
       - name: SSH to Compute Engine and Deploy
         id: compute-ssh-deploy
         uses: "google-github-actions/ssh-compute@v1"
