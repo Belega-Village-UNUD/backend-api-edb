@@ -76,7 +76,7 @@ jobs:
           user: ${{ secrets.GCP_INSTANCE_USER }}
           command: "
             cd docker-backend-api-edb; \
-            git clone https://${{github.actor}}:${{ secrets.GITHUB_TOKEN }}}}@github.com/Belega-Village-UNUD/backend-api-edb.git; \
+            git clone https://${{github.actor}}:${{ secrets.GITHUB_TOKEN }}@github.com/Belega-Village-UNUD/backend-api-edb.git; \
             git fetch; \
             git checkout EDP-181-java-script-sast-with-eslint; \
             git pull origin EDP-181-java-script-sast-with-eslint; \
