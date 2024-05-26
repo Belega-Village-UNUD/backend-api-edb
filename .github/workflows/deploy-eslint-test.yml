@@ -41,7 +41,5 @@ jobs:
           user: ${{ github.actor }}
           command: |-
             cd ${{ env.REPOPATH }}
-            git fetch
-            git checkout EDP-181-java-script-sast-with-eslint
-            make build-staging
-
+            chmod +x ./shell/deploy.sh
+            ./shell/deploy.sh EDP-181-java-script-sast-with-eslint
