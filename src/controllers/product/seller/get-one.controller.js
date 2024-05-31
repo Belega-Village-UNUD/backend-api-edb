@@ -21,7 +21,6 @@ const getOneProduct = async (req, res) => {
 
     const product = await Product.findOne({
       where: { id, store_id: store.id },
-      attributes: ["name_product"],
       include: [
         {
           model: ProductType,
