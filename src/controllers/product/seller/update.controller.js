@@ -8,16 +8,15 @@ const updateProduct = async (req, res) => {
     const { store_id } = req.body;
     const product = await Product.findOne({ where: { id: id } });
     if (!product) {
-      return response(res, 404, false, `Product ${id} Not Found`, null);
+      return response(res, 404, false, `Product Not Found`, null);
     }
-    const updateStock = (await product.stock) + stock;
     await Product.update(
       {
         name_product,
-        productTypeId,
+        type_id: productTypeId,
         description,
         price,
-        stock: updateStock,
+        stock,
         store_id,
       },
       { where: { id: id } }
@@ -27,7 +26,7 @@ const updateProduct = async (req, res) => {
       res,
       200,
       true,
-      `Product type ${id} has been updated`,
+      `Product ${name_product} has been updated`,
       updateProduct
     );
   } catch (err) {

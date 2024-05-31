@@ -21,6 +21,7 @@ const getOneProduct = async (req, res) => {
 
     const product = await Product.findOne({
       where: { id, store_id: store.id },
+      attributes: ["name_product"],
       include: [
         {
           model: ProductType,
@@ -37,9 +38,21 @@ const getOneProduct = async (req, res) => {
     });
 
     if (!product) {
-      return response(res, 404, false, `Product ${id} Not Found`, null);
+      return response(
+        res,
+        404,
+        false,
+        `Product ${product.name_product} Not Found`,
+        null
+      );
     }
-    return response(res, 200, true, `Get Product ${id} Successfull`, product);
+    return response(
+      res,
+      200,
+      true,
+      `Get Product ${product.name_product} Successfull`,
+      product
+    );
   } catch (err) {
     return response(res, err.status || 500, false, err.message, null);
   }
