@@ -29,6 +29,7 @@ module.exports = (sequelize, DataTypes) => {
       product_id: DataTypes.STRING,
       qty: DataTypes.INTEGER,
       unit_price: DataTypes.DECIMAL,
+      is_checkout: DataTypes.BOOLEAN,
     },
     {
       sequelize,

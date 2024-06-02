@@ -1,4 +1,4 @@
-const Sequelize = require("sequelize");
+const { Op } = require("sequelize");
 const {
   Transaction,
   Cart,
@@ -16,57 +16,11 @@ const getAllTransactions = async (req, res) => {
     const user = await User.findOne({ where: { id: user_id } });
 
     const transactions = await Transaction.findAll({
-      attributes: ["id", "user_id", "status", "createdAt"],
-      include: [
-        {
-          model: Cart,
-          as: "cart",
-          attributes: ["id", "user_id", "product_id", "qty", "unit_price"],
-          include: [
-            {
-              model: User,
-              as: "user",
-              attributes: ["id", "email"],
-              include: [
-                {
-                  model: Profile,
-                  as: "userProfile",
-                  attributes: ["id", "name"],
-                },
-              ],
-            },
-            {
-              model: Product,
-              as: "product",
-              include: [
-                {
-                  model: Store,
-                  as: "store",
-                  attributes: ["id", "name"],
-                  include: [
-                    {
-                      model: User,
-                      as: "user",
-                      attributes: ["id", "email"],
-                      include: [
-                        {
-                          model: Profile,
-                          as: "userProfile",
-                          attributes: ["id", "name"],
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      ],
       where: {
-        "$cart.user.id$": user.id,
+        user_id: user.id,
       },
     });
+    console.log("🚀 ~ getAllTransactions ~ transactions:", transactions);
 
     if (!transactions || transactions.length === 0) {
       return response(
@@ -78,12 +32,75 @@ const getAllTransactions = async (req, res) => {
       );
     }
 
+    const cartIds = [].concat(
+      ...transactions.map((transaction) => transaction.cart_id)
+    );
+    console.log("🚀 ~ getAllTransactions ~ cartIds:", cartIds);
+
+    // Fetch the carts
+    const carts = await Cart.findAll({
+      attributes: ["id", "user_id", "product_id", "qty", "unit_price"],
+      include: [
+        {
+          model: User,
+          as: "user",
+          attributes: ["id", "email"],
+          include: [
+            {
+              model: Profile,
+              as: "userProfile",
+              attributes: ["id", "name"],
+            },
+          ],
+        },
+        {
+          model: Product,
+          as: "product",
+          include: [
+            {
+              model: Store,
+              as: "store",
+              attributes: ["id", "name"],
+              include: [
+                {
+                  model: User,
+                  as: "user",
+                  attributes: ["id", "email"],
+                  include: [
+                    {
+                      model: Profile,
+                      as: "userProfile",
+                      attributes: ["id", "name"],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      where: {
+        id: { [Op.in]: cartIds },
+      },
+    });
+    console.log("🚀 ~ getAllTransactions ~ carts:", carts);
+
+    // Merge the cart details into the transactions
+    const mergedTransactions = transactions.map((transaction) => {
+      const cart_details = transaction.cart_id.map((id) => {
+        const cart = carts.find((cart) => cart.id === id);
+        return cart || id;
+      });
+
+      return { ...transaction.toJSON(), cart_details };
+    });
+
     return response(
       res,
       200,
       true,
       "Transactions retrieved successfully",
-      transactions
+      mergedTransactions
     );
   } catch (error) {
     return response(res, error.status || 500, false, error.message, null);
