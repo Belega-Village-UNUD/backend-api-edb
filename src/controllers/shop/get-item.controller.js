@@ -33,9 +33,11 @@ const getItems = async (req, res) => {
         id: {
           [Op.notIn]: transactions.map((transaction) => transaction.cart_id),
         },
+
+        is_checkout: { [Op.not]: true },
         user_id: id,
       },
-      attributes: ["id", "qty"],
+      attributes: ["id", "qty", "is_checkout"],
       include: [
         {
           model: Product,
@@ -61,6 +63,10 @@ const getItems = async (req, res) => {
     const stores = {};
 
     cartItems.forEach((cartItem) => {
+      console.log(
+        "68: cartItem, get-item.controller.js: ",
+        JSON.stringify(cartItem)
+      );
       // If the store doesn't exist in the object yet, create it
       if (!stores[cartItem.product.store.id]) {
         stores[cartItem.product.store.id] = {
@@ -85,6 +91,7 @@ const getItems = async (req, res) => {
         price: cartItem.product.price,
         stock: cartItem.product.stock,
         desc_product: cartItem.product.desc_product,
+        is_checkout: cartItem.is_checkout,
         type_id: cartItem.product.type_id,
       });
     });
