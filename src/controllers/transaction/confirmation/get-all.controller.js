@@ -24,15 +24,6 @@ const getAllTransactions = async (req, res) => {
     if (!store) return response(res, 404, false, "Store not found", null);
 
     const transactions = await Transaction.findAll({
-      attributes: [
-        "id",
-        "user_id",
-        "status",
-        "createdAt",
-        "updatedAt",
-        "token",
-        "redirect_url",
-      ],
       include: [
         {
           model: Cart,
