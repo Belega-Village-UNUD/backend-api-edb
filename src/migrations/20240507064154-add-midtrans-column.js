@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 const { DataTypes } = require("sequelize");
 
 /** @type {import('sequelize-cli').Migration} */
@@ -7,13 +7,13 @@ module.exports = {
     await queryInterface.addColumn("Transactions", "token", {
       type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: '',
+      defaultValue: "",
     });
 
     await queryInterface.addColumn("Transactions", "redirect_url", {
       type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: '',
+      defaultValue: "",
     });
   },
 
