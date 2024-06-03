@@ -34,6 +34,7 @@ const confirm = async (req, res) => {
       );
     }
 
+    // TODO: Fix this ORM ref: src/controllers/transcation/confirmation/get-all.controller.js
     let transaction = await Transaction.findOne({
       attributes: ["id", "user_id", "total_amount", "status", "createdAt"],
       include: [
