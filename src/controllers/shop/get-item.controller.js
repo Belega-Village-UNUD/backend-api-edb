@@ -63,10 +63,6 @@ const getItems = async (req, res) => {
     const stores = {};
 
     cartItems.forEach((cartItem) => {
-      console.log(
-        "68: cartItem, get-item.controller.js: ",
-        JSON.stringify(cartItem)
-      );
       // If the store doesn't exist in the object yet, create it
       if (!stores[cartItem.product.store.id]) {
         stores[cartItem.product.store.id] = {
