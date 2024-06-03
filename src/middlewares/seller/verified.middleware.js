@@ -11,6 +11,17 @@ const storeVerified = async (req, res, next) => {
     return response(res, 404, false, "User not found", null);
   }
 
+  const store = await Store.findOne({ where: { user_id: user.id } });
+  if (!store) {
+    return response(
+      res,
+      404,
+      false,
+      "Store not found, please register as a seller first!",
+      null
+    );
+  }
+
   let isStoreVerified = store.is_verified === "VERIFIED" ? true : false;
 
   if (!isStoreVerified) {
