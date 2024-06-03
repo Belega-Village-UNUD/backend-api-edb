@@ -20,7 +20,6 @@ const getAllTransactions = async (req, res) => {
         user_id: user.id,
       },
     });
-    console.log("🚀 ~ getAllTransactions ~ transactions:", transactions);
 
     if (!transactions || transactions.length === 0) {
       return response(
