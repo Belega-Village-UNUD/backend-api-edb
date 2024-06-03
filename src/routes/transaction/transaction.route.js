@@ -27,6 +27,13 @@ router.get(
   controller.getAllTransactions
 );
 
+router.get(
+  "/:id",
+  middleware.restrict,
+  middleware.rbac(MODULE.TRANSACTION, ROLE.SELLER, true, true),
+  controller.getOneTransaction
+);
+
 router.use("/buyer", buyer);
 
 module.exports = router;
