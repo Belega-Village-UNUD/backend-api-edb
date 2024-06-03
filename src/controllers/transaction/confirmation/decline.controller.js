@@ -7,6 +7,7 @@ const {
   Store,
 } = require("../../../models");
 const { response } = require("../../../utils/response.utils");
+const { Op } = require("sequelize");
 
 const decline = async (req, res) => {
   try {
@@ -14,7 +15,7 @@ const decline = async (req, res) => {
     const { id } = req.user;
 
     const storeUserId = await Store.findOne({
-      attributes: ["user_id"],
+      attributes: ["id", "user_id"],
       where: { user_id: id },
     });
 
@@ -29,38 +30,13 @@ const decline = async (req, res) => {
     }
 
     let transaction = await Transaction.findOne({
-      attributes: ["id", "user_id", "status", "createdAt"],
       include: [
         {
-          model: Cart,
-          as: "cart",
-          attributes: ["id", "user_id", "product_id", "qty", "unit_price"],
-          include: [
-            {
-              model: Product,
-              as: "product",
-              include: [
-                {
-                  model: Store,
-                  as: "store",
-                  attributes: ["id", "name"],
-                  include: [
-                    {
-                      model: User,
-                      as: "user",
-                      attributes: ["id", "email"],
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
+          model: User,
+          as: "user",
         },
       ],
-      where: {
-        "$cart.product.store.user.id$": storeUserId.user_id,
-        id: transactionId,
-      },
+      where: { id: transactionId },
     });
 
     if (!transaction) {
@@ -83,29 +59,34 @@ const decline = async (req, res) => {
       );
     }
 
-    const cart = await Cart.findOne({
-      where: { id: transaction.cart.id },
+    let cartIds = transaction.cart_id;
+    cartIds = Array.isArray(cartIds) ? cartIds : [cartIds];
+
+    const carts = await Cart.findAll({
+      where: { id: { [Op.in]: cartIds } },
     });
 
-    if (!cart) {
-      return response(res, 500, false, "There's no cart of this id", null);
+    for (const cart of carts) {
+      if (!cart) {
+        return response(res, 500, false, "There's no cart of this id", null);
+      }
+
+      const product = await Product.findOne({
+        where: { id: cart.product_id },
+      });
+
+      if (!product) {
+        return response(res, 500, false, "There's no product of this id", null);
+      }
+
+      product.stock += cart.qty;
+      await product.save();
     }
-
-    const product = await Product.findOne({
-      where: { id: cart.product_id },
-    });
-
-    if (!product) {
-      return response(res, 500, false, "There's no product of this id", null);
-    }
-
-    product.stock += cart.qty;
-    await product.save();
 
     transaction.status = "CANCEL";
     await transaction.save();
 
-    return response(res, 200, true, "Transaction declined", transaction);
+    return response(res, 200, true, "Transaction declined", 1);
   } catch (error) {
     return response(res, error.status || 500, false, error.message, null);
   }
