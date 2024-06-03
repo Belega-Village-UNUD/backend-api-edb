@@ -9,12 +9,6 @@ const {
 const { response } = require("../../../utils/response.utils");
 const { Op } = require("sequelize");
 
-/**
- *
- * @param {*} req
- * @param {*} res
- * @returns
- */
 const getAllTransactions = async (req, res) => {
   try {
     const { id: user_id } = req.user;
