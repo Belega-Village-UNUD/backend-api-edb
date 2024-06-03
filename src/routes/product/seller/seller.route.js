@@ -8,36 +8,42 @@ router.get(
   "/all",
   middleware.restrict,
   middleware.rbac(MODULE.PRODUCT, ROLE.SELLER, true, true),
+  middleware.storeVerified,
   controllers.getAllProductSeller
 );
 router.get(
   "/:id",
   middleware.restrict,
   middleware.rbac(MODULE.PRODUCT, ROLE.SELLER, true, true),
+  middleware.storeVerified,
   controllers.getOneProductSeller
 );
 router.post(
   "/",
   middleware.restrict,
   middleware.rbac(MODULE.PRODUCT, ROLE.SELLER, true, true),
+  middleware.storeVerified,
   controllers.create
 );
 router.put(
   "/:id",
   middleware.restrict,
   middleware.rbac(MODULE.PRODUCT, ROLE.SELLER, true, true),
+  middleware.storeVerified,
   controllers.update
 );
 router.delete(
   "/:id",
   middleware.restrict,
   middleware.rbac(MODULE.PRODUCT, ROLE.SELLER, true, true),
+  middleware.storeVerified,
   controllers.deleteProduct
 );
 router.post(
   "/image",
   middleware.restrict,
   middleware.rbac(MODULE.PRODUCT, ROLE.SELLER, true, true),
+  middleware.storeVerified,
   image.single("productImage"),
   controllers.imageProduct
 );

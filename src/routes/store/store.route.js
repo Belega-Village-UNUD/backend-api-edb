@@ -9,6 +9,7 @@ router.post(
   middleware.restrict,
   image.single("avatar"),
   middleware.rbac(MODULE.STORE, ROLE.SELLER, true, true),
+  middleware.storeVerified,
   controllers.store.avatarStore
 );
 router.post(
@@ -16,6 +17,7 @@ router.post(
   middleware.restrict,
   image.single("image"),
   middleware.rbac(MODULE.STORE, ROLE.SELLER, true, true),
+  middleware.storeVerified,
   controllers.store.imageStore
 );
 

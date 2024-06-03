@@ -10,6 +10,7 @@ router.put(
   "/confirm/:id",
   middleware.restrict,
   middleware.rbac(MODULE.TRANSACTION, ROLE.SELLER, true, true),
+  middleware.storeVerified,
   controller.confirmOrder
 );
 
@@ -17,6 +18,7 @@ router.put(
   "/decline/:id",
   middleware.restrict,
   middleware.rbac(MODULE.TRANSACTION, ROLE.SELLER, true, true),
+  middleware.storeVerified,
   controller.declineOrder
 );
 
@@ -24,6 +26,7 @@ router.get(
   "/",
   middleware.restrict,
   middleware.rbac(MODULE.TRANSACTION, ROLE.SELLER, true, true),
+  middleware.storeVerified,
   controller.getAllTransactions
 );
 
@@ -31,6 +34,7 @@ router.get(
   "/:id",
   middleware.restrict,
   middleware.rbac(MODULE.TRANSACTION, ROLE.SELLER, true, true),
+  middleware.storeVerified,
   controller.getOneTransaction
 );
 
