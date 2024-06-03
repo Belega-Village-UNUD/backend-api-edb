@@ -35,7 +35,6 @@ module.exports = {
       { where: { id: transactionId } }
     );
 
-    console.log("36, modifyStatus: transactions", transaction);
     return status;
   },
 
@@ -71,7 +70,6 @@ module.exports = {
           transaction.id,
           data.transaction_status
         );
-        console.log("48, transactionStatus: newStatus:", newStatus);
       }
     }
   },

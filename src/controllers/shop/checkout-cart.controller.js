@@ -107,7 +107,6 @@ const checkoutCart = async (req, res) => {
 
     return response(res, 200, true, "Checkout successful", transaction);
   } catch (error) {
-    console.error(error);
     return response(res, error.status || 500, false, error.message, null);
   }
 };

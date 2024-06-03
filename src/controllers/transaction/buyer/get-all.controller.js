@@ -34,7 +34,6 @@ const getAllTransactions = async (req, res) => {
     const cartIds = [].concat(
       ...transactions.map((transaction) => transaction.cart_id)
     );
-    console.log("🚀 ~ getAllTransactions ~ cartIds:", cartIds);
 
     // Fetch the carts
     const carts = await Cart.findAll({
@@ -82,7 +81,6 @@ const getAllTransactions = async (req, res) => {
         id: { [Op.in]: cartIds },
       },
     });
-    console.log("🚀 ~ getAllTransactions ~ carts:", carts);
 
     // Merge the cart details into the transactions
     const mergedTransactions = transactions.map((transaction) => {
