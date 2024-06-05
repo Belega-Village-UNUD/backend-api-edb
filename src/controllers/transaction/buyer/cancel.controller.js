@@ -22,45 +22,59 @@ const cancelTransaction = async (req, res) => {
     const user = await User.findOne({ where: { id: user_id } });
 
     let transaction = await Transaction.findOne({
-      attributes: ["id", "user_id", "status", "createdAt"],
+      where: {
+        id: transaction_id,
+        status: { [Op.notIn]: ["CANCEL", "SUCCESS"] }, //  NOTE: Filter all Cancel and Success transaction
+      },
+    });
+
+    if (!transaction) {
+      return response(
+        res,
+        error.status || 500,
+        false,
+        "Cannot Cancel Transaction",
+        null
+      );
+    }
+
+    console.log(`31, cancel.controller.js, transaction: `, transaction);
+
+    let carts = await Cart.findAll({
+      where: {
+        id: { [Op.in]: transaction.cart_id },
+      },
       include: [
         {
-          model: Cart,
-          as: "cart",
-          attributes: ["id", "user_id", "product_id", "qty", "unit_price"],
+          model: User,
+          as: "user",
+          attributes: ["id", "email"],
           include: [
             {
-              model: User,
-              as: "user",
-              attributes: ["id", "email"],
-              include: [
-                {
-                  model: Profile,
-                  as: "userProfile",
-                  attributes: ["id", "name"],
-                },
-              ],
+              model: Profile,
+              as: "userProfile",
+              attributes: ["id", "name"],
             },
+          ],
+        },
+        {
+          model: Product,
+          as: "product",
+          include: [
             {
-              model: Product,
-              as: "product",
+              model: Store,
+              as: "store",
+              attributes: ["id", "name"],
               include: [
                 {
-                  model: Store,
-                  as: "store",
-                  attributes: ["id", "name"],
+                  model: User,
+                  as: "user",
+                  attributes: ["id", "email"],
                   include: [
                     {
-                      model: User,
-                      as: "user",
-                      attributes: ["id", "email"],
-                      include: [
-                        {
-                          model: Profile,
-                          as: "userProfile",
-                          attributes: ["id", "name"],
-                        },
-                      ],
+                      model: Profile,
+                      as: "userProfile",
+                      attributes: ["id", "name"],
                     },
                   ],
                 },
@@ -69,11 +83,6 @@ const cancelTransaction = async (req, res) => {
           ],
         },
       ],
-      where: {
-        "$cart.user.id$": user.id,
-        id: transaction_id,
-        status: { [Op.notIn]: ["CANCEL", "SUCCESS"] }, //  NOTE: Filter all Cancel and Success transaction
-      },
     });
 
     if (!transaction || transaction.length === 0) {
@@ -86,15 +95,6 @@ const cancelTransaction = async (req, res) => {
       );
     }
 
-    // TODO create notification here to seller
-    const notification = {
-      title: "Order Cancelled",
-      message: `Order with ID ${transaction.id} has been cancelled by ${transaction.cart.user.email}`,
-      transaction: transaction.id,
-      type: "order",
-      store_id: transaction.cart.product.store.user.id,
-    };
-
     transaction.status = "CANCEL";
     await transaction.save();
 
@@ -106,17 +106,36 @@ const cancelTransaction = async (req, res) => {
     });
 
     if (!cancelledTransaction) {
+      // count the sum product by checking all the carts qty
+      let quantity = 0;
+      let unitPrice = 0;
+
+      for (const cart of carts) {
+        quantity += cart.qty;
+        unitPrice += cart.unit_price;
+
+        // TODO create notification here to seller
+        const notification = {
+          title: "Order Cancelled",
+          message: `Order with ID ${transaction.id} has been cancelled by ${cart.user.email}`,
+          transaction: transaction.id,
+          type: "order",
+          store_id: cart.product.store.user.id,
+        };
+      }
+
       await CancelledTransaction.create({
         id: nanoid(10),
         transaction_id: transaction.id,
-        sum_product: transaction.cart.qty,
-        total_price: transaction.cart.qty * transaction.cart.unit_price,
+        sum_product: quantity,
+        total_price: quantity * unitPrice,
         reason: reason,
       });
 
       // TODO Email Notification for seller
       const template = await emailTemplate("cancelTransaction.template.ejs", {
         transaction,
+        carts,
         reason,
       });
 
@@ -131,6 +150,7 @@ const cancelTransaction = async (req, res) => {
       transaction
     );
   } catch (error) {
+    console.error(error);
     return response(res, error.status || 500, false, error.message, null);
   }
 };

@@ -1,32 +1,63 @@
-const { Product } = require("../../../models");
+const { Product, User, Store } = require("../../../models");
 const { response } = require("../../../utils/response.utils");
 
 const updateProduct = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { name_product, productTypeId, description, price, stock } = req.body;
-    const { store_id } = req.body;
-    const product = await Product.findOne({ where: { id: id } });
+    const { id: product_id } = req.params;
+    const { id: user_id } = req.user;
+
+    const user = await User.findOne({
+      where: { id: user_id },
+      attributes: { exclude: ["password"] },
+    });
+    if (!user) {
+      return response(res, 404, false, "User not found", null);
+    }
+
+    const store = await Store.findOne({ where: { user_id: user.id } });
+    if (!store) {
+      return response(
+        res,
+        404,
+        false,
+        "Store not found, please register as a seller first!",
+        null
+      );
+    }
+
+    const product = await Product.findOne({ where: { id: product_id } });
     if (!product) {
       return response(res, 404, false, `Product Not Found`, null);
     }
+
+    const {
+      name_product,
+      productTypeId,
+      description,
+      price,
+      stock,
+      weight_gr,
+      is_preorder,
+    } = req.body;
+
     await Product.update(
       {
-        name_product,
+        name_product: name_product,
         type_id: productTypeId,
-        description,
-        price,
-        stock,
-        store_id,
+        desc_product: description,
+        price: price,
+        stock: stock,
+        weight_gr: weight_gr,
+        is_preorder: is_preorder,
       },
-      { where: { id: id } }
+      { where: { id: product_id } }
     );
-    const updateProduct = await Product.findOne({ where: { id: id } });
+    const updateProduct = await Product.findOne({ where: { id: product_id } });
     return response(
       res,
       200,
       true,
-      `Product ${name_product} has been updated`,
+      `Product ${product.name_product} has been updated`,
       updateProduct
     );
   } catch (err) {

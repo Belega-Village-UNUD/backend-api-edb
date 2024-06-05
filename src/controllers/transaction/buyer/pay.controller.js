@@ -9,34 +9,13 @@ const {
   DetailTransaction,
 } = require("../../../models");
 const { response } = require("../../../utils/response.utils");
+const {
+  checkMidtransStatus,
+  updateStatusFromMidtrans,
+} = require("../../../utils/midtrans.utils");
 const sendEmail = require("../../../configs/nodemailer.config");
 const emailTemplate = require("../../../utils/email-template.utils");
-const crypto = require("crypto");
-const { MIDTRANS_SERVER_KEY } = require("../../../utils/constan");
-
-const updateStatusFromMidtrans = async (transaction_id, data) => {
-  const hash = crypto
-    .createHash("sha512")
-    .update(
-      `${transaction_id}${data.status_code}${data.gross_amount}${MIDTRANS_SERVER_KEY}`
-    )
-    .digest("hex");
-
-  if (data.signature_key !== hash) {
-    return response(res, 400, false, "Signature key is not match", null);
-  }
-
-  // let responseData = null;
-  let transactionStatus = data.transaction_status;
-  let fraudStatus = data.fraud_status;
-
-  if (transactionStatus == "capture") {
-    if (fraudStatus == "accept") {
-      let status = { status: "SUCCESS" };
-      return status;
-    }
-  }
-};
+const { Op } = require("sequelize");
 
 const payTransaction = async (req, res) => {
   try {
@@ -47,89 +26,96 @@ const payTransaction = async (req, res) => {
 
     let transaction = await Transaction.findOne({
       attributes: ["id", "user_id", "status", "createdAt"],
-      include: [
-        {
-          model: Cart,
-          as: "cart",
-          attributes: ["id", "user_id", "product_id", "qty", "unit_price"],
-          include: [
-            {
-              model: User,
-              as: "user",
-              attributes: ["id", "email"],
-              include: [
-                {
-                  model: Profile,
-                  as: "userProfile",
-                  attributes: ["id", "name"],
-                },
-              ],
-            },
-            {
-              model: Product,
-              as: "product",
-              include: [
-                {
-                  model: Store,
-                  as: "store",
-                  attributes: ["id", "name"],
-                  include: [
-                    {
-                      model: User,
-                      as: "user",
-                      attributes: ["id", "email"],
-                      include: [
-                        {
-                          model: Profile,
-                          as: "userProfile",
-                          attributes: ["id", "name"],
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      ],
       where: {
-        "$cart.user.id$": user.id,
         id: transaction_id,
+        user_id: user.id,
       },
     });
 
     if (!transaction || transaction.length === 0) {
-      return response(
-        res,
-        200,
-        false,
-        "No transactions found for this user",
-        null
-      );
+      return response(res, 404, false, "No transactions found", null);
     }
 
     if (transaction.status == "PENDING" || transaction.status == "CANCEL") {
-      return response(res, 200, false, "Transaction not valid", null);
+      return response(res, 400, false, "Transaction not valid", null);
     }
 
     if (transaction.status == "PAYABLE") {
-      const midtrans = await updateStatusFromMidtrans(
-        transaction.id,
-        transaction_id
-      );
-      transaction.status = midtrans.status;
-      await transaction.save();
-      // TODO create notification here to seller
-      const notification = {
-        title: "Transfer Success",
-        message: `You have a new order from ${transaction.cart.user.userProfile.name} for product ${transaction.cart.product.name_product} with total price ${transaction.total_price}`,
-        transction_id: transaction.id,
-        type: "order",
-        user_id: transaction.cart.product.store.user.id,
-      };
+      const midtrans = await checkMidtransStatus(transaction);
 
-      // TODO Email Notification
+      const updateMidtrans = await updateStatusFromMidtrans(
+        transaction.id,
+        midtrans
+      );
+
+      if (updateMidtrans.status != "SUCCESS") {
+        return response(res, 403, false, updateMidtrans.message, null);
+      }
+
+      transaction.status = updateMidtrans.status;
+      await transaction.save();
+
+      // const cartIds = transaction.cart_id;
+
+      // const carts = await Cart.findAll({
+      //   include: [
+      //     {
+      //       model: User,
+      //       as: "user",
+      //       attributes: ["id", "email"],
+      //       include: [
+      //         {
+      //           model: Profile,
+      //           as: "userProfile",
+      //           attributes: ["id", "name"],
+      //         },
+      //       ],
+      //     },
+      //     {
+      //       model: Product,
+      //       as: "product",
+      //       include: [
+      //         {
+      //           model: Store,
+      //           as: "store",
+      //           attributes: ["id", "name"],
+      //           include: [
+      //             {
+      //               model: User,
+      //               as: "user",
+      //               attributes: ["id", "email"],
+      //               include: [
+      //                 {
+      //                   model: Profile,
+      //                   as: "userProfile",
+      //                   attributes: ["id", "name"],
+      //                 },
+      //               ],
+      //             },
+      //           ],
+      //         },
+      //       ],
+      //     },
+      //   ],
+      //   where: {
+      //     id: { [Op.in]: cartIds },
+      //     user_id: user.id,
+      //   },
+      // });
+
+      // // TODO create notifi cation  here to seller
+      // carts.map((cart) => {
+      //   notifications.push({
+      //     title: "Transfer Success",
+      //     message: `You have a new order from ${cart.user.userProfile.name} for pr  oduct   ${cart.product.name_product} with total price ${transaction.total_price}`,
+      //     transaction_id: transaction.id,
+      //     type: "order",
+      //     user_id: transaction.cart.product.store.user.id,
+      //   });
+      // });
+
+      // // };
+
       const template = await emailTemplate("payTransaction.template.ejs", {
         transaction_id,
       });
@@ -167,6 +153,7 @@ const payTransaction = async (req, res) => {
       transaction
     );
   } catch (error) {
+    console.error(error);
     return response(res, error.status || 500, false, error.message, null);
   }
 };

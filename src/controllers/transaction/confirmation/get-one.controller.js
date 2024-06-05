@@ -12,14 +12,14 @@ const { Op } = require("sequelize");
 const getOneTransaction = async (req, res) => {
   try {
     const { id: user_id } = req.user;
-    const { id: transactionId } = req.params;
+    const { id: transaction_id } = req.params;
 
     const store = await Store.findOne({ where: { user_id } });
 
     if (!store) return response(res, 404, false, "Store not found", null);
 
     const transaction = await Transaction.findOne({
-      where: { id: transactionId },
+      where: { id: transaction_id },
       include: [
         {
           model: User,
