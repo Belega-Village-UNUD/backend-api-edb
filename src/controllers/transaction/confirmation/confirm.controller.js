@@ -8,6 +8,7 @@ const {
   Store,
 } = require("../../../models");
 const { response } = require("../../../utils/response.utils");
+const { Op } = require("sequelize");
 const {
   MIDTRANS_SERVER_KEY,
   MIDTRANS_APP_URL,
@@ -20,7 +21,7 @@ const confirm = async (req, res) => {
     const { id } = req.user;
 
     const storeUserId = await Store.findOne({
-      attributes: ["user_id"],
+      attributes: ["id", "user_id"],
       where: { user_id: id },
     });
 
@@ -35,37 +36,59 @@ const confirm = async (req, res) => {
     }
 
     let transaction = await Transaction.findOne({
-      attributes: ["id", "user_id", "total_amount", "status", "createdAt"],
       include: [
         {
-          model: Cart,
-          as: "cart",
-          attributes: ["id", "user_id", "product_id", "qty", "unit_price"],
+          model: User,
+          as: "user",
+        },
+      ],
+      where: { id: transactionId },
+    });
+
+    if (!transaction) {
+      return response(
+        res,
+        404,
+        false,
+        "Transaction not found because you are not the seller of this transaction",
+        null
+      );
+    }
+
+    const cartIds = transaction.cart_id;
+
+    const carts = await Cart.findAll({
+      include: [
+        {
+          model: User,
+          as: "user",
+          attributes: ["id", "email"],
           include: [
             {
-              model: User,
-              as: "user",
-              attributes: ["id", "email"],
-              include: [
-                {
-                  model: Profile,
-                  as: "userProfile",
-                  attributes: ["name", "phone"],
-                },
-              ],
+              model: Profile,
+              as: "userProfile",
+              attributes: ["id", "name"],
             },
+          ],
+        },
+        {
+          model: Product,
+          as: "product",
+          include: [
             {
-              model: Product,
-              as: "product",
+              model: Store,
+              as: "store",
+              attributes: ["id", "name"],
               include: [
                 {
-                  model: Store,
-                  as: "store",
+                  model: User,
+                  as: "user",
+                  attributes: ["id", "email"],
                   include: [
                     {
-                      model: User,
-                      as: "user",
-                      include: [{ model: Profile, as: "userProfile" }],
+                      model: Profile,
+                      as: "userProfile",
+                      attributes: ["id", "name"],
                     },
                   ],
                 },
@@ -75,8 +98,8 @@ const confirm = async (req, res) => {
         },
       ],
       where: {
-        "$cart.product.store.user.id$": storeUserId.user_id,
-        id: transactionId,
+        id: { [Op.in]: cartIds },
+        "$product.store_id$": storeUserId.id,
       },
     });
 
@@ -96,23 +119,33 @@ const confirm = async (req, res) => {
 
     const authString = btoa(`${MIDTRANS_SERVER_KEY}:`);
 
+    let itemDetails = [];
+
+    carts.map((cart) => {
+      itemDetails.push({
+        id: cart.product.id,
+        price: cart.product.price,
+        quantity: cart.qty,
+        name: cart.product.name_product,
+      });
+    });
+
+    const customerDetails = await Profile.findOne({
+      attributes: ["name", "phone"],
+      where: { user_id: transaction.user_id },
+      include: [{ model: User, as: "user", attributes: ["email"] }],
+    });
+
     const payload = {
       transaction_details: {
         order_id: transaction.id,
         gross_amount: transaction.total_amount,
       },
-      item_details: [
-        {
-          id: transaction.cart.product.id,
-          price: transaction.cart.product.price,
-          quantity: transaction.cart.qty,
-          name: transaction.cart.product.name_product,
-        },
-      ],
+      item_details: itemDetails,
       customer_details: {
-        first_name: transaction.cart.user.userProfile.name,
-        email: transaction.cart.user.email,
-        phone: transaction.cart.user.userProfile.phone,
+        first_name: customerDetails.name,
+        email: customerDetails.user.email,
+        phone: customerDetails.phone,
       },
     };
 
@@ -146,7 +179,7 @@ const confirm = async (req, res) => {
     transaction.status = "PAYABLE";
     await transaction.save();
 
-    return response(res, 200, true, "Transaction confirmed", transaction);
+    return response(res, 200, true, "Transaction confirmed", 1);
   } catch (error) {
     return response(res, error.status || 500, false, error.message, null);
   }

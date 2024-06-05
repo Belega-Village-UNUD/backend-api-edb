@@ -7,14 +7,8 @@ const {
   Profile,
 } = require("../../../models");
 const { response } = require("../../../utils/response.utils");
-const { checkMidtransStatus } = require("../../../utils/midtrans.utils");
+const { Op } = require("sequelize");
 
-/**
- *
- * @param {*} req
- * @param {*} res
- * @returns
- */
 const getAllTransactions = async (req, res) => {
   try {
     const { id: user_id } = req.user;
@@ -24,53 +18,51 @@ const getAllTransactions = async (req, res) => {
     if (!store) return response(res, 404, false, "Store not found", null);
 
     const transactions = await Transaction.findAll({
-      attributes: [
-        "id",
-        "user_id",
-        "status",
-        "createdAt",
-        "updatedAt",
-        "token",
-        "redirect_url",
-      ],
       include: [
         {
-          model: Cart,
-          as: "cart",
-          attributes: ["id", "user_id", "product_id", "qty", "unit_price"],
+          model: User,
+          as: "user",
+          attributes: ["id", "email"],
+        },
+      ],
+    });
+
+    const cartIds = [].concat(
+      ...transactions.map((transaction) => transaction.cart_id)
+    );
+
+    const carts = await Cart.findAll({
+      include: [
+        {
+          model: User,
+          as: "user",
+          attributes: ["id", "email"],
           include: [
             {
-              model: User,
-              as: "user",
-              attributes: ["id", "email"],
-              include: [
-                {
-                  model: Profile,
-                  as: "userProfile",
-                  attributes: ["id", "name"],
-                },
-              ],
+              model: Profile,
+              as: "userProfile",
+              attributes: ["id", "name"],
             },
+          ],
+        },
+        {
+          model: Product,
+          as: "product",
+          include: [
             {
-              model: Product,
-              as: "product",
+              model: Store,
+              as: "store",
+              attributes: ["id", "name"],
               include: [
                 {
-                  model: Store,
-                  as: "store",
-                  attributes: ["id", "name"],
+                  model: User,
+                  as: "user",
+                  attributes: ["id", "email"],
                   include: [
                     {
-                      model: User,
-                      as: "user",
-                      attributes: ["id", "email"],
-                      include: [
-                        {
-                          model: Profile,
-                          as: "userProfile",
-                          attributes: ["id", "name"],
-                        },
-                      ],
+                      model: Profile,
+                      as: "userProfile",
+                      attributes: ["id", "name"],
                     },
                   ],
                 },
@@ -80,7 +72,8 @@ const getAllTransactions = async (req, res) => {
         },
       ],
       where: {
-        "$cart.product.store_id$": store.id,
+        id: { [Op.in]: cartIds },
+        "$product.store_id$": store.id,
       },
     });
 
@@ -94,14 +87,29 @@ const getAllTransactions = async (req, res) => {
       );
     }
 
-    // await checkMidtransStatus(transactions);
+    const mergedTransactions = transactions
+      .map((transaction) => {
+        const cart_details = transaction.cart_id
+          .map((id) => {
+            const cart = carts.find((cart) => cart.id === id);
+            return cart || null;
+          })
+          .filter((cart) => cart !== null);
+
+        if (cart_details.length > 0) {
+          return { ...transaction.toJSON(), cart_details };
+        }
+
+        return null;
+      })
+      .filter((transaction) => transaction !== null);
 
     return response(
       res,
       200,
       true,
       "Transactions retrieved successfully",
-      transactions
+      mergedTransactions
     );
   } catch (error) {
     return response(res, error.status || 500, false, error.message, null);

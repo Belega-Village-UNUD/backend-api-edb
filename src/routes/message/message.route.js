@@ -7,6 +7,7 @@ router.get(
   "/store",
   middleware.restrict,
   middleware.rbac(MODULE.MESSAGE, ROLE.BUYER, true, true),
+  middleware.buyerVerified,
   controller.sendMessageGreetSeller
 );
 
@@ -15,6 +16,7 @@ router.get(
   "/product",
   middleware.restrict,
   middleware.rbac(MODULE.MESSAGE, ROLE.BUYER, true, true),
+  middleware.buyerVerified,
   controller.sendMessageAskProduct
 );
 

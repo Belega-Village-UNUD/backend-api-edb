@@ -79,7 +79,6 @@ const getOneTransactions = async (req, res) => {
         id: { [Sequelize.Op.in]: transaction.cart_id },
       },
     });
-    console.log("🚀 ~ getAllTransactions ~ carts:", carts);
 
     // Merge the cart details into the transactions
     const cart_details = transaction.cart_id.map((id) => {

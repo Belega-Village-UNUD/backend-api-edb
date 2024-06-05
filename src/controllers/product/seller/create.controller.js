@@ -24,6 +24,20 @@ const createProduct = async (req, res) => {
         null
       );
     }
+
+    // TODO: Create a middleware to check if store is verified
+    isStoreVerified = store.is_verified === "VERIFIED" ? true : false;
+
+    if (!isStoreVerified) {
+      return response(
+        res,
+        403,
+        false,
+        "Store not verified, please wait until store verified by admin",
+        null
+      );
+    }
+
     const {
       name_product,
       productTypeId,
