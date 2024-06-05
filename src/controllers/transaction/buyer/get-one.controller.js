@@ -17,55 +17,8 @@ const getOneTransactions = async (req, res) => {
     const user = await User.findOne({ where: { id: user_id } });
 
     const transaction = await Transaction.findOne({
-      attributes: ["id", "user_id", "status", "createdAt"],
-      include: [
-        {
-          model: Cart,
-          as: "cart",
-          attributes: ["id", "user_id", "product_id", "qty", "unit_price"],
-          include: [
-            {
-              model: User,
-              as: "user",
-              attributes: ["id", "email"],
-              include: [
-                {
-                  model: Profile,
-                  as: "userProfile",
-                  attributes: ["id", "name"],
-                },
-              ],
-            },
-            {
-              model: Product,
-              as: "product",
-              include: [
-                {
-                  model: Store,
-                  as: "store",
-                  attributes: ["id", "name"],
-                  include: [
-                    {
-                      model: User,
-                      as: "user",
-                      attributes: ["id", "email"],
-                      include: [
-                        {
-                          model: Profile,
-                          as: "userProfile",
-                          attributes: ["id", "name"],
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      ],
       where: {
-        "$cart.user.id$": user.id,
+        user_id: user.id,
         id: transaction_id,
       },
     });
@@ -80,12 +33,67 @@ const getOneTransactions = async (req, res) => {
       );
     }
 
+    // Fetch the carts
+    const carts = await Cart.findAll({
+      attributes: ["id", "user_id", "product_id", "qty", "unit_price"],
+      include: [
+        {
+          model: User,
+          as: "user",
+          attributes: ["id", "email"],
+          include: [
+            {
+              model: Profile,
+              as: "userProfile",
+              attributes: ["id", "name"],
+            },
+          ],
+        },
+        {
+          model: Product,
+          as: "product",
+          include: [
+            {
+              model: Store,
+              as: "store",
+              attributes: ["id", "name"],
+              include: [
+                {
+                  model: User,
+                  as: "user",
+                  attributes: ["id", "email"],
+                  include: [
+                    {
+                      model: Profile,
+                      as: "userProfile",
+                      attributes: ["id", "name"],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      where: {
+        id: { [Sequelize.Op.in]: transaction.cart_id },
+      },
+    });
+
+    // Merge the cart details into the transactions
+    const cart_details = transaction.cart_id.map((id) => {
+      const cart = carts.find((cart) => cart.id === id);
+      return cart || id;
+    });
+
+    const mergedTransaction = { ...transaction.toJSON(), cart_details };
+
     return response(
       res,
       200,
       true,
       "Transaction retrieved successfully",
-      transaction
+      mergedTransaction
     );
   } catch (error) {
     return response(res, error.status || 500, false, error.message, null);

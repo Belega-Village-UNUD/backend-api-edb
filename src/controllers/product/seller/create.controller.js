@@ -24,9 +24,39 @@ const createProduct = async (req, res) => {
         null
       );
     }
-    const { name_product, productTypeId, description, price, stock } = req.body;
 
-    if (!name_product || !productTypeId || !description || !price || !stock) {
+    // TODO: Create a middleware to check if store is verified
+    isStoreVerified = store.is_verified === "VERIFIED" ? true : false;
+
+    if (!isStoreVerified) {
+      return response(
+        res,
+        403,
+        false,
+        "Store not verified, please wait until store verified by admin",
+        null
+      );
+    }
+
+    const {
+      name_product,
+      productTypeId,
+      description,
+      price,
+      stock,
+      weight_gr,
+      is_preorder,
+    } = req.body;
+
+    if (
+      !name_product ||
+      !productTypeId ||
+      !description ||
+      !price ||
+      !stock ||
+      !weight_gr ||
+      is_preorder === null
+    ) {
       return response(res, 400, false, "Invalid input data", null);
     }
 
@@ -39,6 +69,8 @@ const createProduct = async (req, res) => {
       desc_product: description,
       price: price,
       stock: stock,
+      weight_gr: weight_gr,
+      is_preorder: is_preorder,
     });
     return response(
       res,

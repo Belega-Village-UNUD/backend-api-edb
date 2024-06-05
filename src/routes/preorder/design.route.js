@@ -7,6 +7,7 @@ router.post(
   "/custom",
   middleware.restrict,
   middleware.rbac(MODULE.PRODUCT, ROLE.BUYER, true, false),
+  middleware.buyerVerified,
   controllers.upCustomDesign
 );
 
