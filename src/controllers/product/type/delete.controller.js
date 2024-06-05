@@ -6,14 +6,14 @@ const deleteType = async (req, res) => {
     const { id } = req.params;
     const checkProductType = await ProductType.findOne({ where: { id } });
     if (!checkProductType) {
-      return response(res, 404, false, `Product Type ${id} Not Found`, null);
+      return response(res, 404, false, `Product Type Not Found`, null);
     }
     await ProductType.destroy({ where: { id } });
     return response(
       res,
       200,
       true,
-      `Delete Product Type ${id} Successfull`,
+      `Delete Product Type ${checkProductType.name} Successfull`,
       null
     );
   } catch (err) {

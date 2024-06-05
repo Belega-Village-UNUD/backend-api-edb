@@ -72,7 +72,13 @@ const createProduct = async (req, res) => {
       weight_gr: weight_gr,
       is_preorder: is_preorder,
     });
-    return response(res, 200, true, `Product has been created`, product);
+    return response(
+      res,
+      200,
+      true,
+      `Product ${name_product} has been created`,
+      product
+    );
   } catch (err) {
     return response(res, err.status || 500, false, err.message, null);
   }
