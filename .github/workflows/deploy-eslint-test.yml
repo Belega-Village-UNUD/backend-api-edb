@@ -41,5 +41,5 @@ jobs:
           user: ${{ github.actor }}
           command: |-
             cd ${{ env.REPOPATH }}
-            chmod +x ./shell/deploy.sh
-            ./shell/deploy.sh EDP-181-java-script-sast-with-eslint
+            make sast-container
+            bash ./shell/deploy.sh EDP-181-java-script-sast-with-eslint
