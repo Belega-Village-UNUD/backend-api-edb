@@ -1,6 +1,6 @@
 #!/bin/bash
 
-./shell/check-trivy.sh
+bash ./shell/check-trivy.sh
 
 # Check if image name is provided
 if [ -z "$1" ]; then
@@ -25,7 +25,7 @@ trivy image -f json -o ./reports/sast-container-backend-report.json $image_name
 if [ $? -eq 0 ]; then
     echo "trivy scan completed successfully."
 		# check git user already configured or not
-		./shell/check-git-user.sh $git_username $git_email
+		bash ./shell/check-git-user.sh $git_username $git_email
 		echo "Committing the sast container image '$image_name' report to the repository..."
 
 		# commit here
