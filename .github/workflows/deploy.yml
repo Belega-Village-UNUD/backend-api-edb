@@ -41,6 +41,4 @@ jobs:
           user: ${{ github.actor }}
           command: |-
             cd $(pwd)/${{ env.REPO }}
-            make build-staging
-            make sast-container
             bash ./shell/deploy.sh staging
