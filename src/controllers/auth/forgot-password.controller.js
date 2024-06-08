@@ -17,7 +17,7 @@ const forgotPassword = async (req, res) => {
         null
       );
 
-    const token = await generateToken(user);
+    const token = generateToken(user);
 
     await sendOTP(user, "Belega Commerce Forgot Password OTP Token");
 
@@ -29,7 +29,7 @@ const forgotPassword = async (req, res) => {
       { token }
     );
   } catch (error) {
-    return response(res, error.status || 500, false, error.message, null);
+    return response(res, error.status || 500, false, error, null);
   }
 };
 

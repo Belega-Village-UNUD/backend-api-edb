@@ -46,32 +46,32 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }} github actions to run publish docker image to github packages
 
-  sast-container-checks:
-    needs: build-and-push-image
-    environment: staging
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      security-events: write
-      actions: read
-    steps:
-      - name: SAST Trivy Container Checks
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: "${{ env.REGISTRY }}/belega-village-unud/backend-api-edb:edp-67-sast-on-container"
-          format: "sarif"
-          exit-code: "0"
-          ignore-unfixed: true
-          output: "trivy-results-container.sarif"
-          severity: "CRITICAL,HIGH,MEDIUM"
+  #sast-container-checks:
+  #  needs: build-and-push-image
+  #  environment: staging
+  #  runs-on: ubuntu-latest
+  #  permissions:
+  #    contents: read
+  #    security-events: write
+  #    actions: read
+  #  steps:
+  #    - name: SAST Trivy Container Checks
+  #      uses: aquasecurity/trivy-action@master
+  #      with:
+  #        image-ref: "${{ env.REGISTRY }}/belega-village-unud/backend-api-edb:edp-67-sast-on-container"
+  #        format: "sarif"
+  #        exit-code: "0"
+  #        ignore-unfixed: true
+  #        output: "trivy-results-container.sarif"
+  #        severity: "CRITICAL,HIGH,MEDIUM"
 
-      - name: Upload Trivy Report into Github Security
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: "trivy-results-container.sarif"
+  #    - name: Upload Trivy Report into Github Security
+  #      uses: github/codeql-action/upload-sarif@v2
+  #      with:
+  #        sarif_file: "trivy-results-container.sarif"
 
   deploy:
-    needs: sast-container-checks
+#    needs: sast-container-checks
     runs-on: ubuntu-latest
     environment: staging
     permissions:

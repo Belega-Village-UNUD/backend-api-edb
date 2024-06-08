@@ -33,9 +33,11 @@ const getItems = async (req, res) => {
         id: {
           [Op.notIn]: transactions.map((transaction) => transaction.cart_id),
         },
+
+        is_checkout: { [Op.not]: true },
         user_id: id,
       },
-      attributes: ["id", "qty"],
+      attributes: ["id", "qty", "is_checkout"],
       include: [
         {
           model: Product,
@@ -85,6 +87,7 @@ const getItems = async (req, res) => {
         price: cartItem.product.price,
         stock: cartItem.product.stock,
         desc_product: cartItem.product.desc_product,
+        is_checkout: cartItem.is_checkout,
         type_id: cartItem.product.type_id,
       });
     });

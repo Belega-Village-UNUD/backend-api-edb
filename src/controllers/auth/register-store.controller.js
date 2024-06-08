@@ -21,6 +21,16 @@ const registerStore = async (req, res) => {
       return response(res, 404, false, "User not found", null);
     }
 
+    if (user.is_verified != true) {
+      return response(
+        res,
+        404,
+        false,
+        "You must be verified to register a store",
+        null
+      );
+    }
+
     const existedStore = await Store.findOne({ where: { user_id: id } });
     if (existedStore) {
       return response(res, 400, false, "Store already registered", null);
@@ -35,16 +45,6 @@ const registerStore = async (req, res) => {
     if (!ktp_link) {
       return response(res, 400, false, "File upload failed", null);
     }
-
-    const sellerRole = await Role.findOne({ where: { name: ROLE.SELLER } });
-    if (!sellerRole) {
-      return response(res, 404, false, "Role not found", null);
-    }
-
-    const existingRoles = user.role_id || [];
-    const updatedRoles = [...existingRoles, sellerRole.id];
-
-    await User.update({ role_id: updatedRoles }, { where: { id: id } });
 
     const store = await Store.create({
       id: nanoid(10),

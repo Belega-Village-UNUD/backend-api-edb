@@ -7,7 +7,7 @@ const updateType = async (req, res) => {
     const { name, material } = req.body;
     const checkType = await ProductType.findOne({ where: { id: id } });
     if (!checkType) {
-      return response(res, 404, false, `Product type ${id} not found`, null);
+      return response(res, 404, false, `Product type not found`, null);
     }
     await ProductType.update({ name, material }, { where: { id: id } });
     const productType = await ProductType.findOne({ where: { id: id } });
@@ -15,7 +15,7 @@ const updateType = async (req, res) => {
       res,
       200,
       true,
-      `Product type ${id} has been updated`,
+      `Product type ${name} has been updated`,
       productType
     );
   } catch (err) {
