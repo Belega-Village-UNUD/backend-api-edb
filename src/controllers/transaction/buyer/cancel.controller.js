@@ -31,14 +31,12 @@ const cancelTransaction = async (req, res) => {
     if (!transaction) {
       return response(
         res,
-        error.status || 500,
+        400,
         false,
         "Cannot Cancel Transaction",
         null
       );
     }
-
-    console.log(`31, cancel.controller.js, transaction: `, transaction);
 
     let carts = await Cart.findAll({
       where: {
@@ -150,7 +148,6 @@ const cancelTransaction = async (req, res) => {
       transaction
     );
   } catch (error) {
-    console.error(error);
     return response(res, error.status || 500, false, error.message, null);
   }
 };
