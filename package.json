@@ -30,16 +30,29 @@
     "migrate:down:one": "npx sequelize db:migrate:undo",
     "migrate:down:all": "npx sequelize db:migrate:undo:all",
     "seed:up": "npx sequelize db:seed:all",
-    "seed:down": "npx sequelize db:seed:undo:all"
+    "seed:down": "npx sequelize db:seed:undo:all",
+    "sast": "npx eslint -f json ./src/docs/ -o results.json.temp && cat results.json.temp | jq . > results.json && rm results.json.temp",
+    "check": "npx eslint -f json ./src/controllers/ -o results.json.temp && cat results.json.temp | jq . >> results_controllers.json && rm results.json.temp"
   },
   "devDependencies": {
     "dotenv": "^16.3.1",
     "eslint": "^8.51.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-config-semistandard": "^17.0.0",
     "eslint-config-standard": "^17.1.0",
-    "eslint-plugin-import": "^2.28.1",
-    "eslint-plugin-n": "^16.2.0",
+    "eslint-plugin-html": "^8.1.1",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-jsonc": "^2.15.1",
+    "eslint-plugin-no-secrets": "^1.0.2",
+    "eslint-plugin-no-unsanitized": "^4.0.2",
+    "eslint-plugin-no-wildcard-postmessage": "^0.2.0",
+    "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.1.1",
-    "nodemon": "^3.0.1",
+    "eslint-plugin-prototype-pollution-security-rules": "^1.0.6",
+    "eslint-plugin-scanjs-rules": "^0.2.1",
+    "eslint-plugin-security": "^3.0.0",
+    "eslint-plugin-security-node": "^1.1.4",
+    "eslint-plugin-standard": "^5.0.0",
     "sequelize-cli": "^6.6.2"
   }
 }

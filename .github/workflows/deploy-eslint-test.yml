@@ -2,12 +2,13 @@ name: Deploy
 
 on:
   push:
-    branches: ["staging"]
+    branches: ["EDP-181-java-script-sast-with-eslint"]
 
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
   INSTANCE_NAME: belega-instance
+  REPOPATH: /home/${{ github.actor }}/backend-api-edb
   ZONE: asia-southeast2-a
 
 jobs:
@@ -41,4 +42,4 @@ jobs:
           command: |-
             cd ${{ env.REPOPATH }}
             make sast-container
-            bash ./shell/deploy.sh staging
+            bash ./shell/deploy.sh EDP-181-java-script-sast-with-eslint
