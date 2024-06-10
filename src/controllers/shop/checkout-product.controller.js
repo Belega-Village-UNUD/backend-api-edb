@@ -1,11 +1,6 @@
 const { nanoid } = require("nanoid");
 const { Cart, User, Product, Transaction, Profile } = require("../../models");
 const { response } = require("../../utils/response.utils");
-const {
-  MIDTRANS_SERVER_KEY,
-  MIDTRANS_APP_URL,
-  FE_URL,
-} = require("../../utils/constan");
 
 const checkoutProduct = async (req, res) => {
   try {
@@ -68,7 +63,7 @@ const checkoutProduct = async (req, res) => {
     const transaction = await Transaction.create({
       id: transaction_id,
       user_id: user.id,
-      cart_id: cart.id,
+      cart_id: [cart.id],
       total_amount: totalAmount,
       status: "PENDING",
       token: null,
