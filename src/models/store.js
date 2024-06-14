@@ -29,6 +29,8 @@ module.exports = (sequelize, DataTypes) => {
       name: DataTypes.STRING,
       phone: DataTypes.STRING,
       address: DataTypes.STRING,
+      province: DataTypes.JSON,
+      city: DataTypes.JSON,
       description: DataTypes.TEXT,
       is_verified: DataTypes.ENUM("WAITING", "FEE", "VERIFIED", "DECLINED"),
       unverified_reason: DataTypes.TEXT,

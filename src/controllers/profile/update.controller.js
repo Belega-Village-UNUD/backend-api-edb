@@ -4,17 +4,22 @@ const { response } = require("../../utils/response.utils");
 const updateUser = async (req, res) => {
   try {
     const { email } = req.user;
-    const { name, phone, address, description } = req.body;
+    const { name, phone, address, description, province, city } = req.body;
+    const data = {
+      name,
+      phone,
+      address,
+      description,
+      province,
+      city,
+    };
 
     const user = await User.findOne({
       where: { email: email },
       attributes: { exclude: ["password"] },
     });
 
-    await Profile.update(
-      { name, phone, address, description },
-      { where: { user_id: user.id } }
-    );
+    await Profile.update(data, { where: { user_id: user.id } });
     const profile = await Profile.findOne({ where: { user_id: user.id } });
 
     const payload = {
