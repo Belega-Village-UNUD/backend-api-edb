@@ -13,19 +13,12 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "transaction_id",
         as: "transaction",
       });
-      this.belongsTo(models.Product, {
-        foreignKey: "product_id",
-        as: "product",
-      });
     }
   }
   DetailTransaction.init(
     {
       transaction_id: DataTypes.STRING,
-      product_id: DataTypes.STRING,
-      qty: DataTypes.INTEGER,
-      unit_price: DataTypes.DECIMAL,
-      total_price: DataTypes.DECIMAL,
+      carts_details: DataTypes.JSON,
       sub_total_transaction_price_before_shipping: {
         type: DataTypes.DECIMAL,
         get() {
