@@ -1,5 +1,5 @@
 const { nanoid } = require("nanoid");
-const { Cart, User, Product, Transaction } = require("../../models");
+const { Cart, User, Profile, Product, Transaction } = require("../../models");
 const { response } = require("../../utils/response.utils");
 const { Op } = require("sequelize");
 
@@ -59,6 +59,19 @@ const checkoutCart = async (req, res) => {
             false,
             `Minimum quantity for ${product.name_product} is 1`,
             null
+          );
+        }
+
+        let productWeight = cart.qty * product.weight_gr;
+
+        let belowMaxWeight = productWeight > 30000 ? false : true;
+        if (!belowMaxWeight) {
+          return response(
+            res,
+            400,
+            false,
+            `Product: ${product.name_product} total must be less than 30 kg, try reducing your quantity`,
+            cart
           );
         }
 
