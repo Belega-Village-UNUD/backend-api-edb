@@ -40,6 +40,10 @@ const addItem = async (req, res) => {
         ],
       });
 
+      if (!product) {
+        return response(res, 404, false, `Product not found`, null);
+      }
+
       const storeIsnull = store === null ? true : false;
 
       if (!storeIsnull) {

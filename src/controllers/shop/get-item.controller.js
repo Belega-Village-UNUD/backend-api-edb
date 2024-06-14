@@ -31,16 +31,11 @@ const getItems = async (req, res) => {
       (transaction) => transaction.cart_id
     );
 
-    console.log(
-      "34: transactionCartIds get-item.controller.js: ",
-      transcationsCartIds
-    );
-
     // filter cart that has not been in the transaction module
     const cartItems = await Cart.findAll({
       where: {
         id: {
-          [Op.notIn]: transactions.map((transaction) => transaction.cart_id),
+          [Op.notIn]: transcationsCartIds,
         },
 
         is_checkout: { [Op.not]: true },
@@ -69,8 +64,6 @@ const getItems = async (req, res) => {
     });
 
     const stores = {};
-
-    console.log("🚀 ~ getItems ~ cartItem:", JSON.stringify(cartItems[0]));
 
     cartItems.forEach((cartItem) => {
       // break the loop if there's no product
