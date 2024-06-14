@@ -7,7 +7,7 @@ const { ROLE } = require("../../utils/enum.utils");
 const registerStore = async (req, res) => {
   try {
     const { id } = req.user;
-    const { name, phone, address, description } = req.body;
+    const { name, phone, address, description, province, city } = req.body;
 
     if (!name || !phone || !address || !description) {
       return response(res, 400, false, "Invalid input data", null);
@@ -58,6 +58,8 @@ const registerStore = async (req, res) => {
       description,
       unverified_reason: null,
       is_verified: "WAITING",
+      province,
+      city,
     });
 
     return response(

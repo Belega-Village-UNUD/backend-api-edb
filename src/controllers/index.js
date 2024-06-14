@@ -8,6 +8,7 @@ const custom = require("./preorder");
 const store = require("./store");
 const fee = require("./fee");
 const message = require("./message");
+const shipping = require("./shipping");
 
 module.exports = {
   auth,
@@ -20,4 +21,5 @@ module.exports = {
   store,
   fee,
   message,
+  shipping,
 };

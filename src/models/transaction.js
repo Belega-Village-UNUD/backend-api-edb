@@ -35,7 +35,13 @@ module.exports = (sequelize, DataTypes) => {
     {
       user_id: DataTypes.STRING,
       cart_id: DataTypes.ARRAY(DataTypes.STRING),
-      total_amount: DataTypes.DECIMAL,
+      total_amount: {
+        type: DataTypes.DECIMAL,
+        get() {
+          const value = this.getDataValue("total_amount");
+          return value === null ? null : parseFloat(value);
+        },
+      },
       status: DataTypes.ENUM("PENDING", "PAYABLE", "SUCCESS", "CANCEL"),
       token: DataTypes.STRING,
       redirect_url: DataTypes.STRING,

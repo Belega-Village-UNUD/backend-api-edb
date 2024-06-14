@@ -17,7 +17,13 @@ module.exports = (sequelize, DataTypes) => {
   Fee.init(
     {
       name: DataTypes.STRING,
-      interest: DataTypes.DECIMAL,
+      interest: {
+        type: DataTypes.DECIMAL,
+        get() {
+          const value = this.getDataValue("interest");
+          return value === null ? null : parseFloat(value);
+        },
+      },
       description: DataTypes.TEXT,
     },
     {

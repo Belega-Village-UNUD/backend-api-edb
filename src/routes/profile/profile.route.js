@@ -14,6 +14,7 @@ router.put(
   "/",
   middleware.restrict,
   middleware.rbac(MODULE.LANDING, ROLE.BUYER, true, false),
+  middleware.buyerVerified,
   controller.updateUser
 );
 router.post(

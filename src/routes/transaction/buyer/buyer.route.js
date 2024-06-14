@@ -28,6 +28,14 @@ router.put(
 );
 
 router.put(
+  "/*/",
+  middleware.restrict,
+  middleware.rbac(MODULE.TRANSACTION, ROLE.BUYER, true, false),
+  middleware.buyerVerified,
+  controllers.finalTransaction
+);
+
+router.put(
   "/cancel/:id",
   middleware.restrict,
   middleware.rbac(MODULE.TRANSACTION, ROLE.BUYER, true, false),

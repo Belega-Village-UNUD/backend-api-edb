@@ -7,6 +7,7 @@ const getAllBuyerTransactionHistory = require("./buyer/get-all.controller");
 const getOneBuyerTransactionHistory = require("./buyer/get-one.controller");
 const payTransaction = require("./buyer/pay.controller");
 const cancelTransaction = require("./buyer/cancel.controller");
+const finalTransaction = require("./buyer/final.controller");
 
 module.exports = {
   getTokenMidtrans,
@@ -18,4 +19,5 @@ module.exports = {
   getOneBuyerTransactionHistory,
   payTransaction,
   cancelTransaction,
+  finalTransaction,
 };

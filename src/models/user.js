@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "user_id",
         as: "userOTP",
       });
-      User.hasOne(models.OTP, {
+      User.hasOne(models.Store, {
         foreignKey: "user_id",
         as: "userStore",
       });
