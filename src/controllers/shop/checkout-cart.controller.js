@@ -35,7 +35,7 @@ const checkoutCart = async (req, res) => {
         const qty = cart.qty;
 
         const product = await Product.findOne({
-          where: { id: cart.product_id },
+          where: { id: cart.product_id, display: true },
         });
 
         if (!product) {

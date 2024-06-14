@@ -62,7 +62,7 @@ const removeAll = async (req, res) => {
     // loop through cart
     for (const cart of carts) {
       let product = await Product.findOne({
-        where: { id: cart.product.id },
+        where: { id: cart.product.id, display: true },
       });
       if (!product) {
         return response(res, 404, false, "There's no product of this id", null);

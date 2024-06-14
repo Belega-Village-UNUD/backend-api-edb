@@ -14,7 +14,9 @@ const imageProduct = async (req, res) => {
       { image_product: upload.url },
       { where: { user_id: user.id } }
     );
-    const product = await Product.findOne({ where: { user_id: user.id } });
+    const product = await Product.findOne({
+      where: { user_id: user.id, display: true },
+    });
     response(res, 200, upload.success, "Successfully Update Product Image", {
       user,
       product,

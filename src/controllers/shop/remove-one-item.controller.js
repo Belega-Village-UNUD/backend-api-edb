@@ -48,7 +48,7 @@ const removeItem = async (req, res) => {
     }
 
     const product = await Product.findOne({
-      where: { id: cart.product.id },
+      where: { id: cart.product.id, display: true },
     });
 
     if (!product) {

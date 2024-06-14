@@ -20,7 +20,9 @@ const checkoutProduct = async (req, res) => {
 
     const { product_id, qty } = req.body;
 
-    const product = await Product.findOne({ where: { id: product_id } });
+    const product = await Product.findOne({
+      where: { id: product_id, display: true },
+    });
     if (!product) {
       return response(res, 404, false, "Product not found", null);
     }

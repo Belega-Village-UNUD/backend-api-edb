@@ -29,7 +29,7 @@ const addItem = async (req, res) => {
       });
 
       const product = await Product.findOne({
-        where: { id: product_id },
+        where: { id: product_id, display: true },
         attributes: ["id", "price", "stock", "name_product"],
         include: [
           {

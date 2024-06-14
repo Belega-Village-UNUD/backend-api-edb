@@ -19,7 +19,7 @@ const sendMessageAskProduct = async (req, res) => {
     const { product_id } = req.body;
 
     const product = await Product.findOne({
-      where : { id: product_id },
+      where: { id: product_id, display: true },
       attributes: ["id", "store_id"],
     });
 
@@ -30,12 +30,15 @@ const sendMessageAskProduct = async (req, res) => {
       attributes: ["name", "phone"],
     });
 
-    if (!store) return response(res, 404, false, "Store or Seller phone not found", null);
+    if (!store)
+      return response(res, 404, false, "Store or Seller phone not found", null);
 
     const parsedStringPhone = store.phone.split("+").pop();
     // TODO change to frontend url for product
     const messageTemplate = `Hi ${store.name}, I am ${buyer.name} I would like to ask the availibility of this product [example of url]/${product.id}`;
-    const waMeString = `https://wa.me/${parsedStringPhone}/?text=${encodeURIComponent(messageTemplate)}`;
+    const waMeString = `https://wa.me/${parsedStringPhone}/?text=${encodeURIComponent(
+      messageTemplate
+    )}`;
 
     return response(res, 201, true, "Successfully Message Seller", waMeString);
   } catch (error) {
@@ -44,4 +47,3 @@ const sendMessageAskProduct = async (req, res) => {
 };
 
 module.exports = sendMessageAskProduct;
-

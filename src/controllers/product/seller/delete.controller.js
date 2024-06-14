@@ -5,13 +5,13 @@ const deleteProduct = async (req, res) => {
   try {
     const { id } = req.params;
     const checkProduct = await Product.findOne({
-      where: { id },
+      where: { id, display: true },
       attributes: ["name_product"],
     });
     if (!checkProduct) {
       return response(res, 404, false, `Product Not Found`, null);
     }
-    await Product.destroy({ where: { id } });
+    await Product.update({ display: false }, { where: { id } });
     return response(
       res,
       200,

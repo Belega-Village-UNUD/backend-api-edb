@@ -25,7 +25,9 @@ const updateProduct = async (req, res) => {
       );
     }
 
-    const product = await Product.findOne({ where: { id: product_id } });
+    const product = await Product.findOne({
+      where: { id: product_id, display: true },
+    });
     if (!product) {
       return response(res, 404, false, `Product Not Found`, null);
     }
@@ -52,7 +54,9 @@ const updateProduct = async (req, res) => {
       },
       { where: { id: product_id } }
     );
-    const updateProduct = await Product.findOne({ where: { id: product_id } });
+    const updateProduct = await Product.findOne({
+      where: { id: product_id, display: true },
+    });
     return response(
       res,
       200,

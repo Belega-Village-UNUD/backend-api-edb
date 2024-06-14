@@ -47,6 +47,7 @@ module.exports = (sequelize, DataTypes) => {
       stock: DataTypes.INTEGER,
       weight_gr: DataTypes.INTEGER,
       is_preorder: DataTypes.BOOLEAN,
+      display: DataTypes.BOOLEAN,
     },
     {
       sequelize,

@@ -8,7 +8,7 @@ const getOneProduct = async (req, res) => {
     const store = await Store.findOne({ where: { user_id: req.user.id } });
 
     const product = await Product.findOne({
-      where: { id, store_id: { [Op.not]: store.id } },
+      where: { id, store_id: { [Op.not]: store.id, display: true } },
       include: [
         {
           model: ProductType,

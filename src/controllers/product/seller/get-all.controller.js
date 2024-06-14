@@ -18,7 +18,7 @@ const getAllProduct = async (req, res) => {
       return response(res, 404, false, `Store Not Found`, null);
     }
     const product = await Product.findAll({
-      where: { store_id: store.id },
+      where: { store_id: store.id, display: true },
       include: [
         {
           model: ProductType,

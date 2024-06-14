@@ -72,7 +72,7 @@ const decline = async (req, res) => {
       }
 
       const product = await Product.findOne({
-        where: { id: cart.product_id },
+        where: { id: cart.product_id, display: true },
       });
 
       if (!product) {
