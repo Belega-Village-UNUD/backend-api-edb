@@ -18,7 +18,13 @@ module.exports = (sequelize, DataTypes) => {
     {
       transaction_id: DataTypes.STRING,
       sum_product: DataTypes.INTEGER,
-      total_price: DataTypes.DECIMAL,
+      total_price: {
+        type: DataTypes.DECIMAL,
+        get() {
+          const value = this.getDataValue("total_price");
+          return value === null ? null : parseFloat(value);
+        },
+      },
       reason: DataTypes.TEXT,
     },
     {

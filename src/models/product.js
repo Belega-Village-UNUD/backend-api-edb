@@ -27,10 +27,6 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "product_id",
         as: "cart",
       });
-      this.hasOne(models.DetailTransaction, {
-        foreignKey: "product_id",
-        as: "detail_transaction",
-      });
     }
   }
   Product.init(
@@ -41,7 +37,13 @@ module.exports = (sequelize, DataTypes) => {
       image_product: DataTypes.STRING,
       name_product: DataTypes.STRING,
       desc_product: DataTypes.TEXT,
-      price: DataTypes.DECIMAL,
+      price: {
+        type: DataTypes.DECIMAL,
+        get() {
+          const value = this.getDataValue("price");
+          return value === null ? null : parseFloat(value);
+        },
+      },
       stock: DataTypes.INTEGER,
       weight_gr: DataTypes.INTEGER,
       is_preorder: DataTypes.BOOLEAN,

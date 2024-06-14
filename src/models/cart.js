@@ -28,7 +28,13 @@ module.exports = (sequelize, DataTypes) => {
       user_id: DataTypes.STRING,
       product_id: DataTypes.STRING,
       qty: DataTypes.INTEGER,
-      unit_price: DataTypes.DECIMAL,
+      unit_price: {
+        type: DataTypes.DECIMAL,
+        get() {
+          const value = this.getDataValue("unit_price");
+          return value === null ? null : parseFloat(value);
+        },
+      },
       is_checkout: DataTypes.BOOLEAN,
     },
     {
