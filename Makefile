@@ -14,7 +14,8 @@ deploy:
 	bash ./shell/deploy.sh EDP-181-java-script-sast-with-eslint
 
 up:
-	docker compose -p belega --file docker/service/docker-compose.yml --env-file .env up -d
+	docker stack deploy -c ./docker/service/docker-compose.yml backend
+	docker stack deploy -c ./docker/ssl/docker-compose.yml backend
 
 prometheus:
 	docker compose -p belega --file docker/prometheus/docker-compose.yml --env-file .env up -d
