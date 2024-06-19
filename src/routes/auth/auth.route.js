@@ -7,6 +7,13 @@ const { MODULE, ROLE } = require("../../utils/enum.utils");
 router.post("/register", controllers.auth.register);
 router.post("/login", controllers.auth.login);
 router.post(
+  "/login/admin",
+  middleware.loginAdmin,
+  middleware.restrict,
+  middleware.rbac(MODULE.AUTH, ROLE.ADMIN, true, false),
+  controllers.auth.login
+);
+router.post(
   "/otp/verify",
   middleware.restrict,
   middleware.rbac(MODULE.AUTH, ROLE.BUYER, true, false),
