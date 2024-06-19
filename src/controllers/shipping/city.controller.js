@@ -1,19 +1,18 @@
 const { response } = require("../../utils/response.utils");
-const { RAJAONGKIRAPI_KEY, RAJAONGKIRAPI_URL } = require("../../utils/constan");
+const { readFileSyncJSON } = require("../../utils/file.utils");
 
 const getCity = async (req, res) => {
   try {
-    const { province_id } = req.params;
-    const url = `${RAJAONGKIRAPI_URL}/city?province=${province_id}`;
-    const headerKey = new Headers();
-    headerKey.append("key", RAJAONGKIRAPI_KEY);
-    const citiesResponse = await fetch(url, {
-      method: "GET",
-      headers: headerKey,
-    });
+    const { province_id } = req.query;
+    let data = readFileSyncJSON("city.json");
 
-    const cities = await citiesResponse.json();
-    const data = cities.rajaongkir.results;
+    if (!province_id) {
+      return response(res, 400, false, "Please provide province id", null);
+    }
+
+    data = data.filter((item) => {
+      return item.province_id.toLowerCase() == province_id.toLowerCase();
+    });
 
     return response(res, 200, true, "Successfully get list of city", data);
   } catch (error) {
