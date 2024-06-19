@@ -3,7 +3,8 @@ const path = require("path");
 
 module.exports = {
   readFileSyncJSON: (file) => {
-    const fileData = fs.readFileSync(path.join(__dirname, file));
+    const filePath = "../data/json/" +  file;
+    const fileData = fs.readFileSync(path.join(__dirname, filePath));
     let parsedData = JSON.parse(fileData);
     return parsedData;
   },
