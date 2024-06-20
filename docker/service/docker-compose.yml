@@ -1,11 +1,9 @@
 version: "3.4"
 services:
   app:
-    container_name: backend-ecommerce-desa-belega
     image: ghcr.io/belega-village-unud/backend-api-edb:staging-test
     env_file:
       - ../../.env
-    restart: always
     deploy:
       resources:
        limits:

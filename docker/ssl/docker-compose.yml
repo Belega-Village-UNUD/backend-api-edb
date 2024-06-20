@@ -1,7 +1,6 @@
 version: "3.4"
 services:
   nginx:
-    container_name: nginx-ecommerce-desa-belega
     image: nginx:latest
     ports:
       - 80:80
