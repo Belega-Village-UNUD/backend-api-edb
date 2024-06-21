@@ -35,6 +35,17 @@ const verifyStore = async (req, res) => {
         null
       );
     }
+
+    if (store.is_verified !== "WAITING") {
+      return response(
+        res,
+        400,
+        false,
+        "Only WAITING status store can be verified",
+        null
+      );
+    }
+
     const isStoreVerified = store.is_verified == "VERIFIED" ? true : false;
 
     if (!isStoreVerified) {
