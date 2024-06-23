@@ -5,7 +5,11 @@ const { modifyStatusTransaction } = require("../../utils/midtrans.utils");
 
 const checkStatus = async (req, res) => {
   try {
-    const { order_id: transaction_id, transaction_status } = req.query;
+    const {
+      order_id: transaction_id,
+      transaction_status,
+      status_code,
+    } = req.query;
 
     const detailTransaction = await getDetailTransaction(transaction_id);
 
@@ -15,12 +19,18 @@ const checkStatus = async (req, res) => {
 
     await modifyStatusTransaction(transaction_id, transaction_status);
 
+    const data = {
+      transaction_status,
+      status_code,
+      detailTransaction,
+    };
+
     return response(
       res,
       200,
       true,
       "Successfully get Error Status from Midtrans",
-      detailTransaction
+      data
     );
   } catch (err) {
     return response(res, err.status || 500, false, err.message, null);
