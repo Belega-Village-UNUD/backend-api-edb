@@ -19,7 +19,9 @@ const finalTransaction = async (req, res) => {
     const { id: user_id } = req.user;
     let { transaction_id, shipping_name, shipping_cost_index } = req.query;
 
-    const detail = (await getDetailTransaction(transaction_id)) ? true : false;
+    const detail = (await getDetailTransaction(transaction_id, user_id))
+      ? true
+      : false;
     if (!detail) {
       shipping_name = JSON.parse(shipping_name);
       shipping_cost_index = JSON.parse(shipping_cost_index);
