@@ -12,9 +12,9 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "fee_id",
         as: "fee",
       });
-      this.belongsTo(models.User, {
-        foreignKey: "seller_id",
-        as: "seller",
+      this.belongsTo(models.Store, {
+        foreignKey: "store_id",
+        as: "store",
       });
       this.belongsTo(models.User, {
         foreignKey: "admin_id",
@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   FeeHistory.init(
     {
-      seller_id: DataTypes.STRING,
+      store_id: DataTypes.STRING,
       admin_id: DataTypes.STRING,
       fee_id: DataTypes.STRING,
       description: DataTypes.TEXT,
