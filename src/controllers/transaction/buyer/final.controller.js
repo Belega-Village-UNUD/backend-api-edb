@@ -44,7 +44,7 @@ const finalTransaction = async (req, res) => {
       }
 
       const checkTransactionStatus =
-        transaction.status == "PENDING" ? true : false;
+        transaction.status == "PENDING" || "PAYABLE" ? true : false;
 
       if (!checkTransactionStatus) {
         return response(res, 400, false, "Transaction not valid", null);
