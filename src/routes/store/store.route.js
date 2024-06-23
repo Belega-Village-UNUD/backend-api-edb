@@ -37,4 +37,10 @@ router.post(
   controllers.store.imageStore
 );
 
+router.get(
+  "/admin",
+  middleware.restrict,
+  middleware.rbac(MODULE.AUTH, ROLE.ADMIN, true, true),
+  controllers.store.getStore
+);
 module.exports = router;

@@ -17,6 +17,16 @@ const declinedStore = async (req, res) => {
     });
     if (!store) return response(res, 404, false, "Store not found", null);
 
+    if (store.is_verified !== "WAITING") {
+      return response(
+        res,
+        400,
+        false,
+        "Only WAITING status store can be declined",
+        null
+      );
+    }
+
     await Store.update(
       { is_verified: "DECLINED", unverified_reason },
       { where: { user_id } }
