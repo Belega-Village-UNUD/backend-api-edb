@@ -73,9 +73,12 @@ module.exports = {
 
     return carts;
   },
-  getDetailTransaction: async (transaction_id) => {
+  getDetailTransaction: async (transaction_id, user_id) => {
     const detail = await DetailTransaction.findOne({
-      where: { transaction_id: transaction_id },
+      where: {
+        transaction_id: transaction_id,
+        ...(user_id && { "$transaction.user_id$": user_id }),
+      },
       include: [
         {
           model: Transaction,
