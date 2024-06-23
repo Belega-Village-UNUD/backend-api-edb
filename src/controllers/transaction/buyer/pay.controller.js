@@ -1,4 +1,3 @@
-const { nanoid } = require("nanoid");
 const { Transaction, User, DetailTransaction } = require("../../../models");
 const { response } = require("../../../utils/response.utils");
 const {
@@ -67,7 +66,8 @@ const payTransaction = async (req, res) => {
       200,
       true,
       "Transaction updated successfully",
-      transaction, details
+      transaction,
+      details
     );
   } catch (error) {
     return response(res, error.status || 500, false, error.message, null);

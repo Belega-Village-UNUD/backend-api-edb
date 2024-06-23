@@ -9,6 +9,7 @@ const store = require("./store");
 const fee = require("./fee");
 const message = require("./message");
 const shipping = require("./shipping");
+const midtrans = require("./midtrans");
 
 module.exports = {
   auth,
@@ -22,4 +23,5 @@ module.exports = {
   fee,
   message,
   shipping,
+  midtrans,
 };
