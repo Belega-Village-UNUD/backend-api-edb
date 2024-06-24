@@ -5,7 +5,7 @@ const { readFileSyncJSON } = require("../../utils/file.utils");
 const updateProfileStore = async (req, res) => {
   try {
     const { id } = req.user;
-    const { name, address, description, city_id } = req.body;
+    const { name, phone, address, description, city_id } = req.body;
 
     if (!city_id) {
       return response(res, 400, false, "Province and City is required", null);
@@ -23,8 +23,11 @@ const updateProfileStore = async (req, res) => {
     };
     const city = cityData[0];
 
+    const addPhone = phone.replace(/^0/, "+62");
+
     const data = {
       name,
+      phone: addPhone,
       address,
       description,
       province,
