@@ -89,4 +89,25 @@ module.exports = {
 
     return detail;
   },
+  getStore: async (user_id) => {
+    const store = await Store.findOne({
+      where: { user_id: user_id },
+      include: [
+        {
+          model: User,
+          as: "user",
+          attributes: ["id", "email"],
+          include: [
+            {
+              model: Profile,
+              as: "userProfile",
+              attributes: ["id", "name", "city", "province"],
+            },
+          ],
+        },
+      ],
+    });
+
+    return store;
+  },
 };

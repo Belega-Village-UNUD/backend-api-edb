@@ -3,13 +3,17 @@ const { Fee } = require("../../models");
 
 const deleteFee = async (req, res) => {
   try {
-    const { id } = req.params;
-    const fee = await Fee.findOne({ where: { id } });
+    const { id } = req.body;
+    if (!id) return response(res, 400, false, "Fee ID is required", null);
+
+    const fee = await Fee.findOne({ where: { id, display: true } });
     if (!fee) {
-      return response(res, 404, false, `Fee ${id} Not Found`, null);
+      return response(res, 404, false, `Fee Not Found`, null);
     }
-    await Fee.destroy({ where: { id } });
-    return response(res, 200, true, `Delete Fee ${id} Successfull`, null);
+
+    await Fee.update({ display: false }, { where: { id } });
+
+    return response(res, 200, true, `Delete Fee ${fee.name} Successfull`, null);
   } catch {
     return response(res, err.status || 500, false, err.message, null);
   }
