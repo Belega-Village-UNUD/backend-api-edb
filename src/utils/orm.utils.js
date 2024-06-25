@@ -76,6 +76,7 @@ module.exports = {
 
     return carts;
   },
+
   getDetailTransaction: async (transaction_id, user_id) => {
     const detail = await DetailTransaction.findOne({
       where: {
@@ -92,6 +93,7 @@ module.exports = {
 
     return detail;
   },
+
   checkAdmin: async (user_id) => {
     const user = await User.findOne({
       where: { id: user_id },
@@ -104,6 +106,7 @@ module.exports = {
     const isAdmin = role.name === ROLE.ADMIN ? true : false;
     return isAdmin;
   },
+
   getBankStore: async (user_id, store_bank_id) => {
     const store = await Store.findOne({ where: { user_id: user_id } });
     let bank;
@@ -124,6 +127,7 @@ module.exports = {
 
     return bank;
   },
+
   getBankAdmin: async (store_id, store_bank_id) => {
     let banks;
     if (!store_id && !store_bank_id) {
@@ -163,6 +167,8 @@ module.exports = {
     });
 
     return banks;
+  },
+
   getStore: async (user_id) => {
     const store = await Store.findOne({
       where: { user_id: user_id },
