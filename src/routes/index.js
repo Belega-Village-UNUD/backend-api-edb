@@ -14,6 +14,7 @@ const fee = require("./fee/fee.route");
 const message = require("./message/message.route");
 const shipping = require("./shipping/shipping.route");
 const midtrans = require("./midtrans/midtrans.route");
+const bank = require("./bank-account/bank-account.route");
 
 router.get("/", (req, res) => {
   return response(res, 200, true, "Server API is healthy");
@@ -37,5 +38,7 @@ router.use("/store", store);
 router.use("/fee", fee);
 router.use("/shipping", shipping);
 router.use("/midtrans", midtrans);
+
+router.use("/bank", bank);
 
 module.exports = router;
