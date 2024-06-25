@@ -25,6 +25,10 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       description: DataTypes.TEXT,
+      display: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+      },
     },
     {
       sequelize,

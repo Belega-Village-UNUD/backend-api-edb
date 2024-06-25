@@ -22,7 +22,7 @@ const createFee = async (req, res) => {
       interest: interest,
       description: description,
     });
-    return response(res, 200, true, `Fee ${id} has been created`, fee);
+    return response(res, 200, true, `Fee ${fee.name} has been created`, fee);
   } catch (err) {
     return response(res, err.status || 500, false, err.message, null);
   }

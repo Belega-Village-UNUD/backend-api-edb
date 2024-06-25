@@ -1,19 +1,17 @@
 const create = require("./create.controller");
-const getAll = require("./get-all.controller");
-const getOne = require("./get-one.controller");
+const getFee = require("./get-fee.controller");
 const update = require("./update.controller");
 const deleteFee = require("./delete.controller");
 const charged = require("./charged.controller");
-const getAllHistory = require("./get-allhistory.controller");
-const getOneHistory = require("./get-onehistory.controller");
+const getHistory = require("./get-history.controller");
+// const getOneHistory = require("./get-onehistory.controller");
 
 module.exports = {
   create,
-  getAll,
-  getOne,
+  getFee,
   update,
   deleteFee,
   charged,
-  getAllHistory,
-  getOneHistory,
+  getHistory,
+  // getOneHistory,
 };
