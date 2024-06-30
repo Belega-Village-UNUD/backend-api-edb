@@ -11,6 +11,7 @@ const message = require("./message");
 const shipping = require("./shipping");
 const midtrans = require("./midtrans");
 const bankAccount = require("./bank-account");
+const rating = require("./rating");
 
 module.exports = {
   auth,
@@ -26,4 +27,5 @@ module.exports = {
   shipping,
   midtrans,
   bankAccount,
+  rating,
 };

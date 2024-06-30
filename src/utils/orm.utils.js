@@ -10,6 +10,8 @@ const {
   DetailTransaction,
   Role,
   StoreBankAccount,
+  sequelize,
+  ProductRating,
 } = require("../models");
 const { ROLE } = require("./enum.utils");
 
@@ -107,6 +109,13 @@ module.exports = {
     return isAdmin;
   },
 
+  checkIsAuthenticated: async (user_id) => {
+    if (!user_id) return false;
+    const user = await User.findOne({ where: { id: user_id } });
+    if (!user) return false;
+    return true;
+  },
+
   getBankStore: async (user_id, store_bank_id) => {
     const store = await Store.findOne({ where: { user_id: user_id } });
     let bank;
@@ -189,5 +198,150 @@ module.exports = {
     });
 
     return store;
+  },
+
+  getUser: async (user_id) => {
+    const user = await User.findOne({
+      where: { id: user_id },
+      attributes: { exclude: ["password"] },
+      include: [
+        {
+          model: Profile,
+          as: "userProfile",
+          attributes: ["id", "name", "city", "province"],
+        },
+      ],
+    });
+
+    return user;
+  },
+
+  getCartsBasedOnProduct: async (product_id) => {
+    const carts = await Cart.findAll({
+      attributes: ["id", "user_id", "product_id", "qty", "unit_price"],
+      include: [
+        {
+          model: User,
+          as: "user",
+          attributes: ["id", "email"],
+          include: [
+            {
+              model: Profile,
+              as: "userProfile",
+              attributes: ["id", "name", "city", "province"],
+            },
+          ],
+        },
+        {
+          model: Product,
+          as: "product",
+          include: [
+            {
+              model: ProductType,
+              as: "product_type",
+              attributes: ["name", "material"],
+            },
+            {
+              model: Store,
+              as: "store",
+              attributes: [
+                "id",
+                "name",
+                "phone",
+                "address",
+                "description",
+                "province",
+                "city",
+              ],
+              include: [
+                {
+                  model: User,
+                  as: "user",
+                  attributes: ["id", "email"],
+                  include: [
+                    {
+                      model: Profile,
+                      as: "userProfile",
+                      attributes: ["id", "name", "city", "province"],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      where: {
+        "$product.id$": product_id,
+      },
+    });
+
+    return carts;
+  },
+
+  getTransactionBasedOnProductSuccess: async (
+    product_id,
+    transaction_id,
+    user_id
+  ) => {
+    const carts = await module.exports.getCartsBasedOnProduct(product_id);
+    const cartIds = carts.map((cart) => cart.id);
+    const transactionSuccess = await Transaction.findOne({
+      where: {
+        status: "SUCCESS",
+        id: transaction_id,
+        user_id: user_id,
+        [Op.and]: sequelize.literal(
+          `cart_id && ARRAY[${cartIds
+            .map((id) => `'${id}'`)
+            .join(",")}]::varchar[]`
+        ),
+      },
+    });
+
+    return transactionSuccess;
+  },
+
+  getRatingsByProduct: async (product_id, review) => {
+    const whereClause = product_id ? { where: { product_id } } : {};
+    const ratingBasedOnProduct = await ProductRating.findAll({
+      attributes: ["id", "rate", "review", "display", "createdAt", "updatedAt"],
+      include: [
+        {
+          model: Product,
+          as: "product",
+          attributes: [
+            "id",
+            "name_product",
+            "desc_product",
+            "price",
+            "stock",
+            "image_product",
+            "createdAt",
+            "updatedAt",
+          ],
+          include: [
+            {
+              model: Store,
+              as: "store",
+              attributes: [
+                "id",
+                "avatar_link",
+                "name",
+                "phone",
+                "address",
+                "province",
+                "city",
+                "createdAt",
+                "updatedAt",
+              ],
+            },
+          ],
+        },
+      ],
+      ...whereClause,
+    });
+
+    return ratingBasedOnProduct;
   },
 };
