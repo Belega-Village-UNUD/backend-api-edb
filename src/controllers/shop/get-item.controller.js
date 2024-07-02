@@ -89,6 +89,7 @@ const getItems = async (req, res) => {
         id: cartItem.id,
         qty: cartItem.qty,
         product_id: cartItem.product.id,
+        product: cartItem.product, // add product object for data
         image_product: cartItem.product.image_product,
         name_product: cartItem.product.name_product,
         price: cartItem.product.price,

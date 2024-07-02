@@ -27,6 +27,7 @@ module.exports = {
         id: cartItem.id,
         qty: cartItem.qty,
         product_id: cartItem.product.id,
+        product: cartItem.product,
         image_product: cartItem.product.image_product,
         name_product: cartItem.product.name_product,
         price: cartItem.product.price,
@@ -41,5 +42,23 @@ module.exports = {
 
     const transactionsData = Object.values(stores);
     return transactionsData;
+  },
+
+  mergeProduct: (products) => {
+    const mergeProducts = products.reduce((acc, product) => {
+      const existingProduct = acc.find(
+        (p) => p.product_id === product.product_id
+      );
+
+      if (existingProduct) {
+        existingProduct.total_product_sold += product.total_product_sold;
+      } else {
+        acc.push(product);
+      }
+
+      return acc;
+    }, []);
+
+    return mergeProducts;
   },
 };

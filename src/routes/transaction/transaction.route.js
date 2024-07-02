@@ -2,6 +2,7 @@ const router = require("express").Router();
 const controller = require("../../controllers/transaction");
 const middleware = require("../../middlewares");
 const buyer = require("./buyer/buyer.route");
+const seller = require("./seller/seller.route");
 const { MODULE, ROLE } = require("../../utils/enum.utils");
 
 router.post("/", middleware.restrict, controller.getTokenMidtrans);
@@ -39,5 +40,6 @@ router.get(
 );
 
 router.use("/buyer", buyer);
+router.use("/seller", seller);
 
 module.exports = router;

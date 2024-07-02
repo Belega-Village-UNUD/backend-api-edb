@@ -2,6 +2,7 @@ const { nanoid } = require("nanoid");
 const { Cart, User, Profile, Product, Transaction } = require("../../models");
 const { response } = require("../../utils/response.utils");
 const { Op } = require("sequelize");
+const { getOneTransactionWithProduct } = require("../../utils/orm.utils");
 
 const checkoutCart = async (req, res) => {
   try {
@@ -117,6 +118,16 @@ const checkoutCart = async (req, res) => {
       token: null,
       redirect_url: null,
     });
+
+    const transactionWithProduct = await getOneTransactionWithProduct(
+      transaction.id,
+      cartIds
+    );
+
+    //const data = {
+    //  transaction,
+    //  transactionWithProduct,
+    //};
 
     return response(res, 200, true, "Checkout successful", transaction);
   } catch (error) {

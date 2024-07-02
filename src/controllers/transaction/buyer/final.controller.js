@@ -6,8 +6,12 @@ const {
   Profile,
 } = require("../../../models");
 const { Op } = require("sequelize");
-const { mergeTransactionData } = require("../../../utils/merge-tx-data");
-const { getCarts, getDetailTransaction } = require("../../../utils/orm.utils");
+const { mergeTransactionData } = require("../../../utils/merge.utils");
+const {
+  getCarts,
+  getDetailTransaction,
+  getOneTransaction,
+} = require("../../../utils/orm.utils");
 const { response } = require("../../../utils/response.utils");
 const {
   countTotalTransactionAfterShipping,
@@ -19,9 +23,19 @@ const finalTransaction = async (req, res) => {
     const { id: user_id } = req.user;
     let { transaction_id, shipping_name, shipping_cost_index } = req.query;
 
-    const detail = (await getDetailTransaction(transaction_id, user_id))
-      ? true
-      : false;
+    const transaction = await getOneTransaction(transaction_id);
+    if (transaction.status != "PAYABLE") {
+      return response(
+        res,
+        400,
+        false,
+        "Transaction not valid, please wait status to be PAYABLE",
+        null
+      );
+    }
+
+    const detail = (await getDetailTransaction(transaction_id)) ? true : false;
+
     if (!detail) {
       shipping_name = JSON.parse(shipping_name);
       shipping_cost_index = JSON.parse(shipping_cost_index);
@@ -46,7 +60,7 @@ const finalTransaction = async (req, res) => {
       }
 
       const checkTransactionStatus =
-        transaction.status == "PENDING" ? true : false;
+        transaction.status == "PENDING" || "PAYABLE" ? true : false;
 
       if (!checkTransactionStatus) {
         return response(res, 400, false, "Transaction not valid", null);
@@ -104,7 +118,13 @@ const finalTransaction = async (req, res) => {
       );
     }
 
-    return response(res, 400, false, "Please pay this transaction", detail);
+    return response(
+      res,
+      400,
+      false,
+      "Request invalid please check your transaction status",
+      detail
+    );
   } catch (error) {
     console.error(error);
     return response(res, error.status || 500, false, error.message, null);

@@ -57,6 +57,7 @@ const checkoutProduct = async (req, res) => {
       product_id: product.id,
       qty,
       user_id: user.id,
+      is_chekcout: true,
       unit_price: product.price,
     });
 
