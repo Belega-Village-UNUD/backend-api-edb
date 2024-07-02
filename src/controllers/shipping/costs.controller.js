@@ -8,7 +8,7 @@ const {
 } = require("../../models");
 const { response } = require("../../utils/response.utils");
 const { estimateCosts } = require("../../utils/shipping.utils");
-const { mergeTransactionData } = require("../../utils/merge-tx-data");
+const { mergeTransactionData } = require("../../utils/merge.utils");
 const { Op } = require("sequelize");
 
 /**
