@@ -242,8 +242,7 @@ module.exports = {
           model: User,
           as: "user",
           attributes: ["id", "email"],
-          include: [
-       
+          include: [{
               model: Profile,
               as: "userProfile",
               attributes: ["id", "name", "city", "province"],
