@@ -1,17 +1,30 @@
-const { User, Store, Role } = require("../../models");
+const { User, Store } = require("../../models");
 const { response } = require("../../utils/response.utils");
 const { nanoid } = require("nanoid");
 const { singleUpload } = require("../../utils/imagekit.utils");
-const { ROLE } = require("../../utils/enum.utils");
+const { readFileSyncJSON } = require("../../utils/file.utils");
 
 const registerStore = async (req, res) => {
   try {
     const { id } = req.user;
-    const { name, phone, address, description, province, city } = req.body;
+    const { name, phone, address, description, city_id } = req.body;
 
-    if (!name || !phone || !address || !description) {
+    if (!name || !phone || !address || !description || !city_id) {
       return response(res, 400, false, "Invalid input data", null);
     }
+
+    let cityList = readFileSyncJSON("city.json");
+
+    const cityData = cityList.filter((item) => {
+      return item.city_id.toLowerCase() === city_id.toLowerCase();
+    });
+
+    const province = {
+      province_id: cityData[0].province_id,
+      province: cityData[0].province,
+    };
+
+    const city = cityData[0];
 
     const user = await User.findOne({
       where: { id },
@@ -46,6 +59,8 @@ const registerStore = async (req, res) => {
       return response(res, 400, false, "File upload failed", null);
     }
 
+    const addPhone = phone.replace(/^0/, "+62");
+
     const store = await Store.create({
       id: nanoid(10),
       user_id: user.id,
@@ -53,7 +68,7 @@ const registerStore = async (req, res) => {
       image_link: null,
       ktp_link: ktp_link.url,
       name,
-      phone,
+      phone: addPhone,
       address,
       description,
       unverified_reason: null,

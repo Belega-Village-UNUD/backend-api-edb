@@ -5,7 +5,7 @@ const { MODULE, ROLE } = require("../../utils/enum.utils");
 const seller = require("./seller/seller.route");
 
 router.get(
-  "/city/:province_id",
+  "/city",
   middleware.restrict,
   middleware.rbac(MODULE.MESSAGE, ROLE.BUYER, true, true),
   middleware.buyerVerified,

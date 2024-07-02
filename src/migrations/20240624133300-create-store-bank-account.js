@@ -2,26 +2,26 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("FeeHistories", {
+    await queryInterface.createTable("StoreBankAccounts", {
       id: {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.STRING,
       },
       store_id: {
-        allowNull: false,
         type: Sequelize.STRING,
       },
-      admin_id: {
-        allowNull: false,
+      bank_name: {
         type: Sequelize.STRING,
       },
-      fee_id: {
-        allowNull: false,
+      bank_code: {
         type: Sequelize.STRING,
       },
-      description: {
-        type: Sequelize.TEXT,
+      account_number: {
+        type: Sequelize.STRING,
+      },
+      account_name: {
+        type: Sequelize.STRING,
       },
       createdAt: {
         allowNull: false,
@@ -34,6 +34,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("FeeHistories");
+    await queryInterface.dropTable("StoreBankAccounts");
   },
 };

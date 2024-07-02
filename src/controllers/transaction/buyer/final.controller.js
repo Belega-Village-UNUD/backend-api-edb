@@ -35,6 +35,7 @@ const finalTransaction = async (req, res) => {
     }
 
     const detail = (await getDetailTransaction(transaction_id)) ? true : false;
+
     if (!detail) {
       shipping_name = JSON.parse(shipping_name);
       shipping_cost_index = JSON.parse(shipping_cost_index);

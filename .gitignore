@@ -7,4 +7,5 @@ node_modules
 certbot
 data_backup
 nginx/dhparam
+nginx/cloudflare
 

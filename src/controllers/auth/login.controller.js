@@ -1,7 +1,8 @@
-const { User } = require("../../models");
+const { User, Role, Store } = require("../../models");
 const bcrypt = require("bcrypt");
 const { response } = require("../../utils/response.utils");
 const { generateToken } = require("../../utils/token.utils");
+const { ROLE } = require("../../utils/enum.utils");
 
 const login = async (req, res) => {
   try {
@@ -21,7 +22,7 @@ const login = async (req, res) => {
       );
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch)
+    if (!isMatch) {
       return response(
         res,
         401,
@@ -29,12 +30,25 @@ const login = async (req, res) => {
         "Password credentials do not match with our records",
         null
       );
+    }
+
+    const role = await Role.findOne({
+      where: { id: user.role_id, name: ROLE.SELLER },
+    });
+    const is_store = role ? true : false;
+
+    const store = await Store.findOne({
+      where: { user_id: user.id },
+    });
+    const exist_store = store ? true : false;
 
     const payload = {
       id: user.id,
       email: user.email,
       role_id: user.role_id,
       is_verified: user.is_verified,
+      is_store,
+      exist_store,
     };
 
     const token = generateToken(payload);
