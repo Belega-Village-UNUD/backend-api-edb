@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class StoreBankAccount extends Model {
+  class DisbursementRequest extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -12,25 +12,24 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "store_id",
         as: "store",
       });
-      this.hasMany(models.DisbursementRequest, {
+      this.belongsTo(models.StoreBankAccount, {
         foreignKey: "store_bank_id",
-        as: "disbursement_request",
+        as: "store_bank",
       });
     }
   }
-  StoreBankAccount.init(
+  DisbursementRequest.init(
     {
       store_id: DataTypes.STRING,
-      bank_name: DataTypes.STRING,
-      bank_code: DataTypes.STRING,
-      account_number: DataTypes.STRING,
-      account_name: DataTypes.STRING,
-      display: DataTypes.BOOLEAN,
+      store_bank_id: DataTypes.STRING,
+      amount: DataTypes.DECIMAL,
+      status: DataTypes.STRING,
+      disbursement_proof: DataTypes.STRING,
     },
     {
       sequelize,
-      modelName: "StoreBankAccount",
+      modelName: "DisbursementRequest",
     }
   );
-  return StoreBankAccount;
+  return DisbursementRequest;
 };
