@@ -25,9 +25,9 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "store_id",
         as: "fee_history",
       });
-      this.hasMany(models.DisbursementRequest, {
+      this.hasMany(models.Payout, {
         foreignKey: "store_id",
-        as: "disbursement_request",
+        as: "payout_request",
       });
     }
   }

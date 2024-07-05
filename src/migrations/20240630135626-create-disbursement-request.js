@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("DisbursementRequests", {
+    await queryInterface.createTable("Payout", {
       id: {
         allowNull: false,
         primaryKey: true,
@@ -20,7 +20,7 @@ module.exports = {
       status: {
         type: Sequelize.STRING,
       },
-      disbursement_proof: {
+      payout_proof: {
         type: Sequelize.STRING,
       },
       createdAt: {
@@ -34,6 +34,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("DisbursementRequests");
+    await queryInterface.dropTable("Payout");
   },
 };
