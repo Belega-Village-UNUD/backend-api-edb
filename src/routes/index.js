@@ -15,6 +15,7 @@ const message = require("./message/message.route");
 const shipping = require("./shipping/shipping.route");
 const midtrans = require("./midtrans/midtrans.route");
 const bank = require("./bank-account/bank-account.route");
+const disbursementRequest = require("./disbursement-request/disbursement-request.route");
 
 router.get("/", (req, res) => {
   return response(res, 200, true, "Server API is healthy");
@@ -40,5 +41,6 @@ router.use("/shipping", shipping);
 router.use("/midtrans", midtrans);
 
 router.use("/bank", bank);
+router.use("/disbursement", disbursementRequest);
 
 module.exports = router;
