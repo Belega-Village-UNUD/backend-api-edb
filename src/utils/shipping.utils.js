@@ -31,7 +31,6 @@ const estimateCosts = async (data) => {
     costsResponse
       .json()
       .then((response) => {
-        console.log("🚀 ~ .then ~ response:", response);
         let product = {
           id: data.cart.product_id,
           weight: data.cart.product_weight_gr,
@@ -128,32 +127,16 @@ const changeShippingStatus = async (product_id, transaction_id, status) => {
     const cartDetailsData = detailTransaction.carts_details.map((cart) => {
       if (cart.arrival_shipping_status === "PACKING") {
         if (status !== "SHIPPED") {
-          console.log(`129: this line is performed`);
-          console.log(
-            "🚀 ~ cartDetailsData ~ cart.arrival_shipping_status:",
-            cart.arrival_shipping_status
-          );
           return { msg: "Your product has not shipped yet" };
         }
       } else if (cart.arrival_shipping_status === "SHIPPED") {
         if (status !== "ARRIVED") {
-          console.log(`134: this line is performed`);
-          console.log(
-            "🚀 ~ cartDetailsData ~ cart.arrival_shipping_status:",
-            cart.arrival_shipping_status
-          );
           return { msg: "Your product is on shipment" };
         }
       } else {
-        console.log("136 this line is performed");
-        console.log(
-          "🚀 ~ cartDetailsData ~ cart.arrival_shipping_status:",
-          cart.arrival_shipping_status
-        );
         return { msg: "Invalid status" };
       }
       if (cart.product_id === product_id) {
-        console.log("140 this line is performed");
         return {
           ...cart,
           arrival_shipping_status: status,
@@ -163,13 +146,11 @@ const changeShippingStatus = async (product_id, transaction_id, status) => {
     });
 
     if (cartDetailsData.some((cart) => cart.msg)) {
-      console.log("150 this line is performed");
       const message = cartDetailsData.find((cart) => cart.msg).msg;
       const data = {
         success: false,
         message,
       };
-      console.log("🚀 ~ changeShippingStatus ~ data:", data);
       return data;
     }
 

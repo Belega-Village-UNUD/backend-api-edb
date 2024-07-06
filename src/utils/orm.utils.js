@@ -163,7 +163,6 @@ module.exports = {
     const user = await User.findOne({
       where: { id: user_id },
     });
-    console.log(user);
     if (!user) return null;
     const role = await Role.findOne({
       where: { id: { [Op.in]: user.role_id } },
@@ -210,7 +209,6 @@ module.exports = {
         where: { store_id: store_id, display: true },
       });
 
-      console.log("143 this line is performed ", banks);
       if (banks.length === 0) {
         return null;
       }
