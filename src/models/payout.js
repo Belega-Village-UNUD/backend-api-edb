@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
       store_id: DataTypes.STRING,
       store_bank_id: DataTypes.STRING,
       amount: DataTypes.DECIMAL,
-      status: DataTypes.STRING,
+      status: DataTypes.ENUM("PENDING", "ONGOING", "SUCCESS"),
       payout_proof: DataTypes.STRING,
     },
     {
