@@ -2,17 +2,20 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("StoreBalances", {
+    await queryInterface.createTable("PayoutHistories", {
       id: {
-        allowNull: true,
+        allowNull: false,
         primaryKey: true,
         type: Sequelize.STRING,
       },
-      store_id: {
+      admin_id: {
         type: Sequelize.STRING,
       },
-      balance: {
-        type: Sequelize.DECIMAL,
+      payout_id: {
+        type: Sequelize.STRING,
+      },
+      payment_proof: {
+        type: Sequelize.STRING,
       },
       createdAt: {
         allowNull: false,
@@ -25,6 +28,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("StoreBalances");
+    await queryInterface.dropTable("PayoutHistories");
   },
 };

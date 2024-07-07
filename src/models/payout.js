@@ -34,7 +34,6 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       status: DataTypes.ENUM("PENDING", "ONGOING", "SUCCESS"),
-      payout_proof: DataTypes.STRING,
     },
     {
       sequelize,
