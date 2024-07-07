@@ -13,17 +13,18 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "store_id",
         as: "store",
       });
-      this.belongsTo(models.StoreBankAccount, {
-        foreignKey: "store_bank_id",
-        as: "store_bank",
-      });
     }
   }
   StoreBalance.init(
     {
       store_id: DataTypes.STRING,
-      store_bank_id: DataTypes.STRING,
-      balance: DataTypes.DECIMAL,
+      balance: {
+        type: DataTypes.DECIMAL,
+        get() {
+          const value = this.getDataValue("balance");
+          return value === null ? null : parseFloat(value);
+        },
+      },
     },
     {
       sequelize,
