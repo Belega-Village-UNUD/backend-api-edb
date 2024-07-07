@@ -155,7 +155,7 @@ const changeShippingStatus = async (product_id, transaction_id, status) => {
     }
 
     detailTransaction.carts_details = cartDetailsData;
-    //detailTransaction.save();
+    detailTransaction.save();
 
     const data = {
       success: true,

@@ -2,6 +2,7 @@ const router = require("express").Router();
 const { image } = require("../../configs/multer.config");
 const controllers = require("../../controllers");
 const middleware = require("../../middlewares");
+const balance = require('./balance.route')
 const { MODULE, ROLE } = require("../../utils/enum.utils");
 
 router.get(
@@ -43,4 +44,7 @@ router.get(
   middleware.rbac(MODULE.AUTH, ROLE.ADMIN, true, true),
   controllers.store.getStore
 );
+
+router.use("/balance", balance);
+
 module.exports = router;
