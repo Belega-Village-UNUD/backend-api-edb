@@ -263,6 +263,7 @@ module.exports = {
 
     return store;
   },
+
   getSalesReport: async (store_id) => {
     const carts = await module.exports.getCartsBasedOnStore(store_id);
     const cartIds = carts.map((cart) => cart.id);
@@ -342,5 +343,21 @@ module.exports = {
     const carts = await module.exports.getCarts(cart_ids);
     const data = mergeTransactionData(carts);
     return data;
+  },
+
+  getUser: async (user_id) => {
+    const user = await User.findOne({
+      where: { id: user_id },
+      attributes: ["id", "email"],
+      include: [
+        {
+          model: Profile,
+          as: "userProfile",
+          attributes: ["id", "name", "city", "province"],
+        },
+      ],
+    });
+
+    return user;
   },
 };

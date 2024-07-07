@@ -16,13 +16,23 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "store_bank_id",
         as: "store_bank",
       });
+      this.hasOne(models.PayoutHistory, {
+        foreignKey: "payout_id",
+        as: "payout_history",
+      });
     }
   }
   Payout.init(
     {
       store_id: DataTypes.STRING,
       store_bank_id: DataTypes.STRING,
-      amount: DataTypes.DECIMAL,
+      amount: {
+        type: DataTypes.DECIMAL,
+        get() {
+          const value = this.getDataValue("amount");
+          return value === null ? null : parseFloat(value);
+        },
+      },
       status: DataTypes.ENUM("PENDING", "ONGOING", "SUCCESS"),
       payout_proof: DataTypes.STRING,
     },
