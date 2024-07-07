@@ -1,6 +1,13 @@
 const { response } = require("../../utils/response.utils");
-const { User, Store, Payout } = require("../../models");
+const {
+  User,
+  Store,
+  Payout,
+  StoreBankAccount,
+  StoreBalance,
+} = require("../../models");
 const { nanoid } = require("nanoid");
+const { getStore, getBankStore } = require("../../utils/orm.utils");
 
 const requestPayout = async (req, res) => {
   try {
@@ -12,12 +19,24 @@ const requestPayout = async (req, res) => {
     });
     if (!user) return response(res, 404, false, "User not found", null);
 
-    const store = await Store.findOne({ where: { user_id: user.id } });
+    const store = await getStore(user.id);
     if (!store) return response(res, 404, false, "Store not found", null);
 
     const { store_bank_id, amount } = req.body;
     if (!req.body)
       return response(res, 400, false, "Request body is empty", null);
+
+    const storeBank = await getBankStore(user.id, store_bank_id);
+    if (!storeBank)
+      return response(res, 404, false, "Store bank not found", null);
+
+    const storeBalance = await StoreBalance.findOne({
+      where: { store_bank_id },
+    });
+    if (!storeBalance)
+      return response(res, 404, false, "Store balance doesn't match", null);
+    if (storeBalance.balance < amount)
+      return response(res, 400, false, "Insufficient balance", null);
 
     const createRequest = await Payout.create({
       id: nanoid(10),
@@ -33,7 +52,7 @@ const requestPayout = async (req, res) => {
       res,
       200,
       true,
-      `Payout from store ${store.name} request success`,
+      `Request payout ${store.name} success`,
       createRequest
     );
   } catch (err) {

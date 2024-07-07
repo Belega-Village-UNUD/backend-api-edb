@@ -23,7 +23,13 @@ module.exports = (sequelize, DataTypes) => {
     {
       store_id: DataTypes.STRING,
       store_bank_id: DataTypes.STRING,
-      balance: DataTypes.DECIMAL,
+      balance: {
+        type: DataTypes.DECIMAL,
+        get() {
+          const value = this.getDataValue("balance");
+          return value === null ? null : parseFloat(value);
+        },
+      },
     },
     {
       sequelize,
