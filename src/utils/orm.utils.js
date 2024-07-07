@@ -141,7 +141,17 @@ module.exports = {
 
     return carts;
   },
-  getDetailTransaction: async (transaction_id) => {
+
+  getDetailTransaction: async (transaction_id, user_id) => {
+    if (!user_id) {
+      const detail = await DetailTransaction.findOne({
+        where: {
+          transaction_id: transaction_id,
+        },
+      });
+
+      return detail;
+    }
 
     const detail = await DetailTransaction.findOne({
       where: {
@@ -240,7 +250,8 @@ module.exports = {
           model: User,
           as: "user",
           attributes: ["id", "email"],
-          include: [{
+          include: [
+            {
               model: Profile,
               as: "userProfile",
               attributes: ["id", "name", "city", "province"],
