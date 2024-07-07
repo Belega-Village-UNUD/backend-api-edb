@@ -34,7 +34,9 @@ const finalTransaction = async (req, res) => {
       );
     }
 
-    const detail = (await getDetailTransaction(transaction_id)) ? true : false;
+    const detail = (await getDetailTransaction(transaction_id, user_id))
+      ? true
+      : false;
 
     if (!detail) {
       shipping_name = JSON.parse(shipping_name);
@@ -126,7 +128,6 @@ const finalTransaction = async (req, res) => {
       detail
     );
   } catch (error) {
-    console.error(error);
     return response(res, error.status || 500, false, error.message, null);
   }
 };
