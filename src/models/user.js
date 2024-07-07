@@ -31,6 +31,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "admin_id",
         as: "adminFeeHistory",
       });
+      User.hasOne(models.PayoutHistory, {
+        foreignKey: "admin_id",
+        as: "adminPayoutHistory",
+      });
     }
   }
   User.init(
