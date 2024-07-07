@@ -29,9 +29,6 @@ module.exports = {
         type: Sequelize.ENUM,
         values: ["PENDING", "ONGOING", "SUCCESS", "CANCEL"],
       },
-      payout_proof: {
-        type: Sequelize.STRING,
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

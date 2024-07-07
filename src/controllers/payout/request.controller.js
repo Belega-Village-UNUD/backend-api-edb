@@ -1,13 +1,12 @@
 const { response } = require("../../utils/response.utils");
 const {
   User,
-  Store,
   Payout,
   StoreBankAccount,
   StoreBalance,
 } = require("../../models");
 const { nanoid } = require("nanoid");
-const { getStore, getBankStore } = require("../../utils/orm.utils");
+const { getStore } = require("../../utils/orm.utils");
 
 const requestPayout = async (req, res) => {
   try {
@@ -26,13 +25,20 @@ const requestPayout = async (req, res) => {
     if (!req.body)
       return response(res, 400, false, "Request body is empty", null);
 
-    const storeBank = await getBankStore(user.id, store_bank_id);
+    const checkMinAmount = amount < 10000;
+    if (checkMinAmount)
+      return response(res, 400, false, "Minimum amount is Rp 10.000", null);
+
+    const storeBank = await StoreBankAccount.findOne({
+      where: { id: store_bank_id, store_id: store.id },
+    });
     if (!storeBank)
       return response(res, 404, false, "Store bank not found", null);
 
     const storeBalance = await StoreBalance.findOne({
-      where: { store_bank_id },
+      where: { store_id: store.id },
     });
+
     if (!storeBalance)
       return response(res, 404, false, "Store balance doesn't match", null);
     if (storeBalance.balance < amount)
@@ -56,6 +62,7 @@ const requestPayout = async (req, res) => {
       createRequest
     );
   } catch (err) {
+    console.error(err);
     return response(res, err.status || 500, false, err.message, null);
   }
 };
