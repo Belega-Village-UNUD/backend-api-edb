@@ -142,7 +142,6 @@ module.exports = {
     return carts;
   },
   getDetailTransaction: async (transaction_id) => {
-
     const detail = await DetailTransaction.findOne({
       where: {
         transaction_id: transaction_id,
@@ -163,7 +162,6 @@ module.exports = {
     const user = await User.findOne({
       where: { id: user_id },
     });
-    console.log(user);
     if (!user) return null;
     const role = await Role.findOne({
       where: { id: { [Op.in]: user.role_id } },
@@ -210,7 +208,6 @@ module.exports = {
         where: { store_id: store_id, display: true },
       });
 
-      console.log("143 this line is performed ", banks);
       if (banks.length === 0) {
         return null;
       }
@@ -242,7 +239,8 @@ module.exports = {
           model: User,
           as: "user",
           attributes: ["id", "email"],
-          include: [{
+          include: [
+            {
               model: Profile,
               as: "userProfile",
               attributes: ["id", "name", "city", "province"],
@@ -254,6 +252,7 @@ module.exports = {
 
     return store;
   },
+
   getSalesReport: async (store_id) => {
     const carts = await module.exports.getCartsBasedOnStore(store_id);
     const cartIds = carts.map((cart) => cart.id);
@@ -333,5 +332,21 @@ module.exports = {
     const carts = await module.exports.getCarts(cart_ids);
     const data = mergeTransactionData(carts);
     return data;
+  },
+
+  getUser: async (user_id) => {
+    const user = await User.findOne({
+      where: { id: user_id },
+      attributes: ["id", "email"],
+      include: [
+        {
+          model: Profile,
+          as: "userProfile",
+          attributes: ["id", "name", "city", "province"],
+        },
+      ],
+    });
+
+    return user;
   },
 };

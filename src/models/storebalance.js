@@ -1,36 +1,35 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class StoreBankAccount extends Model {
+  class StoreBalance extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
+      // define association here
       this.belongsTo(models.Store, {
         foreignKey: "store_id",
         as: "store",
       });
-      this.hasMany(models.Payout, {
-        foreignKey: "store_bank_id",
-        as: "payout",
-      });
     }
   }
-  StoreBankAccount.init(
+  StoreBalance.init(
     {
       store_id: DataTypes.STRING,
-      bank_name: DataTypes.STRING,
-      bank_code: DataTypes.STRING,
-      account_number: DataTypes.STRING,
-      account_name: DataTypes.STRING,
-      display: DataTypes.BOOLEAN,
+      balance: {
+        type: DataTypes.DECIMAL,
+        get() {
+          const value = this.getDataValue("balance");
+          return value === null ? null : parseFloat(value);
+        },
+      },
     },
     {
       sequelize,
-      modelName: "StoreBankAccount",
+      modelName: "StoreBalance",
     }
   );
-  return StoreBankAccount;
+  return StoreBalance;
 };
