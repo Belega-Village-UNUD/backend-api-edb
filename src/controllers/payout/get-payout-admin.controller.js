@@ -9,6 +9,19 @@ const getPayoutAdmin = async (req, res) => {
     }
 
     const payouts = await Payout.findAll({
+      attributes: { exclude: ["store_id", "store_bank_id"] },
+      include: [
+        {
+          model: Store,
+          as: "store",
+          attributes: ["name"],
+        },
+        {
+          model: StoreBankAccount,
+          as: "store_bank",
+          attributes: ["bank_name", "account_number", "account_name"],
+        },
+      ],
       where: whereClause,
     });
     if (payouts.length === 0) {

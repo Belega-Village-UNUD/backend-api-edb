@@ -15,6 +15,7 @@ const MODULE = {
   STORE: "STORE",
   FEE: "FEE",
   MESSAGE: "MESSAGE",
+  RATING: "RATING",
 };
 
 module.exports = { ROLE, MODULE };

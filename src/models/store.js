@@ -33,6 +33,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "store_id",
         as: "store_balance",
       });
+      this.hasOne(models.ProductRating, {
+        foreignKey: "store_id",
+        as: "product_rating",
+      });
     }
   }
   Store.init(
