@@ -12,6 +12,7 @@ const shipping = require("./shipping");
 const midtrans = require("./midtrans");
 const bankAccount = require("./bank-account");
 const rating = require("./rating");
+const payout = require("./payout");
 
 module.exports = {
   auth,
@@ -28,4 +29,5 @@ module.exports = {
   midtrans,
   bankAccount,
   rating,
+  payout,
 };

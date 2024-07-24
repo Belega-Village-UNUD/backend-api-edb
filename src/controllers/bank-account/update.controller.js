@@ -14,11 +14,9 @@ const updateBankAccount = async (req, res) => {
 
     const user = await User.findOne({ where: { id } });
     if (!user) return response(res, 404, false, "User not found", null);
-    console.log("line 17:", user);
 
     const store = await Store.findOne({ where: { user_id: user.id } });
     if (!store) return response(res, 404, false, "Store not found", null);
-    console.log("line 22:", store);
 
     const bankAccount = await StoreBankAccount.findOne({
       where: { id: store_bank_id, store_id: store.id, display: true },
@@ -26,7 +24,6 @@ const updateBankAccount = async (req, res) => {
     if (!bankAccount) {
       return response(res, 404, false, "Bank Account not found", null);
     }
-    console.log("line 29:", bankAccount);
 
     await StoreBankAccount.update(
       {
@@ -43,7 +40,6 @@ const updateBankAccount = async (req, res) => {
     const recentBankAccount = await StoreBankAccount.findOne({
       where: { id: store_bank_id, store_id: store.id, display: true },
     });
-    console.log("line 45:", recentBankAccount);
 
     return response(
       res,

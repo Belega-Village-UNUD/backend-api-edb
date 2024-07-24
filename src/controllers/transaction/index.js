@@ -8,6 +8,7 @@ const getOneBuyerTransactionHistory = require("./buyer/get-one.controller");
 const payTransaction = require("./buyer/pay.controller");
 const cancelTransaction = require("./buyer/cancel.controller");
 const finalTransaction = require("./buyer/final.controller");
+const getTransactionReports = require("./store/reports.controller");
 
 module.exports = {
   getTokenMidtrans,
@@ -20,4 +21,5 @@ module.exports = {
   payTransaction,
   cancelTransaction,
   finalTransaction,
+  getTransactionReports,
 };
