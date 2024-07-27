@@ -15,7 +15,7 @@ router.get(
 router.post(
   "/",
   middleware.restrict,
-  middleware.rbac(MODULE.LANDING, ROLE.BUYER, true, true),
+  middleware.rbac(MODULE.MESSAGE, ROLE.BUYER, true, true),
   middleware.buyerVerified,
   controllers.rating.createRating
 );
