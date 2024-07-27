@@ -42,6 +42,7 @@ jobs:
           command: |-
             cd $(pwd)
             echo $(pwd)
+            ls -lah $(pwd)
 
       - name: Build Output
         id: compute-ssh-build-output
