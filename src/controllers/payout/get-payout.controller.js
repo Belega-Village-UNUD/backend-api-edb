@@ -1,6 +1,6 @@
 const { getUser, getStore, getBankStore } = require("../../utils/orm.utils");
 const { response } = require("../../utils/response.utils");
-const { Payout } = require("../../models");
+const { Payout, Store, StoreBankAccount } = require("../../models");
 
 const getPayout = async (req, res) => {
   try {
@@ -16,6 +16,19 @@ const getPayout = async (req, res) => {
     if (!store_bank_id) {
       if (!status) {
         const payouts = await Payout.findAll({
+          attributes: { exclude: ["store_id", "store_bank_id"] },
+          include: [
+            {
+              model: Store,
+              as: "store",
+              attributes: ["name"],
+            },
+            {
+              model: StoreBankAccount,
+              as: "store_bank",
+              attributes: ["bank_name", "account_number", "account_name"],
+            },
+          ],
           where: { store_id: store.id },
         });
         if (payouts.length === 0) {
@@ -32,6 +45,19 @@ const getPayout = async (req, res) => {
       }
 
       const payouts = await Payout.findAll({
+        attributes: { exclude: ["store_id", "store_bank_id"] },
+        include: [
+          {
+            model: Store,
+            as: "store",
+            attributes: ["name"],
+          },
+          {
+            model: StoreBankAccount,
+            as: "store_bank",
+            attributes: ["bank_name", "account_number", "account_name"],
+          },
+        ],
         where: { store_id: store.id, status },
       });
       if (payouts.length === 0) {
@@ -48,6 +74,19 @@ const getPayout = async (req, res) => {
       return response(res, 404, false, "Store bank is empty", null);
 
     const payout = await Payout.findOne({
+      attributes: { exclude: ["store_id", "store_bank_id"] },
+      include: [
+        {
+          model: Store,
+          as: "store",
+          attributes: ["name"],
+        },
+        {
+          model: StoreBankAccount,
+          as: "store_bank",
+          attributes: ["bank_name", "account_number", "account_name"],
+        },
+      ],
       where: { store_id: store.id, store_bank_id: storeBank.id },
     });
     if (!payout) {
