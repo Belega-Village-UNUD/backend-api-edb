@@ -31,7 +31,7 @@ jobs:
           workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
           service_account: ${{ secrets.CLOUD_RUN_SA }}
 
-      - name: SSH to Compute Engine and Deploy
+      - name: SSH to Compute Engine and Build
         id: compute-ssh-build
         uses: "google-github-actions/ssh-compute@v1"
         with:
