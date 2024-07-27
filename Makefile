@@ -14,7 +14,7 @@ deploy:
 	bash ./shell/deploy.sh EDP-181-java-script-sast-with-eslint
 
 up:
-	docker stack deploy -c ./docker/service/docker-compose.yml backend
+	docker service update --image ghcr.io/belega-village-unud/backend-api-edb:staging-test backend_app
 	docker stack deploy -c ./docker/ssl/docker-compose.yml backend
 
 prometheus:

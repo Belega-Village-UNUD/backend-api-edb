@@ -105,7 +105,6 @@ module.exports = [
       "security-node/detect-crlf": "warn",
       "security-node/detect-dangerous-redirects": "warn",
       "security-node/detect-eval-with-expr": "off", // To avoid dulicates.
-      "security-node/detect-helmet-without-nocache": "warn",
       "security-node/detect-html-injection": "warn",
       "security-node/detect-insecure-randomness": "warn",
       "security-node/detect-non-literal-require-calls": "off", // To avoid duplicates.

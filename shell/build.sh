@@ -11,7 +11,8 @@ if [ "$(git rev-parse --abbrev-ref HEAD)" != "$BRANCH" ]; then
 fi
 
 git pull origin $BRANCH;
-make up;
+docker image prune -f;
+make build-staging;
 
 if [ $? -ne 0 ]; then
     echo "Error in build $BRANCH and Deploy Backend Belega Service"

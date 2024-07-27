@@ -12,7 +12,7 @@ env:
   ZONE: asia-southeast2-a
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     environment: staging
     permissions:
@@ -25,7 +25,44 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Google Auth
-        id: auth
+        id: auth-build
+        uses: "google-github-actions/auth@v2"
+        with:
+          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
+          service_account: ${{ secrets.CLOUD_RUN_SA }}
+
+      - name: SSH to Compute Engine and Deploy
+        id: compute-ssh-build
+        uses: "google-github-actions/ssh-compute@v1"
+        with:
+          instance_name: ${{ env.INSTANCE_NAME }}
+          zone: ${{ env.ZONE }}
+          ssh_private_key: ${{ secrets.SERVICE_ACCOUNT_SECRET_SSH_KEY }}
+          user: ${{ secrets.CE_USER }}
+          command: |-
+            cd $(pwd)/${{ env.REPO }}
+            bash ./shell/build.sh staging
+      - name: Build Output
+        id: compute-ssh-build-output
+        run: |-
+          echo '${{ steps.compute-ssh-build.outputs.stdout }}'
+          echo '${{ steps.compute-ssh-build.outputs.stderr }}'
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: staging
+    permissions:
+      contents: read
+      actions: read
+      packages: read
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Google Auth
+        id: auth-deploy
         uses: "google-github-actions/auth@v2"
         with:
           workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
@@ -42,3 +79,9 @@ jobs:
           command: |-
             cd $(pwd)/${{ env.REPO }}
             bash ./shell/deploy.sh staging
+
+      - name: Deploy Output
+        id: compute-ssh-deploy-output
+        run: |-
+          echo '${{ steps.compute-ssh-deploy.outputs.stdout }}'
+          echo '${{ steps.compute-ssh-deploy.outputs.stderr }}'
