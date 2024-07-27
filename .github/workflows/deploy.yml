@@ -40,8 +40,9 @@ jobs:
           ssh_private_key: ${{ secrets.SERVICE_ACCOUNT_SECRET_SSH_KEY }}
           user: ${{ secrets.CE_USER }}
           command: |-
-            cd $(pwd)/${{ env.REPO }}
-            bash ./shell/build.sh staging
+            cd $(pwd)
+            echo $(pwd)
+
       - name: Build Output
         id: compute-ssh-build-output
         run: |-
