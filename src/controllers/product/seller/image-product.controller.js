@@ -9,17 +9,26 @@ const imageProduct = async (req, res) => {
       where: { id },
       attributes: { exclude: ["password"] },
     });
+
+    const { product_id } = req.body;
+    if (!req.body)
+      return response(res, 400, false, "Request body is empty", null);
+
+    const product = await Product.findOne({
+      where: { id: product_id, user_id: user.id, display: true },
+    });
+
     const upload = await singleUpload(req, res);
     await Product.update(
       { image_product: upload.url },
-      { where: { user_id: user.id } }
+      { where: { id: product.id, user_id: user.id, display: true } }
     );
-    const product = await Product.findOne({
-      where: { user_id: user.id, display: true },
+    const productUpdated = await Product.findOne({
+      where: { id: product.id, user_id: user.id, display: true },
     });
     response(res, 200, upload.success, "Successfully Update Product Image", {
       user,
-      product,
+      product: productUpdated,
     });
   } catch (err) {
     return response(res, err.status || 500, false, err.message, null);

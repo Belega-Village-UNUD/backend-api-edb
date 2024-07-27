@@ -11,12 +11,10 @@ const getOneProduct = async (req, res) => {
         {
           model: ProductType,
           as: "product_type",
-          attributes: ["name", "material"],
         },
         {
           model: Store,
           as: "store",
-          attributes: ["id", "name", "user_id", "phone"],
           include: [
             {
               model: User,
