@@ -477,6 +477,14 @@ module.exports = {
       attributes: ["id", "rate", "review", "display", "createdAt", "updatedAt"],
       include: [
         {
+          model: User,
+          as: "user",
+          attributes: ["id", "email"],
+          include: [
+            { model: Profile, as: "userProfile", attributes: ["id", "name"] },
+          ],
+        },
+        {
           model: Product,
           as: "product",
           attributes: [

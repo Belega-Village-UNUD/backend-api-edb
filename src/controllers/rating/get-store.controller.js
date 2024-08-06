@@ -1,5 +1,11 @@
 const { response } = require("../../utils/response.utils");
-const { ProductRating, Product, Store } = require("../../models");
+const {
+  ProductRating,
+  Product,
+  Store,
+  User,
+  Profile,
+} = require("../../models");
 
 const getRatingStore = async (req, res) => {
   try {
@@ -16,6 +22,14 @@ const getRatingStore = async (req, res) => {
     const ratingStores = await ProductRating.findAll({
       attributes: ["id", "rate", "review", "display", "createdAt", "updatedAt"],
       include: [
+        {
+          model: User,
+          as: "user",
+          attributes: ["id", "email"],
+          include: [
+            { model: Profile, as: "userProfile", attributes: ["id", "name"] },
+          ],
+        },
         {
           model: Product,
           as: "product",
