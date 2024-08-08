@@ -42,13 +42,7 @@ const getTransactionReports = async (req, res) => {
       return response(res, 404, false, `${report.message}`, null);
     }
 
-    return response(
-      res,
-      200,
-      true,
-      `Get Transaction Reports between ${start_date} and ${end_date} is Success`,
-      report
-    );
+    return response(res, 200, true, report.message, report.data);
   } catch (err) {
     return response(res, err.status || 500, false, err.message, null);
   }
