@@ -14,7 +14,7 @@ const {
   ProductRating,
 } = require("../models");
 const { ROLE } = require("./enum.utils");
-
+const { parseDate } = require("./date.utils");
 const { mergeProduct, mergeTransactionData } = require("./merge.utils");
 
 module.exports = {
@@ -299,6 +299,7 @@ module.exports = {
           as: "transaction",
         },
       ],
+      order: [["updatedAt", "DESC"]],
     });
 
     let total_income = 0;
@@ -316,11 +317,80 @@ module.exports = {
 
     const productSold = mergeProduct(products);
 
-    //const data = detailTransactions;
     const data = {
       total_income,
-      detailTransactions,
-      productSold,
+      detail_transactions: detailTransactions,
+      product_sold: productSold,
+    };
+
+    return data;
+  },
+
+  getSalesReportBasedCustomDate: async (store_id, start_date, end_date) => {
+    if (!start_date) {
+      return { data: null, message: "Please provide Start Date" };
+    }
+
+    if (!end_date) {
+      return { data: null, message: "Please provide End Date" };
+    }
+
+    const formattedStartDate = parseDate(start_date);
+    console.log("this is the start date ", formattedStartDate);
+    let formattedEndDate = parseDate(end_date);
+    formattedEndDate.setHours(23, 59, 59, 999);
+    console.log("this is the end date ", formattedEndDate);
+    const carts = await module.exports.getCartsBasedOnStore(store_id);
+    const cartIds = carts.map((cart) => cart.id);
+    const transactions = await Transaction.findAll({
+      where: {
+        status: "SUCCESS",
+        [Op.and]: sequelize.literal(
+          `cart_id && ARRAY[${cartIds
+            .map((id) => `'${id}'`)
+            .join(",")}]::varchar[]`
+        ),
+      },
+    });
+
+    const tx_id = transactions.map((transaction) => transaction.id);
+    const detailTransactions = await DetailTransaction.findAll({
+      where: {
+        transaction_id: {
+          [Op.in]: tx_id,
+        },
+        updatedAt: {
+          [Op.between]: [formattedStartDate, formattedEndDate],
+        },
+      },
+      include: [
+        {
+          model: Transaction,
+          as: "transaction",
+        },
+      ],
+      order: [["updatedAt", "DESC"]],
+    });
+
+    let total_income = 0;
+    let products = [];
+    for (const dtx of detailTransactions) {
+      for (const productSold of dtx.carts_details) {
+        products.push({
+          product_id: productSold.product_id,
+          total_product_sold: productSold.qty,
+          unit_price: productSold.unit_price,
+        });
+      }
+      total_income += dtx.sub_total_transaction_price_before_shipping;
+    }
+
+    const productSold = mergeProduct(products);
+
+    const data = {
+      total_income,
+      detail_transactions: detailTransactions,
+      product_sold: productSold,
     };
 
     return data;
