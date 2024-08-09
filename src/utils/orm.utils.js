@@ -333,6 +333,67 @@ module.exports = {
     return store;
   },
 
+  getStoreInfo: async (store_id) => {
+    const rating = await ProductRating.findAll({
+      where: { store_id, display: true },
+      include: [
+        {
+          model: User,
+          as: "user",
+          attributes: ["id", "email"],
+          include: [
+            {
+              model: Profile,
+              as: "userProfile",
+              attributes: ["id", "name", "city", "province"],
+            },
+          ],
+        },
+      ],
+    });
+
+    const averageRating = (rating) => {
+      let total = 0;
+
+      rating.forEach((rate) => {
+        total += rate.rate;
+      });
+
+      const avg = total / rating.length;
+
+      return parseFloat(avg.toFixed(1));
+    };
+
+    const store = await Store.findOne({
+      where: { id: store_id },
+      attributes: [
+        "id",
+        "name",
+        "phone",
+        "address",
+        "description",
+        "province",
+        "city",
+      ],
+      include: [
+        {
+          model: User,
+          as: "user",
+          attributes: ["id", "email"],
+          include: [
+            {
+              model: Profile,
+              as: "userProfile",
+              attributes: ["id", "name", "city", "province"],
+            },
+          ],
+        },
+      ],
+    });
+
+    return { data: { store, rating, average_rating: averageRating(rating) } };
+  },
+
   getSalesReport: async (store_id) => {
     const carts = await module.exports.getCartsBasedOnStore(store_id);
     const cartIds = carts.map((cart) => cart.id);
