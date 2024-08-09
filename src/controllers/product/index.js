@@ -8,6 +8,7 @@ const create = require("./seller/create.controller");
 const update = require("./seller/update.controller");
 const deleteProduct = require("./seller/delete.controller");
 const imageProduct = require("./seller/image-product.controller");
+const imagesProduct = require("./seller/images-product.controller");
 
 const type = require("./type");
 
@@ -22,5 +23,6 @@ module.exports = {
   update,
   deleteProduct,
   imageProduct,
+  imagesProduct,
   type,
 };
