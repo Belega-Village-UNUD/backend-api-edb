@@ -678,9 +678,13 @@ module.exports = {
 
   getOneTransaction: async (transaction_id) => {
     const data = await Transaction.findOne({
-      where: {
-        id: transaction_id,
-      },
+      include: [
+        {
+          model: User,
+          as: "user",
+        },
+      ],
+      where: { id: transaction_id },
     });
 
     return data;
@@ -1047,4 +1051,53 @@ module.exports = {
 
     return ratingBasedOnProduct;
   },
+  getCartFinalPrice: async (cartIds, storeUserId) => {
+    const carts = await Cart.findAll({
+      include: [
+        {
+          model: User,
+          as: "user",
+          attributes: ["id", "email"],
+          include: [
+            {
+              model: Profile,
+              as: "userProfile",
+              attributes: ["id", "name"],
+            },
+          ],
+        },
+        {
+          model: Product,
+          as: "product",
+          include: [
+            {
+              model: Store,
+              as: "store",
+              attributes: ["id", "name"],
+              include: [
+                {
+                  model: User,
+                  as: "user",
+                  attributes: ["id", "email"],
+                  include: [
+                    {
+                      model: Profile,
+                      as: "userProfile",
+                      attributes: ["id", "name"],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      where: {
+        id: { [Op.in]: cartIds },
+        "$product.store_id$": storeUserId.id,
+      },
+    });
+
+    return carts;
+  }
 };
