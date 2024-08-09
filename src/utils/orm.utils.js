@@ -377,6 +377,28 @@ module.exports = {
       ],
       include: [
         {
+          model: Product,
+          as: "store",
+          attributes: [
+            "type_id",
+            "image_product",
+            "name_product",
+            "desc_product",
+            "price",
+            "stock",
+            "weight_gr",
+            "is_preorder",
+            "display",
+          ],
+          include: [
+            {
+              model: ProductType,
+              as: "product_type",
+              attributes: ["id", "name", "material"],
+            },
+          ],
+        },
+        {
           model: User,
           as: "user",
           attributes: ["id", "email"],
