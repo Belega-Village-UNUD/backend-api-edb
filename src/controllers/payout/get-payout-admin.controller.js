@@ -1,5 +1,5 @@
 const { response } = require("../../utils/response.utils");
-const { Payout } = require("../../models");
+const { Payout, Store, StoreBankAccount } = require("../../models");
 
 const getPayoutAdmin = async (req, res) => {
   try {
