@@ -40,12 +40,12 @@ router.delete(
   controllers.deleteProduct
 );
 router.post(
-  "/image",
+  "/images",
   middleware.restrict,
   middleware.rbac(MODULE.PRODUCT, ROLE.SELLER, true, true),
   middleware.storeVerified,
-  image.single("productImage"),
-  controllers.imageProduct
+  image.array("product_images"),
+  controllers.imagesProduct
 );
 
 module.exports = router;

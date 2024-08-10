@@ -17,13 +17,18 @@ const {
   countTotalTransactionAfterShipping,
   cartDetailsWithShippingCost,
 } = require("../../../utils/shipping.utils");
+const {
+  MIDTRANS_SERVER_KEY,
+  MIDTRANS_APP_URL,
+  FE_URL,
+} = require("../../../utils/constan");
 
 const finalTransaction = async (req, res) => {
   try {
     const { id: user_id } = req.user;
     let { transaction_id, shipping_name, shipping_cost_index } = req.query;
 
-    const transaction = await getOneTransaction(transaction_id);
+    let transaction = await getOneTransaction(transaction_id);
     if (transaction.status != "PAYABLE") {
       return response(
         res,
@@ -73,6 +78,7 @@ const finalTransaction = async (req, res) => {
       const transactionsData = mergeTransactionData(carts);
 
       let cartDetails = [];
+
       try {
         cartDetails = await cartDetailsWithShippingCost(
           user,
@@ -109,6 +115,90 @@ const finalTransaction = async (req, res) => {
         receipt_link: payload.receipt_link,
       });
 
+      const authString = btoa(`${MIDTRANS_SERVER_KEY}:`);
+
+      let itemDetails = [];
+
+      carts.map((cart) => {
+        itemDetails.push({
+          id: cart.product.id,
+          price: cart.product.price,
+          quantity: cart.qty,
+          name: cart.product.name_product,
+        });
+      });
+
+      cartDetails.map((cart) => {
+        itemDetails.push({
+          id: nanoid(10),
+          price: totalValue.subTotalShipping,
+          quantity: 1,
+          name: 'shipping-' + cart.shipping.code,
+        });
+      });
+
+      const customerDetails = await Profile.findOne({
+        where: { user_id: transaction.user_id },
+        include: [{ model: User, as: "user", attributes: ["email"] }],
+      });
+
+      const payloadMidtrans = {
+        transaction_details: {
+          order_id: transaction.id,
+          gross_amount: transaction.total_amount,
+        },
+        item_details: itemDetails,
+        customer_details: {
+          first_name: customerDetails.name,
+          email: customerDetails.user.email,
+          phone: customerDetails.phone,
+          billing_address: {
+            first_name: customerDetails.name,
+            email: customerDetails.user.email,
+            phone: customerDetails.phone,
+            address: customerDetails.address,
+            city: customerDetails.city.city_name,
+            postal_code: customerDetails.city.postal_code,
+          },
+          shipping_address: {
+            first_name: customerDetails.name,
+            email: customerDetails.user.email,
+            phone: customerDetails.phone,
+            address: customerDetails.address,
+            city: customerDetails.city.city_name,
+            postal_code: customerDetails.city.postal_code,
+          },
+        },
+
+      };
+
+      const responsedMidtrans = await fetch(
+        `${MIDTRANS_APP_URL}/snap/v1/transactions`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Basic ${authString}`,
+          },
+          body: JSON.stringify(payloadMidtrans),
+        }
+      );
+
+      const data = await responsedMidtrans.json();
+      
+      if (responsedMidtrans.status !== 201) {
+        return response(
+          res,
+          responsedMidtrans.status,
+          false,
+          "Failed to create transaction",
+          null
+        );
+      }
+
+      transaction.token = data.token;
+      transaction.redirect_url = data.redirect_url;
       transaction.save();
 
       return response(
@@ -116,7 +206,11 @@ const finalTransaction = async (req, res) => {
         200,
         true,
         "Transaction with Detail updated successfully",
-        payload
+        {
+          redirect_url: data.redirect_url,
+          token_midtrans: data.token,
+          payload
+        }
       );
     }
 

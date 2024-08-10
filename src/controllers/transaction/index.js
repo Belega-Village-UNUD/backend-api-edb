@@ -9,6 +9,7 @@ const payTransaction = require("./buyer/pay.controller");
 const cancelTransaction = require("./buyer/cancel.controller");
 const finalTransaction = require("./buyer/final.controller");
 const getTransactionReports = require("./store/reports.controller");
+const getAllTransactionsReports = require("./admin/reports.controller");
 
 module.exports = {
   getTokenMidtrans,
@@ -22,4 +23,5 @@ module.exports = {
   cancelTransaction,
   finalTransaction,
   getTransactionReports,
+  getAllTransactionsReports,
 };
