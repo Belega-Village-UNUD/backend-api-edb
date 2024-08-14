@@ -2,7 +2,7 @@ build:
 	docker build . --file docker/service/Dockerfile -t ghcr.io/belega-village-unud/backend-api-edb:v1 -t ghcr.io/belega-village-unud/backend-api-edb:latest
 
 build-staging:
-	docker build --no-cache . --file docker/service/Dockerfile -t ghcr.io/belega-village-unud/backend-api-edb:staging-test
+	docker build . --file docker/service/Dockerfile -t ghcr.io/belega-village-unud/backend-api-edb:staging-test
 
 sast-container:
 	bash ./shell/sast-container.sh ghcr.io/belega-village-unud/backend-api-edb:staging-test ${GITHUB_USERNAME} ${GITHUB_EMAIL}
