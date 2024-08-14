@@ -2,7 +2,7 @@ build:
 	docker build . --file docker/service/Dockerfile -t ghcr.io/belega-village-unud/backend-api-edb:v1 -t ghcr.io/belega-village-unud/backend-api-edb:latest
 
 build-staging:
-	docker build --no-cache . --file docker/service/Dockerfile -t ghcr.io/belega-village-unud/backend-api-edb:staging-test
+	docker build . --file docker/service/Dockerfile -t ghcr.io/belega-village-unud/backend-api-edb:staging-test
 
 sast-container:
 	bash ./shell/sast-container.sh ghcr.io/belega-village-unud/backend-api-edb:staging-test ${GITHUB_USERNAME} ${GITHUB_EMAIL}
@@ -14,7 +14,8 @@ deploy:
 	bash ./shell/deploy.sh EDP-181-java-script-sast-with-eslint
 
 up:
-	docker service update --image ghcr.io/belega-village-unud/backend-api-edb:staging-test backend_app
+	#docker service update --image ghcr.io/belega-village-unud/backend-api-edb:staging-test backend_app
+	docker stack deploy -c ./docker/service/docker-compose.yml backend
 	docker stack deploy -c ./docker/ssl/docker-compose.yml backend
 
 prometheus:
