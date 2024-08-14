@@ -7,6 +7,7 @@ const getAllProduct = async (req, res) => {
 
     if (!store_id) {
       const product = await Product.findAll({
+        attributes: { exclude: ["image_product"] },
         include: [
           {
             model: ProductType,

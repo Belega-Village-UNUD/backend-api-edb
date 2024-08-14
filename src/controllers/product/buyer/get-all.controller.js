@@ -8,17 +8,7 @@ const getAllProduct = async (req, res) => {
     const store = await Store.findOne({ where: { user_id: req.user.id } });
     const product = await Product.findAll({
       where: { store_id: { [Op.not]: store.id } },
-      attributes: [
-        "id",
-        "user_id",
-        "store_id",
-        "type_id",
-        "image_product",
-        "name_product",
-        "desc_product",
-        "price",
-        "stock",
-      ],
+      attributes: { exclude: ["image_product"] },
       include: [
         {
           model: ProductType,
