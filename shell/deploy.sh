@@ -1,6 +1,7 @@
 #!/bin/bash
 
 BRANCH=$1
+COMMIT_SHA=$2
 
 echo $BRANCH;
 
