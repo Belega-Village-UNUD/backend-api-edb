@@ -1,8 +1,19 @@
 #!/bin/bash
 
-BRANCH=$1
+if [ -z $1  ]; then
+    echo "Please provide the external branch name the first argument"
+    exit 1
+fi
 
-echo $BRANCH;
+if [ -z $2  ]; then
+    echo "Please provide the commit sha the second argument"
+    exit 1
+fi
+
+BRANCH=$1
+COMMIT_SHA=$2
+
+echo "Performing build for staging" $BRANCH;
 
 if [ "$(git rev-parse --abbrev-ref HEAD)" != "$BRANCH" ]; then
     echo "this branch is not up to date"
