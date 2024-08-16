@@ -1,3 +1,4 @@
+const e = require("cors");
 const { Cart, Product, User, Store } = require("../../models");
 const { response } = require("../../utils/response.utils");
 
@@ -48,6 +49,7 @@ const removeItem = async (req, res) => {
     }
 
     const product = await Product.findOne({
+      attributes: { exclude: ["image_product"] },
       where: { id: cart.product.id, display: true },
     });
 
