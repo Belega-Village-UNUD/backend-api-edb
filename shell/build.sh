@@ -22,11 +22,21 @@ if [ "$(git rev-parse --abbrev-ref HEAD)" != "$BRANCH" ]; then
 fi
 
 git pull origin $BRANCH;
-docker image prune -f;
-make build-staging;
 
 if [ $? -ne 0 ]; then
-    echo "Error in build $BRANCH and Deploy Backend Belega Service"
+    echo "Error in pull and fetch $BRANCH of Backend Belega Service $?"
+    exit 1
 fi
 
-docker ps;
+set -x
+docker image prune -f;
+make build-staging;
+set +x
+
+if [ $? -ne 0 ]; then
+    echo "Error in build $BRANCH for Backend Belega Service $?"
+    exit 1
+fi
+
+echo "Successfully build the image for ghcr.io/belega-village-unud/backend-api-edb:$COMMIT_SHA"
+
