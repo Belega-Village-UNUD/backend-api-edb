@@ -36,6 +36,7 @@ const checkoutCart = async (req, res) => {
         const qty = cart.qty;
 
         const product = await Product.findOne({
+          attributes: { exclude: ["image_product"] },
           where: { id: cart.product_id, display: true },
         });
 

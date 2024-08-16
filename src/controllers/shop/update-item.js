@@ -60,6 +60,7 @@ const updateCart = async (req, res) => {
     }
 
     const product = await Product.findOne({
+      attributes: { exclude: ["image_product"] },
       where: { id: cart.product.id, display: true },
     });
 

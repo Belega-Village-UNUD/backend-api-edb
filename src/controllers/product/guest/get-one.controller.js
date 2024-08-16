@@ -7,6 +7,7 @@ const getOneProduct = async (req, res) => {
 
     const product = await Product.findOne({
       where: { id: id, display: true },
+      attribues: { exclude: ["image_product"] },
       include: [
         {
           model: ProductType,

@@ -72,6 +72,7 @@ const decline = async (req, res) => {
       }
 
       const product = await Product.findOne({
+        attributes: { exclude: ["image_product"] },
         where: { id: cart.product_id, display: true },
       });
 

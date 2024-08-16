@@ -26,6 +26,7 @@ const updateProduct = async (req, res) => {
     }
 
     const product = await Product.findOne({
+      attributes: { exclude: ["image_product"] },
       where: { id: product_id, display: true },
     });
     if (!product) {
@@ -55,6 +56,7 @@ const updateProduct = async (req, res) => {
       { where: { id: product_id } }
     );
     const updateProduct = await Product.findOne({
+      attributes: { exclude: ["image_product"] },
       where: { id: product_id, display: true },
     });
     return response(

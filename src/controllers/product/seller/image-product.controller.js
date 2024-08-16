@@ -15,6 +15,7 @@ const imageProduct = async (req, res) => {
       return response(res, 400, false, "Request body is empty", null);
 
     const product = await Product.findOne({
+      attributes: { exclude: ["image_product"] },
       where: { id: product_id, user_id: user.id, display: true },
     });
 
@@ -24,6 +25,7 @@ const imageProduct = async (req, res) => {
       { where: { id: product.id, user_id: user.id, display: true } }
     );
     const productUpdated = await Product.findOne({
+      attributes: { exclude: ["image_product"] },
       where: { id: product.id, user_id: user.id, display: true },
     });
     response(res, 200, upload.success, "Successfully Update Product Image", {

@@ -36,6 +36,7 @@ const getBalance = async (store_id) => {
 
 const updateBalance = async (transaction_id, product_id) => {
   const product = await Product.findOne({
+    attributes: { exclude: ["image_product"] },
     where: { id: product_id },
   });
 

@@ -18,6 +18,7 @@ const getAllProduct = async (req, res) => {
       return response(res, 404, false, `Store Not Found`, null);
     }
     const product = await Product.findAll({
+      attributes: { exclude: ["image_product"] },
       where: { store_id: store.id, display: true },
       include: [
         {
