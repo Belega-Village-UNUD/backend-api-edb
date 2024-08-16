@@ -30,9 +30,7 @@
     "migrate:down:one": "npx sequelize db:migrate:undo",
     "migrate:down:all": "npx sequelize db:migrate:undo:all",
     "seed:up": "npx sequelize db:seed:all",
-    "seed:down": "npx sequelize db:seed:undo:all",
-    "sast": "npx eslint -f json ./src/docs/ -o results.json.temp && cat results.json.temp | jq . > results.json && rm results.json.temp",
-    "check": "npx eslint -f json ./src/controllers/ -o results.json.temp && cat results.json.temp | jq . >> results_controllers.json && rm results.json.temp"
+    "seed:down": "npx sequelize db:seed:undo:all"
   },
   "devDependencies": {
     "dotenv": "^16.3.1",

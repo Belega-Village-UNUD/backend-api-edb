@@ -1,6 +1,7 @@
 #!/bin/bash
 
 BRANCH=$1
+COMMIT_SHA=$2
 
 echo $BRANCH;
 
@@ -10,11 +11,14 @@ if [ "$(git rev-parse --abbrev-ref HEAD)" != "$BRANCH" ]; then
     git fetch --dry-run;
 fi
 
-git pull origin $BRANCH;
-make up;
+docker service update --force --image ghcr.io/belega-village-unud/backend-api-edb:$COMMIT_SHA backend_app
 
 if [ $? -ne 0 ]; then
-    echo "Error in build $BRANCH and Deploy Backend Belega Service"
+    echo "Error in deploying $BRANCH of Backend Belega Service"
+    exit 1
 fi
 
-docker ps;
+echo "Successfully deploy the image for ghcr.io/belega-village-unud/backend-api-edb:$COMMIT_SHA on service backend_app"
+
+docker service ls | grep backend | awk '{print $2, $3, $4, $5}'
+
