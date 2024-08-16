@@ -30,7 +30,11 @@ fi
 
 set -x
 docker image prune -f;
-make build-staging;
+
+docker build . --file docker/service/Dockerfile -t \
+  ghcr.io/belega-village-unud/backend-api-edb:$COMMIT_SHA \
+  ghcr.io/belega-village-unud/backend-api-edb:$BRANCH
+
 set +x
 
 if [ $? -ne 0 ]; then

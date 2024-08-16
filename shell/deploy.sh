@@ -11,8 +11,7 @@ if [ "$(git rev-parse --abbrev-ref HEAD)" != "$BRANCH" ]; then
     git fetch --dry-run;
 fi
 
-git pull origin $BRANCH;
-make up;
+docker service update --force --image ghcr.io/belega-village-unud/backend-api-edb:$COMMIT_SHA backend_app
 
 if [ $? -ne 0 ]; then
     echo "Error in deploying $BRANCH of Backend Belega Service"
