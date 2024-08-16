@@ -1,26 +1,17 @@
 const { response } = require("../../../utils/response.utils");
 const {
-  getCarts,
-  getSalesReport,
-  getSalesReportBasedCustomDate,
-  getStore,
+  getAllSalesReport,
+  getAllSalesReportBasedCustomDate,
 } = require("../../../utils/orm.utils");
 
-const getTransactionReports = async (req, res) => {
+const getAllTransactionsReports = async (req, res) => {
   try {
     const { id } = req.user;
-    const store = await getStore(id);
     const { start_date, end_date } = req.query;
     if (!start_date && !end_date) {
-      const report = await getSalesReport(store.id);
+      const report = await getAllSalesReport();
       if (!report) {
-        return response(
-          res,
-          404,
-          false,
-          `Have no Transactions in ${store.name}`,
-          null
-        );
+        return response(res, 404, false, `There are no transactions`, null);
       }
 
       return response(
@@ -32,11 +23,7 @@ const getTransactionReports = async (req, res) => {
       );
     }
 
-    const report = await getSalesReportBasedCustomDate(
-      store.id,
-      start_date,
-      end_date
-    );
+    const report = await getAllSalesReportBasedCustomDate(start_date, end_date);
 
     if (!report) {
       return response(res, 404, false, `${report.message}`, null);
@@ -48,4 +35,4 @@ const getTransactionReports = async (req, res) => {
   }
 };
 
-module.exports = getTransactionReports;
+module.exports = getAllTransactionsReports;

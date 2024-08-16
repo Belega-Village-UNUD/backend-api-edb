@@ -8,97 +8,33 @@ const {
   Profile,
 } = require("../../../models");
 const { response } = require("../../../utils/response.utils");
+const {
+  getTransactionBuyerAll,
+  getTransactionBuyerAllCustomDate,
+} = require("../../../utils/orm.utils");
 
 const getAllTransactions = async (req, res) => {
   try {
     const { id: user_id } = req.user;
+    const { start_date, end_date } = req.query;
 
     const user = await User.findOne({ where: { id: user_id } });
 
-    const transactions = await Transaction.findAll({
-      where: {
-        user_id: user.id,
-      },
-    });
-
-    if (!transactions || transactions.length === 0) {
-      return response(
-        res,
-        200,
-        false,
-        "No transactions found for this user",
-        null
-      );
+    if (!start_date && !end_date) {
+      const transactions = await getTransactionBuyerAll(user.id);
+      return response(res, 200, true, transactions.message, transactions.data);
     }
 
-    const cartIds = [].concat(
-      ...transactions.map((transaction) => transaction.cart_id)
+    const transactions = await getTransactionBuyerAllCustomDate(
+      user.id,
+      start_date,
+      end_date
     );
 
-    // Fetch the carts
-    const carts = await Cart.findAll({
-      attributes: ["id", "user_id", "product_id", "qty", "unit_price"],
-      include: [
-        {
-          model: User,
-          as: "user",
-          attributes: ["id", "email"],
-          include: [
-            {
-              model: Profile,
-              as: "userProfile",
-              attributes: ["id", "name"],
-            },
-          ],
-        },
-        {
-          model: Product,
-          as: "product",
-          include: [
-            {
-              model: Store,
-              as: "store",
-              attributes: ["id", "name"],
-              include: [
-                {
-                  model: User,
-                  as: "user",
-                  attributes: ["id", "email"],
-                  include: [
-                    {
-                      model: Profile,
-                      as: "userProfile",
-                      attributes: ["id", "name"],
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      ],
-      where: {
-        id: { [Op.in]: cartIds },
-      },
-    });
-
-    // Merge the cart details into the transactions
-    const mergedTransactions = transactions.map((transaction) => {
-      const cart_details = transaction.cart_id.map((id) => {
-        const cart = carts.find((cart) => cart.id === id);
-        return cart || id;
-      });
-
-      return { ...transaction.toJSON(), cart_details };
-    });
-
-    return response(
-      res,
-      200,
-      true,
-      "Transactions retrieved successfully",
-      mergedTransactions
-    );
+    if (!transactions) {
+      return response(res, 404, false, transactions.message, null);
+    }
+    return response(res, 200, true, transactions.message, transactions.data);
   } catch (error) {
     return response(res, error.status || 500, false, error.message, null);
   }

@@ -1,19 +1,9 @@
-const { nanoid } = require("nanoid");
 const {
-  Cart,
   User,
-  Product,
   Transaction,
-  Profile,
   Store,
 } = require("../../../models");
 const { response } = require("../../../utils/response.utils");
-const { Op } = require("sequelize");
-const {
-  MIDTRANS_SERVER_KEY,
-  MIDTRANS_APP_URL,
-  FE_URL,
-} = require("../../../utils/constan");
 
 const confirm = async (req, res) => {
   try {
@@ -55,58 +45,6 @@ const confirm = async (req, res) => {
       );
     }
 
-    const cartIds = transaction.cart_id;
-
-    const carts = await Cart.findAll({
-      include: [
-        {
-          model: User,
-          as: "user",
-          attributes: ["id", "email"],
-          include: [
-            {
-              model: Profile,
-              as: "userProfile",
-              attributes: ["id", "name"],
-            },
-          ],
-        },
-        {
-          model: Product,
-          as: "product",
-          include: [
-            {
-              model: Store,
-              as: "store",
-              attributes: ["id", "name"],
-              include: [
-                {
-                  model: User,
-                  as: "user",
-                  attributes: ["id", "email"],
-                  include: [
-                    {
-                      model: Profile,
-                      as: "userProfile",
-                      attributes: ["id", "name"],
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      ],
-      where: {
-        id: { [Op.in]: cartIds },
-        "$product.store_id$": storeUserId.id,
-      },
-    });
-
-    if (!transaction) {
-      return response(res, 404, false, "Transaction not found", null);
-    }
-
     if (transaction.status !== "PENDING") {
       return response(
         res,
@@ -117,65 +55,6 @@ const confirm = async (req, res) => {
       );
     }
 
-    const authString = btoa(`${MIDTRANS_SERVER_KEY}:`);
-
-    let itemDetails = [];
-
-    carts.map((cart) => {
-      itemDetails.push({
-        id: cart.product.id,
-        price: cart.product.price,
-        quantity: cart.qty,
-        name: cart.product.name_product,
-      });
-    });
-
-    const customerDetails = await Profile.findOne({
-      attributes: ["name", "phone"],
-      where: { user_id: transaction.user_id },
-      include: [{ model: User, as: "user", attributes: ["email"] }],
-    });
-
-    const payload = {
-      transaction_details: {
-        order_id: transaction.id,
-        gross_amount: transaction.total_amount,
-      },
-      item_details: itemDetails,
-      customer_details: {
-        first_name: customerDetails.name,
-        email: customerDetails.user.email,
-        phone: customerDetails.phone,
-      },
-    };
-
-    const responsedMidtrans = await fetch(
-      `${MIDTRANS_APP_URL}/snap/v1/transactions`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Basic ${authString}`,
-        },
-        body: JSON.stringify(payload),
-      }
-    );
-
-    const data = await responsedMidtrans.json();
-
-    if (responsedMidtrans.status !== 201) {
-      return response(
-        res,
-        responsedMidtrans.status,
-        false,
-        "Failed to create transaction",
-        null
-      );
-    }
-
-    transaction.token = data.token;
-    transaction.redirect_url = data.redirect_url;
     transaction.status = "PAYABLE";
     await transaction.save();
 

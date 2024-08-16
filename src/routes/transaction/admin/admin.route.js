@@ -6,9 +6,8 @@ const { MODULE, ROLE } = require("../../../utils/enum.utils");
 router.get(
   "/reports",
   middleware.restrict,
-  middleware.rbac(MODULE.TRANSACTION, ROLE.SELLER, true, true),
-  middleware.storeVerified,
-  controller.getTransactionReports
+  middleware.rbac(MODULE.TRANSACTION, ROLE.ADMIN, true, true),
+  controller.getAllTransactionsReports
 );
 
 module.exports = router;
