@@ -31,9 +31,9 @@ fi
 set -x
 docker image prune -f;
 
-docker build . --file docker/service/Dockerfile -t \
-  ghcr.io/belega-village-unud/backend-api-edb:$COMMIT_SHA \
-  ghcr.io/belega-village-unud/backend-api-edb:$BRANCH
+docker build . --file docker/service/Dockerfile \
+  -t ghcr.io/belega-village-unud/backend-api-edb:$COMMIT_SHA \
+  -t ghcr.io/belega-village-unud/backend-api-edb:$BRANCH
 
 set +x
 
