@@ -35,12 +35,12 @@ docker build . --file docker/service/Dockerfile \
   -t ghcr.io/belega-village-unud/backend-api-edb:$COMMIT_SHA \
   -t ghcr.io/belega-village-unud/backend-api-edb:$BRANCH
 
-set +x
-
 if [ $? -ne 0 ]; then
     echo "Error in build $BRANCH for Backend Belega Service $?"
     exit 1
 fi
+
+set +x
 
 echo "Successfully build the image for ghcr.io/belega-village-unud/backend-api-edb:$COMMIT_SHA"
 
