@@ -21,15 +21,15 @@ const multiUpload = async (req, res) => {
     for (let file of req.files) {
       let result = await imagekit.upload({
         file: file.buffer.toString("base64"),
-        fileName: file.filename,
+        fileName: Date.now() + path.extname(file.originalname),
         useUniqueFileName: true,
       });
       urls.push(result.url);
     }
 
-    return response(res, 200, true, "File uploaded successfully", { urls });
+    return { success: true, urls: urls };
   } catch (err) {
-    return response(res, res.status || 500, false, err.message, null);
+    return { success: false, err: err };
   }
 };
 

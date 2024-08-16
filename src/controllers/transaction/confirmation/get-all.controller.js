@@ -25,6 +25,7 @@ const getAllTransactions = async (req, res) => {
           attributes: ["id", "email"],
         },
       ],
+      order: [["updatedAt", "DESC"]],
     });
 
     const cartIds = [].concat(
