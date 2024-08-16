@@ -7,6 +7,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  COMMIT_SHA: ${{ github.sha }}
   REPO: backend-api-edb
   INSTANCE_NAME: belega-instance
   ZONE: asia-southeast2-a
@@ -44,7 +45,7 @@ jobs:
             git checkout staging
             git fetch --dry-run
             git pull origin staging
-            bash ./shell/build.sh staging $(git rev-parse --short "$GITHUB_SHA")
+            bash ./shell/build.sh staging ${{ env.COMMIT_SHA }}
 
       - name: Build Output
         id: compute-ssh-build-output
@@ -82,7 +83,7 @@ jobs:
           user: ${{ secrets.CE_USER }}
           command: |-
             cd $(pwd)/${{ env.REPO }}
-            bash ./shell/deploy.sh staging $(git rev-parse --short "$GITHUB_SHA")
+            bash ./shell/deploy.sh staging ${{ env.COMMIT_SHA }}
 
       - name: Deploy Output
         id: compute-ssh-deploy-output
