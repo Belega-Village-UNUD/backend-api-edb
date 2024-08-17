@@ -29,13 +29,7 @@ const getOneProduct = async (req, res) => {
     });
 
     if (!product) {
-      return response(
-        res,
-        404,
-        false,
-        `Product ${product.name_product} Not Found`,
-        null
-      );
+      return response(res, 404, false, `Product Not Found`, null);
     }
     return response(
       res,
