@@ -1030,7 +1030,7 @@ module.exports = {
             "desc_product",
             "price",
             "stock",
-            "image_product",
+            "images",
             "createdAt",
             "updatedAt",
           ],

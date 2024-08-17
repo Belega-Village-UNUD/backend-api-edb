@@ -28,7 +28,7 @@ module.exports = {
         qty: cartItem.qty,
         product_id: cartItem.product.id,
         product: cartItem.product,
-        image_product: cartItem.product.image_product,
+        images: cartItem.product.images,
         name_product: cartItem.product.name_product,
         price: cartItem.product.price,
         stock: cartItem.product.stock,

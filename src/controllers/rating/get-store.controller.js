@@ -39,7 +39,7 @@ const getRatingStore = async (req, res) => {
             "desc_product",
             "price",
             "stock",
-            "image_product",
+            "images",
             "createdAt",
             "updatedAt",
           ],
