@@ -47,7 +47,7 @@ const getItems = async (req, res) => {
           as: "product",
           attributes: [
             "id",
-            "image_product",
+            "images",
             "name_product",
             "price",
             "stock",
@@ -90,7 +90,7 @@ const getItems = async (req, res) => {
         qty: cartItem.qty,
         product_id: cartItem.product.id,
         product: cartItem.product, // add product object for data
-        image_product: cartItem.product.image_product,
+        images: cartItem.product.images,
         name_product: cartItem.product.name_product,
         price: cartItem.product.price,
         stock: cartItem.product.stock,
