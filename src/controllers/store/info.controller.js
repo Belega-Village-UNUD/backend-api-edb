@@ -15,7 +15,7 @@ const getStoreInfo = async (req, res) => {
       return response(res, 404, false, "Your requested store is empty", null);
     }
 
-    return response(res, 200, true, `Get Store Successfull`, store);
+    return response(res, 200, true, `Get Store Successfull`, store.data);
   } catch (err) {
     return response(res, err.status || 500, false, err.message, null);
   }

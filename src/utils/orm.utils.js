@@ -377,28 +377,6 @@ module.exports = {
       ],
       include: [
         {
-          model: Product,
-          as: "store",
-          attributes: [
-            "type_id",
-            "images",
-            "name_product",
-            "desc_product",
-            "price",
-            "stock",
-            "weight_gr",
-            "is_preorder",
-            "display",
-          ],
-          include: [
-            {
-              model: ProductType,
-              as: "product_type",
-              attributes: ["id", "name", "material"],
-            },
-          ],
-        },
-        {
           model: User,
           as: "user",
           attributes: ["id", "email"],
@@ -406,14 +384,43 @@ module.exports = {
             {
               model: Profile,
               as: "userProfile",
-              attributes: ["id", "name", "city", "province"],
+              attributes: ["id", "name", "avatar_link", "city", "province"],
             },
           ],
         },
       ],
     });
 
-    return { data: { store, rating, average_rating: averageRating(rating) } };
+    const product = await Product.findAll({
+      where: { store_id },
+      attributes: [
+        "id",
+        "store_id",
+        "type_id",
+        "image_product",
+        "name_product",
+        "desc_product",
+        "price",
+        "stock",
+        "weight_gr",
+        "is_preorder",
+        "display",
+      ],
+      include: [
+        {
+          model: ProductType,
+          as: "product_type",
+          attributes: ["id", "name", "material"],
+        },
+      ],
+    });
+
+    return { data: { 
+      store,
+      product, 
+      rating, 
+      average_rating: averageRating(rating) 
+    } };
   },
 
   getSalesReport: async (store_id) => {

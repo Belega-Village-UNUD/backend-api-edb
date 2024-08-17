@@ -27,7 +27,7 @@ const getRatingStore = async (req, res) => {
           as: "user",
           attributes: ["id", "email"],
           include: [
-            { model: Profile, as: "userProfile", attributes: ["id", "name"] },
+            { model: Profile, as: "userProfile" },
           ],
         },
         {
