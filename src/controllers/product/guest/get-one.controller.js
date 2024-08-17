@@ -16,6 +16,7 @@ const getOneProduct = async (req, res) => {
         {
           model: Store,
           as: "store",
+          attributes: { exclude: ["ktp_link"] },
           include: [
             {
               model: User,

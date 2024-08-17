@@ -39,7 +39,7 @@ const updateCart = async (req, res) => {
           as: "product",
           attributes: [
             "id",
-            "image_product",
+            "images",
             "name_product",
             "price",
             "stock",

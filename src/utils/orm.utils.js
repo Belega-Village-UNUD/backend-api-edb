@@ -381,7 +381,7 @@ module.exports = {
           as: "store",
           attributes: [
             "type_id",
-            "image_product",
+            "images",
             "name_product",
             "desc_product",
             "price",
@@ -1023,7 +1023,7 @@ module.exports = {
             "desc_product",
             "price",
             "stock",
-            "image_product",
+            "images",
             "createdAt",
             "updatedAt",
           ],
