@@ -104,17 +104,6 @@ const finalTransaction = async (req, res) => {
 
       transaction.total_amount = payload.total_final_price;
 
-      await DetailTransaction.create({
-        id: payload.id,
-        transaction_id: payload.transaction_id,
-        carts_details: payload.carts_details,
-        sub_total_transaction_price_before_shipping:
-          payload.sub_total_transaction_price_before_shipping,
-        sub_total_shipping: payload.sub_total_shipping,
-        total_final_price: payload.total_final_price,
-        receipt_link: payload.receipt_link,
-      });
-
       const authString = btoa(`${MIDTRANS_SERVER_KEY}:`);
 
       let itemDetails = [];
@@ -131,9 +120,9 @@ const finalTransaction = async (req, res) => {
       cartDetails.map((cart) => {
         itemDetails.push({
           id: nanoid(10),
-          price: totalValue.subTotalShipping,
+          price: cart.shipping.costs,
           quantity: 1,
-          name: 'shipping-' + cart.shipping.code,
+          name: "shipping-" + cart.shipping.code,
         });
       });
 
@@ -169,7 +158,6 @@ const finalTransaction = async (req, res) => {
             postal_code: customerDetails.city.postal_code,
           },
         },
-
       };
 
       const responsedMidtrans = await fetch(
@@ -186,7 +174,7 @@ const finalTransaction = async (req, res) => {
       );
 
       const data = await responsedMidtrans.json();
-      
+
       if (responsedMidtrans.status !== 201) {
         return response(
           res,
@@ -196,6 +184,17 @@ const finalTransaction = async (req, res) => {
           null
         );
       }
+
+      await DetailTransaction.create({
+        id: payload.id,
+        transaction_id: payload.transaction_id,
+        carts_details: payload.carts_details,
+        sub_total_transaction_price_before_shipping:
+          payload.sub_total_transaction_price_before_shipping,
+        sub_total_shipping: payload.sub_total_shipping,
+        total_final_price: payload.total_final_price,
+        receipt_link: payload.receipt_link,
+      });
 
       transaction.token = data.token;
       transaction.redirect_url = data.redirect_url;
@@ -209,7 +208,7 @@ const finalTransaction = async (req, res) => {
         {
           redirect_url: data.redirect_url,
           token_midtrans: data.token,
-          payload
+          payload,
         }
       );
     }

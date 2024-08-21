@@ -26,9 +26,7 @@ const getRatingStore = async (req, res) => {
           model: User,
           as: "user",
           attributes: ["id", "email"],
-          include: [
-            { model: Profile, as: "userProfile" },
-          ],
+          include: [{ model: Profile, as: "userProfile" }],
         },
         {
           model: Product,
@@ -91,7 +89,6 @@ const getRatingStore = async (req, res) => {
       data: ratingStores,
     });
   } catch (err) {
-    console.error("line 79: ", err);
     return response(res, 500, false, "Internal server error", null);
   }
 };

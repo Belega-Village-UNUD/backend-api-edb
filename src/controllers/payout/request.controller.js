@@ -62,7 +62,6 @@ const requestPayout = async (req, res) => {
       createRequest
     );
   } catch (err) {
-    console.error(err);
     return response(res, err.status || 500, false, err.message, null);
   }
 };

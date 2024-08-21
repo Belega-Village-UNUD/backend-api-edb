@@ -87,7 +87,6 @@ const cartDetailsWithShippingCost = async (
       };
 
       let estimation = await estimateCosts(data);
-
       cartDetails.push({
         cart_id: cart.id,
         product_id: cart.product_id,
