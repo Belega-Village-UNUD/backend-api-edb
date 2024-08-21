@@ -19,6 +19,7 @@ const addItem = async (req, res) => {
       raw: true,
     });
     let cart = null;
+    let carts = [];
 
     for (let i = 0; i < products.length; i++) {
       const { product_id, qty } = products[i];
@@ -93,6 +94,7 @@ const addItem = async (req, res) => {
         await existingCartItem.update({
           qty: existingCartItem.qty + qty,
         });
+        carts.push(existingCartItem)
       } else {
         cart = await Cart.create({
           id: nanoid(10),
@@ -101,10 +103,11 @@ const addItem = async (req, res) => {
           qty,
           unit_price: product.price,
         });
+        carts.push(cart)
       }
     }
 
-    return response(res, 201, true, "Cart item added", cart);
+    return response(res, 201, true, "Cart item added", carts);
   } catch (error) {
     return response(res, error.status || 500, false, error.message, null);
   }

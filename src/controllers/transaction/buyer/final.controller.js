@@ -62,6 +62,11 @@ const finalTransaction = async (req, res) => {
         },
       });
 
+      console.log(
+        "65, final.controller.js transaction: ",
+        JSON.stringify(transaction, null, 2)
+      );
+
       if (!transaction || transaction.length === 0) {
         return response(res, 404, false, "No transactions found", null);
       }
@@ -77,7 +82,7 @@ const finalTransaction = async (req, res) => {
       const carts = await getCarts(cartIds);
       const transactionsData = mergeTransactionData(carts);
 
-      let cartDetails = [];
+      let cartDetails;
 
       try {
         cartDetails = await cartDetailsWithShippingCost(
@@ -91,124 +96,135 @@ const finalTransaction = async (req, res) => {
       }
 
       const totalValue = countTotalTransactionAfterShipping(cartDetails);
+      // console.log("==100 final.controller.js totalValue: ", totalValue);
 
-      const payload = {
-        id: nanoid(10),
-        transaction_id: transaction.id,
-        carts_details: cartDetails,
-        sub_total_transaction_price_before_shipping: transaction.total_amount,
-        sub_total_shipping: totalValue.subTotalShipping,
-        total_final_price: totalValue.totalFinalPrice,
-        receipt_link: "", // TODO create the receipt link for the template by upload image first and return the link
-      };
+      // const payload = {
+      //   id: nanoid(10),
+      //   transaction_id: transaction.id,
+      //   carts_details: cartDetails,
+      //   sub_total_transaction_price_before_shipping: transaction.total_amount,
+      //   sub_total_shipping: totalValue.subTotalShipping,
+      //   total_final_price: totalValue.totalFinalPrice,
+      //   receipt_link: "", // TODO create the receipt link for the template by upload image first and return the link
+      // };
 
-      transaction.total_amount = payload.total_final_price;
+      // transaction.total_amount = payload.total_final_price;
 
-      const authString = btoa(`${MIDTRANS_SERVER_KEY}:`);
+      // const authString = btoa(`${MIDTRANS_SERVER_KEY}:`);
 
-      let itemDetails = [];
+      // let itemDetails = [];
 
-      carts.map((cart) => {
-        itemDetails.push({
-          id: cart.product.id,
-          price: cart.product.price,
-          quantity: cart.qty,
-          name: cart.product.name_product,
-        });
-      });
+      // carts.map((cart) => {
+      //   itemDetails.push({
+      //     id: cart.product.id,
+      //     price: cart.product.price,
+      //     quantity: cart.qty,
+      //     name: cart.product.name_product,
+      //   });
+      // });
 
-      cartDetails.map((cart) => {
-        itemDetails.push({
-          id: nanoid(10),
-          price: cart.shipping.costs,
-          quantity: 1,
-          name: "shipping-" + cart.shipping.code,
-        });
-      });
+      // cartDetails.map((cart) => {
+      //   itemDetails.push({
+      //     id: nanoid(10),
+      //     price: cart.shipping.costs,
+      //     quantity: 1,
+      //     name: "shipping-" + cart.shipping.code,
+      //   });
+      // });
 
-      const customerDetails = await Profile.findOne({
-        where: { user_id: transaction.user_id },
-        include: [{ model: User, as: "user", attributes: ["email"] }],
-      });
+      // const customerDetails = await Profile.findOne({
+      //   where: { user_id: transaction.user_id },
+      //   include: [{ model: User, as: "user", attributes: ["email"] }],
+      // });
 
-      const payloadMidtrans = {
-        transaction_details: {
-          order_id: transaction.id,
-          gross_amount: transaction.total_amount,
-        },
-        item_details: itemDetails,
-        customer_details: {
-          first_name: customerDetails.name,
-          email: customerDetails.user.email,
-          phone: customerDetails.phone,
-          billing_address: {
-            first_name: customerDetails.name,
-            email: customerDetails.user.email,
-            phone: customerDetails.phone,
-            address: customerDetails.address,
-            city: customerDetails.city.city_name,
-            postal_code: customerDetails.city.postal_code,
-          },
-          shipping_address: {
-            first_name: customerDetails.name,
-            email: customerDetails.user.email,
-            phone: customerDetails.phone,
-            address: customerDetails.address,
-            city: customerDetails.city.city_name,
-            postal_code: customerDetails.city.postal_code,
-          },
-        },
-      };
+      // const payloadMidtrans = {
+      //   transaction_details: {
+      //     order_id: transaction.id,
+      //     gross_amount: transaction.total_amount,
+      //   },
+      //   item_details: itemDetails,
+      //   customer_details: {
+      //     first_name: customerDetails.name,
+      //     email: customerDetails.user.email,
+      //     phone: customerDetails.phone,
+      //     billing_address: {
+      //       first_name: customerDetails.name,
+      //       email: customerDetails.user.email,
+      //       phone: customerDetails.phone,
+      //       address: customerDetails.address,
+      //       city: customerDetails.city.city_name,
+      //       postal_code: customerDetails.city.postal_code,
+      //     },
+      //     shipping_address: {
+      //       first_name: customerDetails.name,
+      //       email: customerDetails.user.email,
+      //       phone: customerDetails.phone,
+      //       address: customerDetails.address,
+      //       city: customerDetails.city.city_name,
+      //       postal_code: customerDetails.city.postal_code,
+      //     },
+      //   },
+      // };
 
-      const responsedMidtrans = await fetch(
-        `${MIDTRANS_APP_URL}/snap/v1/transactions`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-            Authorization: `Basic ${authString}`,
-          },
-          body: JSON.stringify(payloadMidtrans),
-        }
-      );
+      // const responsedMidtrans = await fetch(
+      //   `${MIDTRANS_APP_URL}/snap/v1/transactions`,
+      //   {
+      //     method: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //       Accept: "application/json",
+      //       Authorization: `Basic ${authString}`,
+      //     },
+      //     body: JSON.stringify(payloadMidtrans),
+      //   }
+      // );
 
-      const data = await responsedMidtrans.json();
+      // const data = await responsedMidtrans.json();
 
-      if (responsedMidtrans.status !== 201) {
-        return response(
-          res,
-          responsedMidtrans.status,
-          false,
-          "Failed to create transaction",
-          null
-        );
-      }
+      // if (responsedMidtrans.status !== 201) {
+      //   return response(
+      //     res,
+      //     responsedMidtrans.status,
+      //     false,
+      //     "Failed to create transaction",
+      //     null
+      //   );
+      // }
 
-      await DetailTransaction.create({
-        id: payload.id,
-        transaction_id: payload.transaction_id,
-        carts_details: payload.carts_details,
-        sub_total_transaction_price_before_shipping:
-          payload.sub_total_transaction_price_before_shipping,
-        sub_total_shipping: payload.sub_total_shipping,
-        total_final_price: payload.total_final_price,
-        receipt_link: payload.receipt_link,
-      });
+      // await DetailTransaction.create({
+      //   id: payload.id,
+      //   transaction_id: payload.transaction_id,
+      //   carts_details: payload.carts_details,
+      //   sub_total_transaction_price_before_shipping:
+      //     payload.sub_total_transaction_price_before_shipping,
+      //   sub_total_shipping: payload.sub_total_shipping,
+      //   total_final_price: payload.total_final_price,
+      //   receipt_link: payload.receipt_link,
+      // });
 
-      transaction.token = data.token;
-      transaction.redirect_url = data.redirect_url;
-      transaction.save();
+      // transaction.token = data.token;
+      // transaction.redirect_url = data.redirect_url;
+      // transaction.save();
 
+      // return response(
+      // res,
+      //   200,
+      //   true,
+      //   "Transaction with Detail updated successfully",
+      //   {
+      //     cartDetail: cartDetails,
+      //     redirect_url: data.redirect_url,
+      //     token_midtrans: data.token,
+      //     payload,
+      //   }
+      // );
       return response(
         res,
         200,
         true,
         "Transaction with Detail updated successfully",
         {
-          redirect_url: data.redirect_url,
-          token_midtrans: data.token,
-          payload,
+          cartDetail: cartDetails,
         }
       );
     }
@@ -221,6 +237,7 @@ const finalTransaction = async (req, res) => {
       detail
     );
   } catch (error) {
+    console.error(error);
     return response(res, error.status || 500, false, error.message, null);
   }
 };

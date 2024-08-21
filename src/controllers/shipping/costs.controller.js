@@ -98,31 +98,26 @@ const checkCosts = async (req, res) => {
 
     let costs = [];
     const transactionsData = mergeTransactionData(carts);
-
     for (const detail of transactionsData) {
       let productCarts = detail.carts;
 
+      let totalAllCartWeight = 0;
       for (const cart of productCarts) {
-        for (const courier of couriers) {
-          const data = {
+        totalAllCartWeight += cart.total_weight_gr;
+      }
+
+      for (const courier of couriers) {
+        try {
+          let data = {
             detail,
-            cart,
+            totalAllCartWeight,
             user,
             courier,
           };
-
-          try {
-            let estimation = await estimateCosts(data);
-            costs.push(estimation);
-          } catch (error) {
-            return response(
-              res,
-              error.status || 500,
-              false,
-              error.message,
-              null
-            );
-          }
+          let estimation = await estimateCosts(data);
+          costs.push(estimation);
+        } catch (error) {
+          return response(res, error.status || 500, false, error.message, null);
         }
       }
     }
