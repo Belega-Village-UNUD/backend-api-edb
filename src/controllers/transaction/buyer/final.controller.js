@@ -120,9 +120,9 @@ const finalTransaction = async (req, res) => {
       cartDetails.map((cart) => {
         itemDetails.push({
           id: nanoid(10),
-          price: totalValue.subTotalShipping,
+          price: cart.shipping.costs,
           quantity: 1,
-          name: 'shipping-' + cart.shipping.code,
+          name: "shipping-" + cart.shipping.code,
         });
       });
 
@@ -158,7 +158,6 @@ const finalTransaction = async (req, res) => {
             postal_code: customerDetails.city.postal_code,
           },
         },
-
       };
 
       const responsedMidtrans = await fetch(
@@ -175,7 +174,7 @@ const finalTransaction = async (req, res) => {
       );
 
       const data = await responsedMidtrans.json();
-      
+
       if (responsedMidtrans.status !== 201) {
         return response(
           res,
@@ -209,7 +208,7 @@ const finalTransaction = async (req, res) => {
         {
           redirect_url: data.redirect_url,
           token_midtrans: data.token,
-          payload
+          payload,
         }
       );
     }
