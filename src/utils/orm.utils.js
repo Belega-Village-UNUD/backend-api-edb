@@ -415,12 +415,14 @@ module.exports = {
       ],
     });
 
-    return { data: { 
-      store,
-      product, 
-      rating, 
-      average_rating: averageRating(rating) 
-    } };
+    return {
+      data: {
+        store,
+        product,
+        rating,
+        average_rating: averageRating(rating),
+      },
+    };
   },
 
   getSalesReport: async (store_id) => {
@@ -1106,5 +1108,5 @@ module.exports = {
     });
 
     return carts;
-  }
+  },
 };
