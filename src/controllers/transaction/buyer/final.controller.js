@@ -104,17 +104,6 @@ const finalTransaction = async (req, res) => {
 
       transaction.total_amount = payload.total_final_price;
 
-      await DetailTransaction.create({
-        id: payload.id,
-        transaction_id: payload.transaction_id,
-        carts_details: payload.carts_details,
-        sub_total_transaction_price_before_shipping:
-          payload.sub_total_transaction_price_before_shipping,
-        sub_total_shipping: payload.sub_total_shipping,
-        total_final_price: payload.total_final_price,
-        receipt_link: payload.receipt_link,
-      });
-
       const authString = btoa(`${MIDTRANS_SERVER_KEY}:`);
 
       let itemDetails = [];
@@ -196,6 +185,17 @@ const finalTransaction = async (req, res) => {
           null
         );
       }
+
+      await DetailTransaction.create({
+        id: payload.id,
+        transaction_id: payload.transaction_id,
+        carts_details: payload.carts_details,
+        sub_total_transaction_price_before_shipping:
+          payload.sub_total_transaction_price_before_shipping,
+        sub_total_shipping: payload.sub_total_shipping,
+        total_final_price: payload.total_final_price,
+        receipt_link: payload.receipt_link,
+      });
 
       transaction.token = data.token;
       transaction.redirect_url = data.redirect_url;
