@@ -366,15 +366,7 @@ module.exports = {
 
     const store = await Store.findOne({
       where: { id: store_id },
-      attributes: [
-        "id",
-        "name",
-        "phone",
-        "address",
-        "description",
-        "province",
-        "city",
-      ],
+      attributes: { exclude: ["unverified_reason", "is_verified"] },
       include: [
         {
           model: User,
@@ -1008,7 +1000,11 @@ module.exports = {
           as: "user",
           attributes: ["id", "email"],
           include: [
-            { model: Profile, as: "userProfile", attributes: ["id", "name"] },
+            {
+              model: Profile,
+              as: "userProfile",
+              attributes: ["id", "name", "avatar_link"],
+            },
           ],
         },
         {
