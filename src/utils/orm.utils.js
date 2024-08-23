@@ -1000,7 +1000,7 @@ module.exports = {
           as: "user",
           attributes: ["id", "email"],
           include: [
-            { model: Profile, as: "userProfile", attributes: ["id", "name"] },
+            { model: Profile, as: "userProfile", attributes: ["id", "name", "avatar_link"] },
           ],
         },
         {
