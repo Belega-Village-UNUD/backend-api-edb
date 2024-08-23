@@ -393,19 +393,7 @@ module.exports = {
 
     const product = await Product.findAll({
       where: { store_id },
-      attributes: [
-        "id",
-        "store_id",
-        "type_id",
-        "image_product",
-        "name_product",
-        "desc_product",
-        "price",
-        "stock",
-        "weight_gr",
-        "is_preorder",
-        "display",
-      ],
+      attributes: { exclude: ["image_product"] },
       include: [
         {
           model: ProductType,
