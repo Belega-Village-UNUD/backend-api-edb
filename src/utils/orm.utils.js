@@ -366,15 +366,7 @@ module.exports = {
 
     const store = await Store.findOne({
       where: { id: store_id },
-      attributes: [
-        "id",
-        "name",
-        "phone",
-        "address",
-        "description",
-        "province",
-        "city",
-      ],
+      attributes: { exclude: ["unverified_reason", "is_verified"] },
       include: [
         {
           model: User,
@@ -393,19 +385,7 @@ module.exports = {
 
     const product = await Product.findAll({
       where: { store_id },
-      attributes: [
-        "id",
-        "store_id",
-        "type_id",
-        "image_product",
-        "name_product",
-        "desc_product",
-        "price",
-        "stock",
-        "weight_gr",
-        "is_preorder",
-        "display",
-      ],
+      attributes: { exclude: ["image_product"] },
       include: [
         {
           model: ProductType,
