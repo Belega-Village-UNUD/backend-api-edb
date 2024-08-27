@@ -19,64 +19,68 @@ const { mergeProduct, mergeTransactionData } = require("./merge.utils");
 
 module.exports = {
   getCarts: async (cartIds) => {
-    const carts = await Cart.findAll({
-      attributes: ["id", "user_id", "product_id", "qty", "unit_price"],
-      include: [
-        {
-          model: User,
-          as: "user",
-          attributes: ["id", "email"],
-          include: [
-            {
-              model: Profile,
-              as: "userProfile",
-              attributes: ["id", "name", "city", "province"],
-            },
-          ],
+    let carts = [];
+    for (const cartId of cartIds) {
+      let cart = await Cart.findOne({
+        attributes: ["id", "user_id", "product_id", "qty", "unit_price"],
+        include: [
+          {
+            model: User,
+            as: "user",
+            attributes: ["id", "email"],
+            include: [
+              {
+                model: Profile,
+                as: "userProfile",
+                attributes: ["id", "name", "city", "province"],
+              },
+            ],
+          },
+          {
+            model: Product,
+            as: "product",
+            include: [
+              {
+                model: ProductType,
+                as: "product_type",
+                attributes: ["name", "material"],
+              },
+              {
+                model: Store,
+                as: "store",
+                attributes: [
+                  "id",
+                  "name",
+                  "phone",
+                  "address",
+                  "description",
+                  "province",
+                  "city",
+                ],
+                include: [
+                  {
+                    model: User,
+                    as: "user",
+                    attributes: ["id", "email"],
+                    include: [
+                      {
+                        model: Profile,
+                        as: "userProfile",
+                        attributes: ["id", "name", "city", "province"],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+        where: {
+          id: cartId,
         },
-        {
-          model: Product,
-          as: "product",
-          include: [
-            {
-              model: ProductType,
-              as: "product_type",
-              attributes: ["name", "material"],
-            },
-            {
-              model: Store,
-              as: "store",
-              attributes: [
-                "id",
-                "name",
-                "phone",
-                "address",
-                "description",
-                "province",
-                "city",
-              ],
-              include: [
-                {
-                  model: User,
-                  as: "user",
-                  attributes: ["id", "email"],
-                  include: [
-                    {
-                      model: Profile,
-                      as: "userProfile",
-                      attributes: ["id", "name", "city", "province"],
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      ],
-      where: {
-        id: { [Op.in]: cartIds },
-      },
-    });
+      });
+      carts.push(cart);
+    }
 
     return carts;
   },

@@ -35,7 +35,7 @@ const finalTransaction = async (req, res) => {
         400,
         false,
         "Transaction not valid, please wait status to be PAYABLE",
-        null
+        null,
       );
     }
 
@@ -62,11 +62,6 @@ const finalTransaction = async (req, res) => {
         },
       });
 
-      console.log(
-        "65, final.controller.js transaction: ",
-        JSON.stringify(transaction, null, 2)
-      );
-
       if (!transaction || transaction.length === 0) {
         return response(res, 404, false, "No transactions found", null);
       }
@@ -89,14 +84,20 @@ const finalTransaction = async (req, res) => {
           user,
           transactionsData,
           shipping_name,
-          shipping_cost_index
+          shipping_cost_index,
         );
       } catch (error) {
         return response(res, error.status || 400, false, error.message, null);
+        // return response(
+        //   res,
+        //   error.status || 400,
+        //   false,
+        //   "Failed to perform counting detail shipping detail",
+        //   null
+        // );
       }
 
       const totalValue = countTotalTransactionAfterShipping(cartDetails);
-      // console.log("==100 final.controller.js totalValue: ", totalValue);
 
       // const payload = {
       //   id: nanoid(10),
@@ -224,8 +225,11 @@ const finalTransaction = async (req, res) => {
         true,
         "Transaction with Detail updated successfully",
         {
-          cartDetail: cartDetails,
-        }
+          tx: transactionsData,
+          tx_length: transactionsData.length,
+          carts: cartDetails,
+          total_price: totalValue,
+        },
       );
     }
 
@@ -234,7 +238,7 @@ const finalTransaction = async (req, res) => {
       400,
       false,
       "Request invalid please check your transaction status",
-      detail
+      detail,
     );
   } catch (error) {
     console.error(error);
