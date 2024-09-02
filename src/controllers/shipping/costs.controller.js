@@ -10,6 +10,7 @@ const { response } = require("../../utils/response.utils");
 const { estimateCosts } = require("../../utils/shipping.utils");
 const { mergeTransactionData } = require("../../utils/merge.utils");
 const { Op } = require("sequelize");
+const { getCarts } = require("../../utils/orm.utils");
 
 /**
  *
@@ -30,59 +31,8 @@ const checkCosts = async (req, res) => {
       where: { id: transaction_id },
     });
 
-    const carts = await Cart.findAll({
-      attributes: ["id", "user_id", "product_id", "qty", "unit_price"],
-      include: [
-        {
-          model: User,
-          as: "user",
-          attributes: ["id", "email"],
-          include: [
-            {
-              model: Profile,
-              as: "userProfile",
-              attributes: ["id", "name"],
-            },
-          ],
-        },
-        {
-          model: Product,
-          as: "product",
-          include: [
-            {
-              model: Store,
-              as: "store",
-              attributes: [
-                "id",
-                "name",
-                "phone",
-                "address",
-                "description",
-                "province",
-                "city",
-              ],
-              include: [
-                {
-                  model: User,
-                  as: "user",
-                  attributes: ["id", "email"],
-                  include: [
-                    {
-                      model: Profile,
-                      as: "userProfile",
-                      attributes: ["id", "name"],
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      ],
-      where: {
-        id: { [Op.in]: transaction.cart_id },
-      },
-    });
+    const cartIds = transaction.cart_id;
+    const carts = await getCarts(cartIds);
 
     const user = await User.findOne({
       where: { id: req.user.id },
@@ -98,31 +48,26 @@ const checkCosts = async (req, res) => {
 
     let costs = [];
     const transactionsData = mergeTransactionData(carts);
-
     for (const detail of transactionsData) {
       let productCarts = detail.carts;
 
+      let totalAllCartWeight = 0;
       for (const cart of productCarts) {
-        for (const courier of couriers) {
-          const data = {
+        totalAllCartWeight += cart.total_weight_gr;
+      }
+
+      for (const courier of couriers) {
+        try {
+          let data = {
             detail,
-            cart,
+            totalAllCartWeight,
             user,
             courier,
           };
-
-          try {
-            let estimation = await estimateCosts(data);
-            costs.push(estimation);
-          } catch (error) {
-            return response(
-              res,
-              error.status || 500,
-              false,
-              error.message,
-              null
-            );
-          }
+          let estimation = await estimateCosts(data);
+          costs.push(estimation);
+        } catch (error) {
+          return response(res, error.status || 500, false, error.message, null);
         }
       }
     }

@@ -120,6 +120,8 @@ const checkoutCart = async (req, res) => {
       redirect_url: null,
     });
 
+    // TODO move update checkout here from line 80 and create orm.utils.js
+
     const transactionWithProduct = await getOneTransactionWithProduct(
       transaction.id,
       cartIds

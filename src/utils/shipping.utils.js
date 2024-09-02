@@ -1,6 +1,5 @@
 const { RAJAONGKIRAPI_KEY, RAJAONGKIRAPI_URL } = require("./constan");
 const { getDetailTransaction } = require("./orm.utils");
-const { DetailTransaction } = require("../models");
 
 const estimateCosts = async (data) => {
   const headerKey = new Headers();
@@ -11,11 +10,11 @@ const estimateCosts = async (data) => {
   const payload = JSON.stringify({
     origin: data.detail.store.city.city_id,
     destination: data.user.userProfile.city.city_id,
-    weight: data.cart.total_weight_gr,
+    weight: data.totalAllCartWeight,
     courier: data.courier,
   });
 
-  let belowMaxWeight = data.cart.total_weight_gr > 30000 ? false : true;
+  let belowMaxWeight = data.totalAllCartWeight > 30000 ? false : true;
 
   if (!belowMaxWeight) {
     throw new Error("Weight must be less than 30 kg");
@@ -31,19 +30,10 @@ const estimateCosts = async (data) => {
     costsResponse
       .json()
       .then((response) => {
-        let product = {
-          id: data.cart.product_id,
-          weight: data.cart.product_weight_gr,
-        };
-
-        let cart = {
-          id: data.cart.id,
-          qty: data.cart.qty,
-        };
-
         let estimation = {
-          cart: cart,
-          product: product,
+          store_id: data.detail.store.id,
+          carts: data.detail.carts,
+          total_all_cart_weight: data.totalAllCartWeight,
           origin: response.rajaongkir.origin_details,
           destination: response.rajaongkir.destination_details,
           shipping: response.rajaongkir.results,
@@ -60,63 +50,78 @@ const estimateCosts = async (data) => {
 const countTotalTransactionAfterShipping = (cartDetails) => {
   let subTotalShipping = 0;
   let totalFinalPrice = 0;
-  for (const cartDetail of cartDetails) {
-    subTotalShipping += cartDetail.shipping.costs;
-    totalFinalPrice += cartDetail.sub_total_cart_price_with_shipping;
+  let totalCartPrice = 0;
+
+  for (const detail of cartDetails) {
+    const carts = detail.carts;
+    subTotalShipping += detail.shipping.costs;
+
+    for (const cart of carts) {
+      totalCartPrice += cart.qty * cart.product.price;
+    }
   }
-  return { subTotalShipping, totalFinalPrice };
+
+  totalFinalPrice = totalCartPrice + subTotalShipping;
+  return { subTotalShipping, totalFinalPrice, totalCartPrice };
+};
+
+const calculateTotalWeightPerStore = async (carts) => {
+  return carts.map((cartData) => {
+    const carts = cartData.carts;
+    let totalWeight = 0;
+    carts.forEach((cart) => {
+      totalWeight += cart.total_weight_gr;
+    });
+
+    return {
+      store_id: cartData.store.id,
+      store_name: cartData.store.name,
+      total_weight: totalWeight,
+    };
+  });
 };
 
 const cartDetailsWithShippingCost = async (
   user,
   transactionData,
   shipping_name,
-  shipping_cost_index
+  shipping_cost_index,
 ) => {
-  let iteration = 0;
-  let cartDetails = [];
+  let estimation = [];
 
-  for (const detail of transactionData) {
-    let carts = detail.carts;
-    for (const cart of carts) {
+  const totalWeightPerStore =
+    await calculateTotalWeightPerStore(transactionData);
+
+  await Promise.all(
+    transactionData.map(async (detail, iteration) => {
+      let carts = detail.carts;
       const data = {
         detail,
-        cart,
+        totalAllCartWeight: totalWeightPerStore[iteration].total_weight,
         user,
         courier: shipping_name[iteration],
       };
+      estimation.push(await estimateCosts(data));
+    }),
+  );
 
-      let estimation = await estimateCosts(data);
-      cartDetails.push({
-        cart_id: cart.id,
-        product_id: cart.product_id,
-        qty: cart.qty,
-        unit_price: cart.price,
-        sub_total_cart_price: cart.qty * cart.price,
-        arrival_shipping_status: "PACKING",
-        shipping: {
-          code: estimation.shipping[0].code,
-          costs:
-            estimation.shipping[0].costs[shipping_cost_index[iteration]].cost[0]
-              .value,
-          estimation:
-            estimation.shipping[0].costs[shipping_cost_index[iteration]].cost[0]
-              .etd,
-          service:
-            estimation.shipping[0].costs[shipping_cost_index[iteration]]
-              .service,
-          description:
-            estimation.shipping[0].costs[shipping_cost_index[iteration]]
-              .description,
-        },
-        sub_total_cart_price_with_shipping:
-          cart.qty * cart.price +
-          estimation.shipping[0].costs[shipping_cost_index[iteration]].cost[0]
-            .value,
-      });
-      iteration++;
-    }
-  }
+  const cartDetails = estimation.map((item, iteration) => {
+    const shipping = {
+      code: item.shipping[0].code,
+      costs:
+        item.shipping[0].costs[shipping_cost_index[iteration]].cost[0].value,
+      estimation:
+        item.shipping[0].costs[shipping_cost_index[iteration]].cost[0].etd,
+      service: item.shipping[0].costs[shipping_cost_index[iteration]].service,
+      description:
+        item.shipping[0].costs[shipping_cost_index[iteration]].description,
+    };
+    return {
+      ...item,
+      shipping: shipping,
+    };
+  });
+
   return cartDetails;
 };
 
