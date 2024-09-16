@@ -10,4 +10,18 @@ router.get(
   controller.getAllTransactionsReports
 );
 
+router.get(
+  "/all",
+  middleware.restrict,
+  middleware.rbac(MODULE.TRANSACTION, ROLE.ADMIN, true, true),
+  controller.getAllTransactionsAdmin
+);
+
+router.get(
+  "/:id",
+  middleware.restrict,
+  middleware.rbac(MODULE.TRANSACTION, ROLE.ADMIN, true, true),
+  controller.getOneTransactionsAdmin
+);
+
 module.exports = router;
