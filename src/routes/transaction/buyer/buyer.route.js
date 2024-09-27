@@ -42,4 +42,12 @@ router.put(
   middleware.buyerVerified,
   controllers.cancelTransaction
 );
+
+router.get(
+  "/status/:id",
+  middleware.restrict,
+  middleware.rbac(MODULE.TRANSACTION, ROLE.BUYER, true, false),
+  middleware.buyerVerified,
+  controllers.getCheckShipping
+);
 module.exports = router;
