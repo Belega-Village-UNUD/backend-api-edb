@@ -62,7 +62,11 @@ const countTotalTransactionAfterShipping = (cartDetails) => {
   }
 
   totalFinalPrice = totalCartPrice + subTotalShipping;
-  return { subTotalShipping, totalFinalPrice, totalCartPrice };
+  return {
+    subTotalShipping,
+    totalFinalPrice,
+    totalCartPrice,
+  };
 };
 
 const calculateTotalWeightPerStore = async (carts) => {
@@ -85,12 +89,13 @@ const cartDetailsWithShippingCost = async (
   user,
   transactionData,
   shipping_name,
-  shipping_cost_index,
+  shipping_cost_index
 ) => {
   let estimation = [];
 
-  const totalWeightPerStore =
-    await calculateTotalWeightPerStore(transactionData);
+  const totalWeightPerStore = await calculateTotalWeightPerStore(
+    transactionData
+  );
 
   await Promise.all(
     transactionData.map(async (detail, iteration) => {
@@ -102,10 +107,11 @@ const cartDetailsWithShippingCost = async (
         courier: shipping_name[iteration],
       };
       estimation.push(await estimateCosts(data));
-    }),
+    })
   );
 
   const cartDetails = estimation.map((item, iteration) => {
+    const arrival_shipping_status = "PACKING";
     const shipping = {
       code: item.shipping[0].code,
       costs:
@@ -118,6 +124,7 @@ const cartDetailsWithShippingCost = async (
     };
     return {
       ...item,
+      arrival_shipping_status,
       shipping: shipping,
     };
   });

@@ -12,6 +12,7 @@ const getTransactionReports = require("./store/reports.controller");
 const getAllTransactionsReports = require("./admin/reports.controller");
 const getAllTransactionsAdmin = require("./admin/get-all.controller");
 const getOneTransactionsAdmin = require("./admin/get-one.controller");
+const getCheckShipping = require("./buyer/check-shipping.controller");
 
 module.exports = {
   getTokenMidtrans,
@@ -28,4 +29,5 @@ module.exports = {
   getAllTransactionsReports,
   getAllTransactionsAdmin,
   getOneTransactionsAdmin,
+  getCheckShipping,
 };

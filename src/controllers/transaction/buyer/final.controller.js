@@ -35,7 +35,7 @@ const finalTransaction = async (req, res) => {
         400,
         false,
         "Transaction not valid, please wait status to be PAYABLE",
-        null,
+        null
       );
     }
 
@@ -84,7 +84,7 @@ const finalTransaction = async (req, res) => {
           user,
           transactionsData,
           shipping_name,
-          shipping_cost_index,
+          shipping_cost_index
         );
       } catch (error) {
         console.error(error);
@@ -93,7 +93,7 @@ const finalTransaction = async (req, res) => {
           error.status || 400,
           false,
           "Failed to perform counting detail shipping detail",
-          null,
+          null
         );
       }
 
@@ -177,7 +177,7 @@ const finalTransaction = async (req, res) => {
             Authorization: `Basic ${authString}`,
           },
           body: JSON.stringify(payloadMidtrans),
-        },
+        }
       );
 
       const data = await responsedMidtrans.json();
@@ -188,12 +188,13 @@ const finalTransaction = async (req, res) => {
           responsedMidtrans.status,
           false,
           "Failed to create transaction",
-          null,
+          null
         );
       }
 
       await DetailTransaction.create({
         id: payload.id,
+        arrival_shipping_status: "PACKING",
         transaction_id: payload.transaction_id,
         carts_details: payload.carts_details,
         sub_total_transaction_price_before_shipping:
@@ -217,7 +218,7 @@ const finalTransaction = async (req, res) => {
           redirect_url: data.redirect_url,
           token_midtrans: data.token,
           payload,
-        },
+        }
       );
     }
 
@@ -226,7 +227,7 @@ const finalTransaction = async (req, res) => {
       400,
       false,
       "Request invalid please check your transaction status",
-      detail,
+      detail
     );
   } catch (error) {
     console.error(error);
