@@ -111,6 +111,7 @@ const cartDetailsWithShippingCost = async (
   );
 
   const cartDetails = estimation.map((item, iteration) => {
+    const sub_total_cart_price = item.carts[0].qty * item.carts[0].price;
     const arrival_shipping_status = "PACKING";
     const shipping = {
       code: item.shipping[0].code,
@@ -124,6 +125,7 @@ const cartDetailsWithShippingCost = async (
     };
     return {
       ...item,
+      sub_total_cart_price,
       arrival_shipping_status,
       shipping: shipping,
     };
@@ -132,22 +134,22 @@ const cartDetailsWithShippingCost = async (
   return cartDetails;
 };
 
-const changeShippingStatus = async (product_id, transaction_id, status) => {
+const changeShippingStatus = async (store_id, transaction_id, status) => {
   try {
     const detailTransaction = await getDetailTransaction(transaction_id);
     const cartDetailsData = detailTransaction.carts_details.map((cart) => {
-      if (cart.arrival_shipping_status === "PACKING") {
-        if (status !== "SHIPPED") {
-          return { msg: "Your product has not shipped yet" };
+      if (cart.store_id === store_id) {
+        if (cart.arrival_shipping_status === "PACKING") {
+          if (status !== "SHIPPED") {
+            return { msg: "Your product has not shipped yet" };
+          }
+        } else if (cart.arrival_shipping_status === "SHIPPED") {
+          if (status !== "ARRIVED") {
+            return { msg: "Your product is on shipment" };
+          }
+        } else {
+          return { msg: "Invalid status" };
         }
-      } else if (cart.arrival_shipping_status === "SHIPPED") {
-        if (status !== "ARRIVED") {
-          return { msg: "Your product is on shipment" };
-        }
-      } else {
-        return { msg: "Invalid status" };
-      }
-      if (cart.product_id === product_id) {
         return {
           ...cart,
           arrival_shipping_status: status,
@@ -170,7 +172,6 @@ const changeShippingStatus = async (product_id, transaction_id, status) => {
 
     const data = {
       success: true,
-      cartDetailsData,
       detailTransaction,
     };
 

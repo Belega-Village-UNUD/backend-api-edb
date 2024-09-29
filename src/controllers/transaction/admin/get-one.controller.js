@@ -103,7 +103,6 @@ const getOneTransactionAdmin = async (req, res) => {
       mergedTransaction
     );
   } catch (error) {
-    console.error(error);
     return response(res, error.status || 500, false, error.message, null);
   }
 };
