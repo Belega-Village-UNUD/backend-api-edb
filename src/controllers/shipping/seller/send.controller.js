@@ -1,12 +1,18 @@
 const { response } = require("../../../utils/response.utils");
 const { changeShippingStatus } = require("../../../utils/shipping.utils");
-const { getOneTransaction } = require("../../../utils/orm.utils");
+const { getOneTransaction, getStore } = require("../../../utils/orm.utils");
 
 const send = async (req, res) => {
   try {
-    const { product_id, transaction_id } = req.body;
+    const { transaction_id } = req.body;
+    const { id: user_id } = req.user;
 
-    if (!product_id || !transaction_id) {
+    const store = await getStore(user_id);
+    if (!store) {
+      return response(res, 404, false, "Store not found", null);
+    }
+
+    if (!user_id || !transaction_id) {
       return response(res, 400, false, "Invalid request", null);
     }
 
@@ -21,7 +27,7 @@ const send = async (req, res) => {
     }
 
     const data = await changeShippingStatus(
-      product_id,
+      store.id,
       transaction_id,
       "SHIPPED"
     );
@@ -30,9 +36,8 @@ const send = async (req, res) => {
       return response(res, 404, data.success, data.message, null);
     }
 
-    return response(res, 200, true, "Product succesfully sent", data);
+    return response(res, 200, true, "Order sent successfully", data);
   } catch (error) {
-    console.error(error);
     return response(res, 500, false, error.message, null);
   }
 };

@@ -100,7 +100,6 @@ const getAllTransactionsAdmin = async (req, res) => {
       mergedTransactions
     );
   } catch (error) {
-    console.error(error);
     return response(res, error.status || 500, false, error.message, null);
   }
 };

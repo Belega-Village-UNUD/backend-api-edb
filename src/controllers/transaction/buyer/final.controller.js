@@ -87,7 +87,6 @@ const finalTransaction = async (req, res) => {
           shipping_cost_index
         );
       } catch (error) {
-        console.error(error);
         return response(
           res,
           error.status || 400,
@@ -194,7 +193,6 @@ const finalTransaction = async (req, res) => {
 
       await DetailTransaction.create({
         id: payload.id,
-        arrival_shipping_status: "PACKING",
         transaction_id: payload.transaction_id,
         carts_details: payload.carts_details,
         sub_total_transaction_price_before_shipping:
@@ -230,7 +228,6 @@ const finalTransaction = async (req, res) => {
       detail
     );
   } catch (error) {
-    console.error(error);
     return response(res, error.status || 500, false, error.message, null);
   }
 };
