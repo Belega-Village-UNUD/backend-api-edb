@@ -1,5 +1,5 @@
 const { nanoid } = require("nanoid");
-const { Product, User, Store } = require("../../../models");
+const { Product, User, Store, StoreBankAccount } = require("../../../models");
 const { response } = require("../../../utils/response.utils");
 
 const createProduct = async (req, res) => {
@@ -45,6 +45,20 @@ const createProduct = async (req, res) => {
       is_preorder === null
     ) {
       return response(res, 400, false, "Invalid input data", null);
+    }
+
+    const bank = await StoreBankAccount.findOne({
+      where: { store_id: store.id, display: true },
+    });
+
+    if (!bank) {
+      return response(
+        res,
+        404,
+        false,
+        "Bank account should be available.",
+        null
+      );
     }
 
     const product = await Product.create({

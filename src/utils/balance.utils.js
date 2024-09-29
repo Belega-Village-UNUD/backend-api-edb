@@ -8,14 +8,6 @@ const { getDetailTransaction } = require("../utils/orm.utils");
 const { nanoid } = require("nanoid");
 
 const getBalance = async (store_id) => {
-  const bank = await StoreBankAccount.findOne({
-    where: { store_id, display: true },
-  });
-
-  if (!bank) {
-    return { success: false, message: "Bank Account should be available" };
-  }
-
   const [balance, created] = await StoreBalance.findOrCreate({
     where: { store_id },
     defaults: { id: nanoid(10), balance: 0 },
@@ -82,16 +74,18 @@ const updateBalance = async (transaction_id, store_id) => {
 
       return data;
     }
+
+    data = {
+      success: false,
+      message: "Product has arrived, cannot update status",
+      arrival: null,
+      detail: null,
+      balance: null,
+      newBalance: null,
+    };
+    return data;
   }
 
-  data = {
-    success: false,
-    message: "Product has arrived, cannot update status",
-    arrival: null,
-    detail: null,
-    balance: null,
-    newBalance: null,
-  };
   return data;
 };
 
