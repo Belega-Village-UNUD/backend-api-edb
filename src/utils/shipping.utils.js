@@ -139,21 +139,20 @@ const changeShippingStatus = async (store_id, transaction_id, status) => {
     const detailTransaction = await getDetailTransaction(transaction_id);
     const cartDetailsData = detailTransaction.carts_details.map((cart) => {
       if (cart.store_id === store_id) {
-        if (cart.arrival_shipping_status === "PACKING") {
-          if (status !== "SHIPPED") {
-            return { msg: "Your product has not shipped yet" };
-          }
-        } else if (cart.arrival_shipping_status === "SHIPPED") {
-          if (status !== "ARRIVED") {
-            return { msg: "Your product is on shipment" };
-          }
-        } else {
-          return { msg: "Invalid status" };
+        switch (cart.arrival_shipping_status) {
+          case "PACKING":
+            return status === "SHIPPED"
+              ? { ...cart, arrival_shipping_status: status }
+              : { msg: "Your product has not shipped yet" };
+          case "SHIPPED":
+            return status === "ARRIVED"
+              ? { ...cart, arrival_shipping_status: status }
+              : { msg: "Your product is on shipment" };
+          case "ARRIVED":
+            return { msg: "Order has already arrived." };
+          default:
+            return { msg: "Invalid status." };
         }
-        return {
-          ...cart,
-          arrival_shipping_status: status,
-        };
       }
       return cart;
     });
