@@ -418,7 +418,7 @@ module.exports = {
         [Op.and]: sequelize.literal(
           `cart_id && ARRAY[${cartIds
             .map((id) => `'${id}'`)
-            .join(",")}]::varchar[]`,
+            .join(",")}]::varchar[]`
         ),
       },
     });
@@ -488,7 +488,7 @@ module.exports = {
         [Op.and]: sequelize.literal(
           `cart_id && ARRAY[${cartIds
             .map((id) => `'${id}'`)
-            .join(",")}]::varchar[]`,
+            .join(",")}]::varchar[]`
         ),
       },
     });
@@ -548,7 +548,7 @@ module.exports = {
         [Op.and]: sequelize.literal(
           `cart_id && ARRAY[${cartIds
             .map((id) => `'${id}'`)
-            .join(",")}]::varchar[]`,
+            .join(",")}]::varchar[]`
         ),
       },
     });
@@ -618,7 +618,7 @@ module.exports = {
         [Op.and]: sequelize.literal(
           `cart_id && ARRAY[${cartIds
             .map((id) => `'${id}'`)
-            .join(",")}]::varchar[]`,
+            .join(",")}]::varchar[]`
         ),
       },
     });
@@ -690,7 +690,7 @@ module.exports = {
         [Op.and]: sequelize.literal(
           `cart_id && ARRAY[${cart_ids
             .map((id) => `'${id}'`)
-            .join(",")}]::varchar[]`,
+            .join(",")}]::varchar[]`
         ),
       },
     });
@@ -808,7 +808,7 @@ module.exports = {
     }
 
     const cartIds = [].concat(
-      ...transactions.map((transaction) => transaction.cart_id),
+      ...transactions.map((transaction) => transaction.cart_id)
     );
 
     // Fetch the carts
@@ -906,7 +906,7 @@ module.exports = {
     }
 
     const cartIds = [].concat(
-      ...transactions.map((transaction) => transaction.cart_id),
+      ...transactions.map((transaction) => transaction.cart_id)
     );
 
     // Fetch the carts
@@ -974,7 +974,7 @@ module.exports = {
   getTransactionBasedOnProductSuccess: async (
     product_id,
     transaction_id,
-    user_id,
+    user_id
   ) => {
     const carts = await module.exports.getCartsBasedOnProduct(product_id);
     const cartIds = carts.map((cart) => cart.id);
@@ -986,7 +986,7 @@ module.exports = {
         [Op.and]: sequelize.literal(
           `cart_id && ARRAY[${cartIds
             .map((id) => `'${id}'`)
-            .join(",")}]::varchar[]`,
+            .join(",")}]::varchar[]`
         ),
       },
     });
