@@ -5,6 +5,7 @@ const {
   User,
   Store,
   Profile,
+  DetailTransaction,
 } = require("../../../models");
 const { response } = require("../../../utils/response.utils");
 const { Op } = require("sequelize");
@@ -15,22 +16,22 @@ const getOneTransaction = async (req, res) => {
     const { id: transaction_id } = req.params;
 
     const store = await Store.findOne({ where: { user_id } });
-
     if (!store) return response(res, 404, false, "Store not found", null);
 
     const transaction = await Transaction.findOne({
       where: { id: transaction_id },
-      include: [
-        {
-          model: User,
-          as: "user",
-          attributes: ["id", "email"],
-        },
-      ],
+      include: [{ model: User, as: "user", attributes: ["id", "email"] }],
     });
 
-    let cartIds = transaction.cart_id;
-    cartIds = Array.isArray(cartIds) ? cartIds : [cartIds];
+    if (!transaction) {
+      return response(
+        res,
+        200,
+        false,
+        "No transactions found for this store and user",
+        null
+      );
+    }
 
     const carts = await Cart.findAll({
       include: [
@@ -73,33 +74,42 @@ const getOneTransaction = async (req, res) => {
         },
       ],
       where: {
-        id: { [Op.in]: cartIds },
+        id: { [Op.in]: transaction.cart_id },
         "$product.store_id$": store.id,
       },
     });
 
-    if (!transaction || transaction.length === 0) {
-      return response(
-        res,
-        200,
-        false,
-        "No transactions found for this store and user",
-        null
-      );
-    }
+    const cart_details = carts.filter((cart) =>
+      transaction.cart_id.includes(cart.id)
+    );
 
-    const cart_details = transaction.cart_id
-      .map((id) => {
-        const cart = carts.find((cart) => cart.id === id);
-        return cart || null;
-      })
-      .filter((cart) => cart !== null);
+    let mergedTransaction =
+      cart_details.length > 0
+        ? { ...transaction.toJSON(), cart_details }
+        : null;
 
-    let mergedTransaction = null;
+    const detailTransaction = await DetailTransaction.findAll({
+      where: { transaction_id: mergedTransaction.id },
+      include: [{ model: Transaction, as: "transaction", attributes: ["id"] }],
+      attributes: ["id", "carts_details"],
+    });
 
-    if (cart_details.length > 0) {
-      mergedTransaction = { ...transaction.toJSON(), cart_details };
-    }
+    let arrivalShippingStatus =
+      detailTransaction
+        .find((detail) => detail.carts_details.length)
+        ?.carts_details.find((cart) => cart.arrival_shipping_status)
+        ?.arrival_shipping_status || "UNCONFIRMED";
+
+    mergedTransaction.cart_details = cart_details.map((cart) => ({
+      unit_price: cart.unit_price,
+      id: cart.id,
+      user_id: cart.user_id,
+      product_id: cart.product_id,
+      qty: cart.qty,
+      arrival_shipping_status: arrivalShippingStatus,
+      user: cart.user,
+      product: cart.product,
+    }));
 
     return response(
       res,
