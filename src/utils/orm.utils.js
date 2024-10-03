@@ -418,7 +418,7 @@ module.exports = {
         [Op.and]: sequelize.literal(
           `cart_id && ARRAY[${cartIds
             .map((id) => `'${id}'`)
-            .join(",")}]::varchar[]`,
+            .join(",")}]::varchar[]`
         ),
       },
     });
@@ -488,7 +488,7 @@ module.exports = {
         [Op.and]: sequelize.literal(
           `cart_id && ARRAY[${cartIds
             .map((id) => `'${id}'`)
-            .join(",")}]::varchar[]`,
+            .join(",")}]::varchar[]`
         ),
       },
     });
@@ -548,7 +548,7 @@ module.exports = {
         [Op.and]: sequelize.literal(
           `cart_id && ARRAY[${cartIds
             .map((id) => `'${id}'`)
-            .join(",")}]::varchar[]`,
+            .join(",")}]::varchar[]`
         ),
       },
     });
@@ -618,7 +618,7 @@ module.exports = {
         [Op.and]: sequelize.literal(
           `cart_id && ARRAY[${cartIds
             .map((id) => `'${id}'`)
-            .join(",")}]::varchar[]`,
+            .join(",")}]::varchar[]`
         ),
       },
     });
@@ -690,7 +690,7 @@ module.exports = {
         [Op.and]: sequelize.literal(
           `cart_id && ARRAY[${cart_ids
             .map((id) => `'${id}'`)
-            .join(",")}]::varchar[]`,
+            .join(",")}]::varchar[]`
         ),
       },
     });
@@ -808,7 +808,7 @@ module.exports = {
     }
 
     const cartIds = [].concat(
-      ...transactions.map((transaction) => transaction.cart_id),
+      ...transactions.map((transaction) => transaction.cart_id)
     );
 
     // Fetch the carts
@@ -906,7 +906,7 @@ module.exports = {
     }
 
     const cartIds = [].concat(
-      ...transactions.map((transaction) => transaction.cart_id),
+      ...transactions.map((transaction) => transaction.cart_id)
     );
 
     // Fetch the carts
@@ -974,7 +974,7 @@ module.exports = {
   getTransactionBasedOnProductSuccess: async (
     product_id,
     transaction_id,
-    user_id,
+    user_id
   ) => {
     const carts = await module.exports.getCartsBasedOnProduct(product_id);
     const cartIds = carts.map((cart) => cart.id);
@@ -986,12 +986,89 @@ module.exports = {
         [Op.and]: sequelize.literal(
           `cart_id && ARRAY[${cartIds
             .map((id) => `'${id}'`)
-            .join(",")}]::varchar[]`,
+            .join(",")}]::varchar[]`
         ),
       },
     });
 
     return transactionSuccess;
+  },
+
+  getTransactionBuyerOne: async (user_id, transaction_id) => {
+    const transaction = await Transaction.findOne({
+      where: {
+        user_id: user_id,
+        id: transaction_id,
+      },
+    });
+
+    if (!transaction || transaction.length === 0) {
+      return response(
+        res,
+        200,
+        false,
+        "No transactions found for this user",
+        null
+      );
+    }
+
+    const carts = await Cart.findAll({
+      attributes: ["id", "user_id", "product_id", "qty", "unit_price"],
+      include: [
+        {
+          model: User,
+          as: "user",
+          attributes: ["id", "email"],
+          include: [
+            {
+              model: Profile,
+              as: "userProfile",
+              attributes: ["id", "name"],
+            },
+          ],
+        },
+        {
+          model: Product,
+          as: "product",
+          include: [
+            {
+              model: Store,
+              as: "store",
+              attributes: ["id", "name"],
+              include: [
+                {
+                  model: User,
+                  as: "user",
+                  attributes: ["id", "email"],
+                  include: [
+                    {
+                      model: Profile,
+                      as: "userProfile",
+                      attributes: ["id", "name"],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      where: {
+        id: { [Op.in]: transaction.cart_id },
+      },
+    });
+
+    const cart_details = transaction.cart_id.map((id) => {
+      const cart = carts.find((cart) => cart.id === id);
+      return cart || id;
+    });
+
+    const mergedTransaction = { ...transaction.toJSON(), cart_details };
+
+    return {
+      data: mergedTransaction,
+      message: "Transaction Retreived Successfully",
+    };
   },
 
   getRatingsByProduct: async (product_id, review) => {
