@@ -94,7 +94,7 @@ const getOneTransactionAdmin = async (req, res) => {
       const cartWithStatus = detailWithStatus.carts_details.find(
         (cart) => cart.arrival_shipping_status
       );
-      console.log("line 109", cartWithStatus);
+
       if (cartWithStatus) {
         arrivalShippingStatus = cartWithStatus.arrival_shipping_status;
         if (cartWithStatus.shipping) {

@@ -43,7 +43,6 @@ const getOneTransaction = async (req, res) => {
             {
               model: Profile,
               as: "userProfile",
-              attributes: ["id", "name"],
             },
           ],
         },
@@ -103,7 +102,6 @@ const getOneTransaction = async (req, res) => {
       const cartWithStatus = detailWithStatus.carts_details.find(
         (cart) => cart.arrival_shipping_status
       );
-      console.log("line 109", cartWithStatus);
       if (cartWithStatus) {
         arrivalShippingStatus = cartWithStatus.arrival_shipping_status;
         if (cartWithStatus.shipping) {
@@ -123,7 +121,7 @@ const getOneTransaction = async (req, res) => {
       user_id: cart.user_id,
       product_id: cart.product_id,
       qty: cart.qty,
-      address: `${cart.product.store.user.userProfile.address}, ${cart.product.store.user.userProfile.city.city_name}, ${cart.product.store.user.userProfile.city.province}, ${cart.product.store.user.userProfile.city.postal_code}`,
+      address: `${cart.user.userProfile.address}, ${cart.user.userProfile.city.city_name}, ${cart.user.userProfile.city.province}, ${cart.user.userProfile.city.postal_code}`,
       shipping_method: shippingMethod,
       arrival_shipping_status: arrivalShippingStatus,
       user: cart.user,

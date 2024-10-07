@@ -14,13 +14,6 @@ const getOneTransactions = async (req, res) => {
 
     const user = await User.findOne({ where: { id: user_id } });
 
-    const profile = await Profile.findOne({
-      where: { user_id: user.id },
-    });
-    if (!profile) {
-      return response(res, 404, false, "Profile not found", null);
-    }
-
     const transaction = await getTransactionBuyerOne(user.id, transaction_id);
 
     let updatedCarts = [];
@@ -48,7 +41,7 @@ const getOneTransactions = async (req, res) => {
       );
       if (detailWithStatus) {
         const cartWithStatus = detailWithStatus.carts_details.find(
-          (cart) => cart.arrival_shipping_statusz
+          (cart) => cart.arrival_shipping_status
         );
         if (cartWithStatus) {
           arrivalShippingStatus = cartWithStatus.arrival_shipping_status;
@@ -74,7 +67,7 @@ const getOneTransactions = async (req, res) => {
           user_id: cart.user_id,
           product_id: cart.product_id,
           qty: cart.qty,
-          address: `${profile.address}, ${profile.city.city_name}, ${profile.city.province}, ${profile.city.postal_code}`,
+          address: `${cart.user.userProfile.address}, ${cart.user.userProfile.city.city_name}, ${cart.user.userProfile.city.province}, ${cart.user.userProfile.city.postal_code}`,
           shipping_method: shippingMethod,
           arrival_shipping_status: arrivalShippingStatus,
           user: cart.user,

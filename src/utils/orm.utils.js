@@ -1023,7 +1023,7 @@ module.exports = {
             {
               model: Profile,
               as: "userProfile",
-              attributes: ["id", "name", "address"],
+              // attributes: ["id", "name", "address"],
             },
           ],
         },
