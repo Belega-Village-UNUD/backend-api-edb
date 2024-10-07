@@ -1,4 +1,9 @@
-const { Transaction, DetailTransaction, User } = require("../../../models");
+const {
+  Transaction,
+  DetailTransaction,
+  User,
+  Profile,
+} = require("../../../models");
 const { response } = require("../../../utils/response.utils");
 const { getTransactionBuyerOne } = require("../../../utils/orm.utils");
 
@@ -9,10 +14,18 @@ const getOneTransactions = async (req, res) => {
 
     const user = await User.findOne({ where: { id: user_id } });
 
+    const profile = await Profile.findOne({
+      where: { user_id: user.id },
+    });
+    if (!profile) {
+      return response(res, 404, false, "Profile not found", null);
+    }
+
     const transaction = await getTransactionBuyerOne(user.id, transaction_id);
 
     let updatedCarts = [];
     let arrivalShippingStatus = "UNCONFIRMED";
+    let shippingMethod = null;
 
     const detailTransaction = await DetailTransaction.findAll({
       where: {
@@ -35,10 +48,20 @@ const getOneTransactions = async (req, res) => {
       );
       if (detailWithStatus) {
         const cartWithStatus = detailWithStatus.carts_details.find(
-          (cart) => cart.arrival_shipping_status
+          (cart) => cart.arrival_shipping_statusz
         );
         if (cartWithStatus) {
           arrivalShippingStatus = cartWithStatus.arrival_shipping_status;
+          if (cartWithStatus.shipping) {
+            shippingMethod = `${
+              cartWithStatus.shipping.code.charAt(0).toUpperCase() +
+              cartWithStatus.shipping.code.slice(1)
+            } ${cartWithStatus.shipping.service} (${
+              cartWithStatus.shipping.description
+            })`;
+          } else {
+            shippingMethod = "Unknown Shipping Method";
+          }
         }
       }
     }
@@ -51,6 +74,8 @@ const getOneTransactions = async (req, res) => {
           user_id: cart.user_id,
           product_id: cart.product_id,
           qty: cart.qty,
+          address: `${profile.address}, ${profile.city.city_name}, ${profile.city.province}, ${profile.city.postal_code}`,
+          shipping_method: shippingMethod,
           arrival_shipping_status: arrivalShippingStatus,
           user: cart.user,
           product: cart.product,

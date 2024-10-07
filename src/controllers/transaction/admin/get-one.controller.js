@@ -35,7 +35,6 @@ const getOneTransactionAdmin = async (req, res) => {
             {
               model: Profile,
               as: "userProfile",
-              attributes: ["id", "name"],
             },
           ],
         },
@@ -85,11 +84,29 @@ const getOneTransactionAdmin = async (req, res) => {
       attributes: ["id", "carts_details"],
     });
 
-    let arrivalShippingStatus =
-      detailTransaction
-        .find((detail) => detail.carts_details.length)
-        ?.carts_details.find((cart) => cart.arrival_shipping_status)
-        ?.arrival_shipping_status || "UNCONFIRMED";
+    let arrivalShippingStatus = "UNCONFIRMED";
+    let shippingMethod = null;
+
+    const detailWithStatus = detailTransaction.find(
+      (detail) => detail.carts_details.length
+    );
+    if (detailWithStatus) {
+      const cartWithStatus = detailWithStatus.carts_details.find(
+        (cart) => cart.arrival_shipping_status
+      );
+      console.log("line 109", cartWithStatus);
+      if (cartWithStatus) {
+        arrivalShippingStatus = cartWithStatus.arrival_shipping_status;
+        if (cartWithStatus.shipping) {
+          shippingMethod = `${
+            cartWithStatus.shipping.code.charAt(0).toUpperCase() +
+            cartWithStatus.shipping.code.slice(1)
+          } ${cartWithStatus.shipping.service} (${
+            cartWithStatus.shipping.description
+          })`;
+        }
+      }
+    }
 
     mergedTransaction.cart_details = cart_details.map((cart) => ({
       unit_price: cart.unit_price,
@@ -97,6 +114,8 @@ const getOneTransactionAdmin = async (req, res) => {
       user_id: cart.user_id,
       product_id: cart.product_id,
       qty: cart.qty,
+      address: `${cart.user.userProfile.address}, ${cart.user.userProfile.city.city_name}, ${cart.user.userProfile.city.province}, ${cart.user.userProfile.city.postal_code}`,
+      shipping_method: shippingMethod,
       arrival_shipping_status: arrivalShippingStatus,
       user: cart.user,
       product: cart.product,
