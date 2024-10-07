@@ -32,7 +32,7 @@ module.exports = {
               {
                 model: Profile,
                 as: "userProfile",
-                attributes: ["id", "name", "city", "province"],
+                // attributes: ["id", "name", "city", "province"],
               },
             ],
           },
@@ -1023,7 +1023,7 @@ module.exports = {
             {
               model: Profile,
               as: "userProfile",
-              attributes: ["id", "name"],
+              // attributes: ["id", "name", "address"],
             },
           ],
         },
