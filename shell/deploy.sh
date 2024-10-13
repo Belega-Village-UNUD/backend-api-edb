@@ -30,7 +30,7 @@ fi
 docker service ls | grep "backend_nginx"
 
 if [ $? -ne 0 ]; then
-  docker stack deploy -c ./docker/ssl/docker-compose.yml backend
+  export $(cat .env) > /dev/null 2>&1; docker stack deploy -c ./docker/ssl/docker-compose.yml backend
   if [ $? -ne 0 ]; then
       echo "Error in deploying $BRANCH of Backend Belega Service"
       exit 1
