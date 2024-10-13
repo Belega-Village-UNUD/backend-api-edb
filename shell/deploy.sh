@@ -12,6 +12,7 @@ if [ "$(git rev-parse --abbrev-ref HEAD)" != "$BRANCH" ]; then
 fi
 
 docker service update --force --image ghcr.io/belega-village-unud/backend-api-edb:$COMMIT_SHA backend_app
+docker stack deploy -c ./docker/ssl/docker-compose.yml backend
 
 if [ $? -ne 0 ]; then
     echo "Error in deploying $BRANCH of Backend Belega Service"
