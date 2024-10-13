@@ -14,7 +14,7 @@ fi
 docker service ls | grep "backend_app"
 
 if [ $? -ne 0 ]; then
-  docker stack deploy -c ./docker/service/docker-compose.yml backend
+  export $(cat .env) > /dev/null 2>&1; docker stack deploy -c ./docker/service/docker-compose.yml backend
   if [ $? -ne 0 ]; then
       echo "Error in deploying $BRANCH of Backend Belega Service"
       exit 1
@@ -27,18 +27,18 @@ else
   fi
 fi
 
-docker service ls | grep "backend_nginx"
+docker service ls | grep "ssl_nginx"
 
 if [ $? -ne 0 ]; then
-  export $(cat .env) > /dev/null 2>&1; docker stack deploy -c ./docker/ssl/docker-compose.yml backend
+  export $(cat .env) > /dev/null 2>&1; docker stack deploy -c ./docker/ssl/docker-compose.yml ssl
   if [ $? -ne 0 ]; then
-      echo "Error in deploying $BRANCH of Backend Belega Service"
+      echo "Error in deploying $BRANCH of SSL Belega Service"
       exit 1
   fi
 else
-  docker stack deploy -c ./docker/ssl/docker-compose.yml backend
+  docker stack deploy -c ./docker/ssl/docker-compose.yml ssl
   if [ $? -ne 0 ]; then
-      echo "Error in deploying $BRANCH of Backend Belega Service"
+      echo "Error in deploying $BRANCH of SSL Belega Service"
       exit 1
   fi
 fi
