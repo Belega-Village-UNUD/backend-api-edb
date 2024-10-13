@@ -1,7 +1,7 @@
 version: "3.4"
 services:
   app:
-    image: ghcr.io/belega-village-unud/backend-api-edb:staging-test
+    image: ghcr.io/belega-village-unud/backend-api-edb:staging
     env_file:
       - ../../.env
     deploy:
@@ -10,8 +10,8 @@ services:
          cpus: "1.0"
          memory: "1G"
     ports:
-      - target: 3333
-        published: 3333
+      - target: ${PORT}
+        published: ${PUBLISH_PORT}
     networks:
       - belega-network
 
