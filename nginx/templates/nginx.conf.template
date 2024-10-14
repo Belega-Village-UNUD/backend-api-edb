@@ -20,7 +20,7 @@ server {
 
     ssl_certificate /etc/nginx/cloudflare/fullchain.pem;
     ssl_certificate_key /etc/nginx/cloudflare/privkey.pem;
-    ssl_dhparam /etc/nginx/dhparam/dhparam-2048.pem;
+    ssl_dhparam /etc/nginx/dhparam/dhparam.pem;
 
     location / {
         proxy_pass http://${BACKEND_SERVICE}:${PORT};
