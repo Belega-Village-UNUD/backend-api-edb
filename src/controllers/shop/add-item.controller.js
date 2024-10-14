@@ -93,8 +93,9 @@ const addItem = async (req, res) => {
         }
         await existingCartItem.update({
           qty: existingCartItem.qty + qty,
+          is_checkout: false,
         });
-        carts.push(existingCartItem)
+        carts.push(existingCartItem);
       } else {
         cart = await Cart.create({
           id: nanoid(10),
@@ -102,8 +103,9 @@ const addItem = async (req, res) => {
           product_id,
           qty,
           unit_price: product.price,
+          is_checkout: false,
         });
-        carts.push(cart)
+        carts.push(cart);
       }
     }
 
