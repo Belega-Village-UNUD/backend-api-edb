@@ -1,17 +1,22 @@
 version: "3.4"
 services:
   app:
-    image: ghcr.io/belega-village-unud/backend-api-edb:staging
+    image: registry.belegacommerce.shop/belega-village-unud/backend-api-edb:${COMMIT_SHA}
     env_file:
       - ../../.env
     deploy:
+      mode: replicated
+      replicas: 2
+      placement:
+        constraints:
+          - node.role==manager
       resources:
-       limits:
-         cpus: "1.0"
-         memory: "1G"
+        limits:
+          cpus: "1.0"
+          memory: "1G"
     ports:
       - target: ${PORT}
-        published: ${PUBLISH_PORT}
+        published: ${PORT}
     networks:
       - belega-network
 
@@ -22,4 +27,3 @@ networks:
 volumes:
   ecommerce-data:
     driver: local
-

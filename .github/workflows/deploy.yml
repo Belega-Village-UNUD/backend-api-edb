@@ -3,6 +3,8 @@ name: Deploy
 on:
   push:
     branches: ["staging"]
+    paths:
+      - "src/**"
 
 env:
   REGISTRY: ghcr.io
@@ -35,6 +37,47 @@ jobs:
       - name: SSH to Compute Engine and Build
         id: compute-ssh-build
         uses: "google-github-actions/ssh-compute@v1"
+        env:
+          NODE_ENV: ${{ secrets.NODE_ENV }}
+          PORT: ${{ secrets.PORT }}
+          PUBLISH_PORT: ${{ secrets.PUBLISH_PORT }}
+          HOST: ${{ secrets.HOST }}
+          FE_URL: ${{ secrets.FE_URL }}
+          STAGING_DB_USERNAME: ${{ secrets.STAGING_DB_USERNAME }}
+          STAGING_DB_PASSWORD: ${{ secrets.STAGING_DB_PASSWORD }}
+          STAGING_DB_NAME: ${{ secrets.STAGING_DB_NAME }}
+          STAGING_DB_HOST: ${{ secrets.STAGING_DB_HOST }}
+          STAGING_DB_DIALECT: ${{ secrets.STAGING_DB_DIALECT }}
+          STAGING_DB_PORT: ${{ secrets.STAGING_DB_PORT }}
+          BELEGA_ADMIN_EMAIL: ${{ secrets.BELEGA_ADMIN_EMAIL }}
+          BELEGA_ADMIN_PASSWORD: ${{ secrets.BELEGA_ADMIN_PASSWORD }}
+          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+          JWT_EXPIRES: ${{ secrets.JWT_EXPIRES }}
+          JWT_RESET_PASSWORD_KEY: ${{ secrets.JWT_RESET_PASSWORD_KEY }}
+          JWT_RESET_EXPIRES: ${{ secrets.JWT_RESET_EXPIRES }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          GOOGLE_REDIRECT_URI: ${{ secrets.GOOGLE_REDIRECT_URI }}
+          GOOGLE_REFRESH_TOKEN: ${{ secrets.GOOGLE_REFRESH_TOKEN }}
+          GOOGLE_EMAIL: ${{ secrets.GOOGLE_EMAIL }}
+          WIF_PROVIDER: ${{ secrets.WIF_PROVIDER }}
+          CLOUD_RUN_SA: ${{ secrets.CLOUD_RUN_SA }}
+          IMAGEKIT_PUBLIC_KEY: ${{ secrets.IMAGEKIT_PUBLIC_KEY }}
+          IMAGEKIT_PRIVATE_KEY: ${{ secrets.IMAGEKIT_PRIVATE_KEY }}
+          IMAGEKIT_URL_ENDPOINT: ${{ secrets.IMAGEKIT_URL_ENDPOINT }}
+          MIDTRANS_APP_URL: ${{ secrets.MIDTRANS_APP_URL }}
+          MIDTRANS_MERCHANT_ID: ${{ secrets.MIDTRANS_MERCHANT_ID }}
+          MIDTRANS_CLIENT_KEY: ${{ secrets.MIDTRANS_CLIENT_KEY }}
+          MIDTRANS_SERVER_KEY: ${{ secrets.MIDTRANS_SERVER_KEY }}
+          DSN_SENTRY: ${{ secrets.DSN_SENTRY }}
+          ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+          DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}
+          RAJAONGKIRAPI_URL: ${{ secrets.RAJAONGKIRAPI_URL }}
+          RAJAONGKIRAPI_KEY: ${{ secrets.RAJAONGKIRAPI_KEY }}
+          BACKEND_SERVICE: ${{ secrets.BACKEND_SERVICE }}
+          FRONTEND_SERVICE: ${{ secrets.FRONTEND_SERVICE }}
+          FRONTEND_PORT: ${{ secrets.FRONTEND_PORT }}
+          FRONTEND_HOST: ${{ secrets.FRONTEND_HOST }}
         with:
           instance_name: ${{ env.INSTANCE_NAME }}
           zone: ${{ env.ZONE }}
@@ -45,6 +88,48 @@ jobs:
             git checkout staging
             git fetch --dry-run
             git pull origin staging
+            tee .env <<EOF
+            NODE_ENV=${{ env.NODE_ENV }}
+            PORT=${{ env.PORT }}
+            PUBLISH_PORT=${{ env.PUBLISH_PORT }}
+            HOST=${{ env.HOST }}
+            FE_URL=${{ env.FE_URL }}
+            STAGING_DB_USERNAME=${{ env.STAGING_DB_USERNAME }}
+            STAGING_DB_PASSWORD=${{ env.STAGING_DB_PASSWORD }}
+            STAGING_DB_NAME=${{ env.STAGING_DB_NAME }}
+            STAGING_DB_HOST=${{ env.STAGING_DB_HOST }}
+            STAGING_DB_DIALECT=${{ env.STAGING_DB_DIALECT }}
+            STAGING_DB_PORT=${{ env.STAGING_DB_PORT }}
+            BELEGA_ADMIN_EMAIL=${{ env.BELEGA_ADMIN_EMAIL }}
+            BELEGA_ADMIN_PASSWORD=${{ env.BELEGA_ADMIN_PASSWORD }}
+            JWT_SECRET_KEY=${{ env.JWT_SECRET_KEY }}
+            JWT_EXPIRES=${{ env.JWT_EXPIRES }}
+            JWT_RESET_PASSWORD_KEY=${{ env.JWT_RESET_PASSWORD_KEY }}
+            JWT_RESET_EXPIRES=${{ env.JWT_RESET_EXPIRES }}
+            GOOGLE_CLIENT_ID=${{ env.GOOGLE_CLIENT_ID }}
+            GOOGLE_CLIENT_SECRET=${{ env.GOOGLE_CLIENT_SECRET }}
+            GOOGLE_REDIRECT_URI=${{ env.GOOGLE_REDIRECT_URI }}
+            GOOGLE_REFRESH_TOKEN=${{ env.GOOGLE_REFRESH_TOKEN }}
+            GOOGLE_EMAIL=${{ env.GOOGLE_EMAIL }}
+            WIF_PROVIDER=${{ env.WIF_PROVIDER }}
+            CLOUD_RUN_SA=${{ env.CLOUD_RUN_SA }}
+            IMAGEKIT_PUBLIC_KEY=${{ env.IMAGEKIT_PUBLIC_KEY }}
+            IMAGEKIT_PRIVATE_KEY=${{ env.IMAGEKIT_PRIVATE_KEY }}
+            IMAGEKIT_URL_ENDPOINT=${{ env.IMAGEKIT_URL_ENDPOINT }}
+            MIDTRANS_APP_URL=${{ env.MIDTRANS_APP_URL }}
+            MIDTRANS_MERCHANT_ID=${{ env.MIDTRANS_MERCHANT_ID }}
+            MIDTRANS_CLIENT_KEY=${{ env.MIDTRANS_CLIENT_KEY }}
+            MIDTRANS_SERVER_KEY=${{ env.MIDTRANS_SERVER_KEY }}
+            DSN_SENTRY=${{ env.DSN_SENTRY }}
+            ADMIN_EMAIL=${{ env.ADMIN_EMAIL }}
+            DOMAIN_NAME=${{ env.DOMAIN_NAME }}
+            RAJAONGKIRAPI_URL=${{ env.RAJAONGKIRAPI_URL }}
+            RAJAONGKIRAPI_KEY=${{ env.RAJAONGKIRAPI_KEY }}
+            BACKEND_SERVICE=${{ env.BACKEND_SERVICE }}
+            FRONTEND_SERVICE=${{ env.FRONTEND_SERVICE }}
+            FRONTEND_PORT=${{ env.FRONTEND_PORT }}
+            FRONTEND_HOST=${{ env.FRONTEND_HOST }}
+            EOF
             bash ./shell/build.sh staging ${{ env.COMMIT_SHA }}
 
       - name: Build Output
@@ -84,6 +169,8 @@ jobs:
           command: |-
             cd $(pwd)/${{ env.REPO }}
             bash ./shell/deploy.sh staging ${{ env.COMMIT_SHA }}
+            bash ./shell/proxy.sh
+            rm .env
 
       - name: Deploy Output
         id: compute-ssh-deploy-output

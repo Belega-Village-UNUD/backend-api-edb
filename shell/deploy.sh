@@ -14,42 +14,19 @@ fi
 docker service ls | grep "backend_app"
 
 if [ $? -ne 0 ]; then
-  export $(cat .env) > /dev/null 2>&1; docker stack deploy -c ./docker/service/docker-compose.yml backend
+  export COMMIT_SHA=$COMMIT_SHA $(cat .env | grep PORT) >  /dev/null 2>&1; docker stack deploy -c ./docker/service/docker-compose.yml backend
   if [ $? -ne 0 ]; then
       echo "Error in deploying $BRANCH of Backend Belega Service"
       exit 1
   fi
 else
-  docker service update --force --image ghcr.io/belega-village-unud/backend-api-edb:$COMMIT_SHA backend_app
+  docker service update --force --image registry.belegacommerce.shop/belega-village-unud/backend-api-edb:$COMMIT_SHA backend_app
   if [ $? -ne 0 ]; then
       echo "Error in deploying $BRANCH of Backend Belega Service"
       exit 1
   fi
 fi
 
-docker service ls | grep "ssl_nginx"
+echo "Successfully deploy the image for registry.belegacommerce.shop/belega-village-unud/backend-api-edb:$COMMIT_SHA on service backend_app"
 
-if [ $? -ne 0 ]; then
-  export $(cat .env) > /dev/null 2>&1; docker stack deploy -c ./docker/ssl/docker-compose.yml ssl
-  if [ $? -ne 0 ]; then
-      echo "Error in deploying $BRANCH of SSL Belega Service"
-      exit 1
-  fi
-else
-  docker stack deploy -c ./docker/ssl/docker-compose.yml ssl
-  if [ $? -ne 0 ]; then
-      echo "Error in deploying $BRANCH of SSL Belega Service"
-      exit 1
-  fi
-fi
-
-
-if [ $? -ne 0 ]; then
-    echo "Error in deploying $BRANCH of Backend Belega Service"
-    exit 1
-fi  
-
-echo "Successfully deploy the image for ghcr.io/belega-village-unud/backend-api-edb:$COMMIT_SHA on service backend_app"
-
-docker service ls | grep backend | awk '{print $2, $3, $4, $5}'
-
+docker service ls | grep backend_app | awk '{print $2, $3, $4, $5}'
