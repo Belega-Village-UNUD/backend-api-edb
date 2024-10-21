@@ -7,8 +7,8 @@ server {
         allow all;
     }
 
-    location / {
-        return 301 http://${HOST}$request_uri;
+    location /api/ {
+        return 301 http://${HOST}$${esc}request_uri;
     }
 }
 
@@ -20,15 +20,15 @@ server {
 
     ssl_certificate /etc/nginx/cloudflare/fullchain.pem;
     ssl_certificate_key /etc/nginx/cloudflare/privkey.pem;
-    ssl_dhparam /etc/nginx/dhparam/dhparam-2048.pem;
+    ssl_dhparam /etc/nginx/dhparam/dhparam.pem;
 
-    location / {
+    location /api/ {
         proxy_pass http://${BACKEND_SERVICE}:${PORT};
         proxy_http_version 1.1;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $${esc}remote_addr;
+        proxy_set_header X-Forwarded-For $${esc}proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $${esc}scheme;
+        proxy_set_header Host $${esc}host;
         proxy_set_header Connection "keep-alive";
         proxy_read_timeout 100s;
         proxy_connect_timeout 100s;
