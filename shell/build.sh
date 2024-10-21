@@ -32,8 +32,8 @@ set -x
 docker image prune -f;
 
 docker build . --file docker/service/Dockerfile \
-  -t ghcr.io/belega-village-unud/backend-api-edb:$COMMIT_SHA \
-  -t ghcr.io/belega-village-unud/backend-api-edb:$BRANCH
+  -t registry.belegacommerce.shop/belega-village-unud/backend-api-edb:$COMMIT_SHA \
+  -t registry.belegacommerce.shop/belega-village-unud/backend-api-edb:$BRANCH
 
 if [ $? -ne 0 ]; then
     echo "Error in build $BRANCH for Backend Belega Service $?"
@@ -42,5 +42,4 @@ fi
 
 set +x
 
-echo "Successfully build the image for ghcr.io/belega-village-unud/backend-api-edb:$COMMIT_SHA"
-
+echo "Successfully build the image for registry.belegacommerce.shop/belega-village-unud/backend-api-edb:$COMMIT_SHA"
