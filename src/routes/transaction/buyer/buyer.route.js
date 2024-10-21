@@ -3,6 +3,22 @@ const controllers = require("../../../controllers/transaction");
 const middleware = require("../../../middlewares");
 const { MODULE, ROLE } = require("../../../utils/enum.utils");
 
+router.put(
+  "/final",
+  middleware.restrict,
+  middleware.rbac(MODULE.TRANSACTION, ROLE.BUYER, true, false),
+  middleware.buyerVerified,
+  controllers.finalTransaction
+);
+
+router.put(
+  "/cancel/:id",
+  middleware.restrict,
+  middleware.rbac(MODULE.TRANSACTION, ROLE.BUYER, true, false),
+  middleware.buyerVerified,
+  controllers.cancelTransaction
+);
+
 router.get(
   "/all",
   middleware.restrict,
@@ -27,19 +43,11 @@ router.put(
   controllers.payTransaction
 );
 
-router.put(
-  "/*/",
+router.get(
+  "/status/:id",
   middleware.restrict,
   middleware.rbac(MODULE.TRANSACTION, ROLE.BUYER, true, false),
   middleware.buyerVerified,
-  controllers.finalTransaction
-);
-
-router.put(
-  "/cancel/:id",
-  middleware.restrict,
-  middleware.rbac(MODULE.TRANSACTION, ROLE.BUYER, true, false),
-  middleware.buyerVerified,
-  controllers.cancelTransaction
+  controllers.getCheckShipping
 );
 module.exports = router;

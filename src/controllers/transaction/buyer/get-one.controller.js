@@ -1,13 +1,11 @@
-const Sequelize = require("sequelize");
 const {
   Transaction,
-  Cart,
-  Product,
+  DetailTransaction,
   User,
-  Store,
   Profile,
 } = require("../../../models");
 const { response } = require("../../../utils/response.utils");
+const { getTransactionBuyerOne } = require("../../../utils/orm.utils");
 
 const getOneTransactions = async (req, res) => {
   try {
@@ -16,85 +14,72 @@ const getOneTransactions = async (req, res) => {
 
     const user = await User.findOne({ where: { id: user_id } });
 
-    const transaction = await Transaction.findOne({
+    const transaction = await getTransactionBuyerOne(user.id, transaction_id);
+
+    let updatedCarts = [];
+    let arrivalShippingStatus = "UNCONFIRMED";
+    let shippingMethod = null;
+
+    const detailTransaction = await DetailTransaction.findAll({
       where: {
-        user_id: user.id,
-        id: transaction_id,
+        transaction_id: transaction.data.id,
+        "$transaction.user_id$": user.id,
       },
-    });
-
-    if (!transaction || transaction.length === 0) {
-      return response(
-        res,
-        200,
-        false,
-        "No transactions found for this user",
-        null
-      );
-    }
-
-    // Fetch the carts
-    const carts = await Cart.findAll({
-      attributes: ["id", "user_id", "product_id", "qty", "unit_price"],
       include: [
         {
-          model: User,
-          as: "user",
-          attributes: ["id", "email"],
-          include: [
-            {
-              model: Profile,
-              as: "userProfile",
-              attributes: ["id", "name"],
-            },
-          ],
-        },
-        {
-          model: Product,
-          as: "product",
-          include: [
-            {
-              model: Store,
-              as: "store",
-              attributes: ["id", "name"],
-              include: [
-                {
-                  model: User,
-                  as: "user",
-                  attributes: ["id", "email"],
-                  include: [
-                    {
-                      model: Profile,
-                      as: "userProfile",
-                      attributes: ["id", "name"],
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
+          model: Transaction,
+          as: "transaction",
+          attributes: ["id"],
         },
       ],
-      where: {
-        id: { [Sequelize.Op.in]: transaction.cart_id },
-      },
+      attributes: ["id", "carts_details"],
     });
 
-    // Merge the cart details into the transactions
-    const cart_details = transaction.cart_id.map((id) => {
-      const cart = carts.find((cart) => cart.id === id);
-      return cart || id;
+    if (detailTransaction.length > 0) {
+      const detailWithStatus = detailTransaction.find(
+        (detail) => detail.carts_details.length
+      );
+      if (detailWithStatus) {
+        const cartWithStatus = detailWithStatus.carts_details.find(
+          (cart) => cart.arrival_shipping_status
+        );
+        if (cartWithStatus) {
+          arrivalShippingStatus = cartWithStatus.arrival_shipping_status;
+          if (cartWithStatus.shipping) {
+            shippingMethod = `${
+              cartWithStatus.shipping.code.charAt(0).toUpperCase() +
+              cartWithStatus.shipping.code.slice(1)
+            } ${cartWithStatus.shipping.service} (${
+              cartWithStatus.shipping.description
+            })`;
+          } else {
+            shippingMethod = "Unknown Shipping Method";
+          }
+        }
+      }
+    }
+
+    transaction.data.cart_details.forEach(async (cart) => {
+      if (cart.id) {
+        const newCart = {
+          unit_price: cart.unit_price,
+          id: cart.id,
+          user_id: cart.user_id,
+          product_id: cart.product_id,
+          qty: cart.qty,
+          address: `${cart.user.userProfile.address}, ${cart.user.userProfile.city.city_name}, ${cart.user.userProfile.city.province}, ${cart.user.userProfile.city.postal_code}`,
+          shipping_method: shippingMethod,
+          arrival_shipping_status: arrivalShippingStatus,
+          user: cart.user,
+          product: cart.product,
+        };
+        updatedCarts.push(newCart);
+      }
     });
 
-    const mergedTransaction = { ...transaction.toJSON(), cart_details };
+    transaction.data.cart_details = updatedCarts;
 
-    return response(
-      res,
-      200,
-      true,
-      "Transaction retrieved successfully",
-      mergedTransaction
-    );
+    return response(res, 200, true, transaction.message, transaction.data);
   } catch (error) {
     return response(res, error.status || 500, false, error.message, null);
   }

@@ -62,7 +62,11 @@ const countTotalTransactionAfterShipping = (cartDetails) => {
   }
 
   totalFinalPrice = totalCartPrice + subTotalShipping;
-  return { subTotalShipping, totalFinalPrice, totalCartPrice };
+  return {
+    subTotalShipping,
+    totalFinalPrice,
+    totalCartPrice,
+  };
 };
 
 const calculateTotalWeightPerStore = async (carts) => {
@@ -85,12 +89,13 @@ const cartDetailsWithShippingCost = async (
   user,
   transactionData,
   shipping_name,
-  shipping_cost_index,
+  shipping_cost_index
 ) => {
   let estimation = [];
 
-  const totalWeightPerStore =
-    await calculateTotalWeightPerStore(transactionData);
+  const totalWeightPerStore = await calculateTotalWeightPerStore(
+    transactionData
+  );
 
   await Promise.all(
     transactionData.map(async (detail, iteration) => {
@@ -102,10 +107,12 @@ const cartDetailsWithShippingCost = async (
         courier: shipping_name[iteration],
       };
       estimation.push(await estimateCosts(data));
-    }),
+    })
   );
 
   const cartDetails = estimation.map((item, iteration) => {
+    const sub_total_cart_price = item.carts[0].qty * item.carts[0].price;
+    const arrival_shipping_status = "PACKING";
     const shipping = {
       code: item.shipping[0].code,
       costs:
@@ -118,6 +125,8 @@ const cartDetailsWithShippingCost = async (
     };
     return {
       ...item,
+      sub_total_cart_price,
+      arrival_shipping_status,
       shipping: shipping,
     };
   });
@@ -125,26 +134,25 @@ const cartDetailsWithShippingCost = async (
   return cartDetails;
 };
 
-const changeShippingStatus = async (product_id, transaction_id, status) => {
+const changeShippingStatus = async (store_id, transaction_id, status) => {
   try {
     const detailTransaction = await getDetailTransaction(transaction_id);
     const cartDetailsData = detailTransaction.carts_details.map((cart) => {
-      if (cart.arrival_shipping_status === "PACKING") {
-        if (status !== "SHIPPED") {
-          return { msg: "Your product has not shipped yet" };
+      if (cart.store_id === store_id) {
+        switch (cart.arrival_shipping_status) {
+          case "PACKING":
+            return status === "SHIPPED"
+              ? { ...cart, arrival_shipping_status: status }
+              : { msg: "Your product has not shipped yet" };
+          case "SHIPPED":
+            return status === "ARRIVED"
+              ? { ...cart, arrival_shipping_status: status }
+              : { msg: "Your product is on shipment" };
+          case "ARRIVED":
+            return { msg: "Order has already arrived." };
+          default:
+            return { msg: "Invalid status." };
         }
-      } else if (cart.arrival_shipping_status === "SHIPPED") {
-        if (status !== "ARRIVED") {
-          return { msg: "Your product is on shipment" };
-        }
-      } else {
-        return { msg: "Invalid status" };
-      }
-      if (cart.product_id === product_id) {
-        return {
-          ...cart,
-          arrival_shipping_status: status,
-        };
       }
       return cart;
     });
@@ -163,7 +171,6 @@ const changeShippingStatus = async (product_id, transaction_id, status) => {
 
     const data = {
       success: true,
-      cartDetailsData,
       detailTransaction,
     };
 

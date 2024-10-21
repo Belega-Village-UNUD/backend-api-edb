@@ -8,14 +8,6 @@ const { getDetailTransaction } = require("../utils/orm.utils");
 const { nanoid } = require("nanoid");
 
 const getBalance = async (store_id) => {
-  const bank = await StoreBankAccount.findOne({
-    where: { store_id, display: true },
-  });
-
-  if (!bank) {
-    return { success: false, message: "Bank Account should be available" };
-  }
-
   const [balance, created] = await StoreBalance.findOrCreate({
     where: { store_id },
     defaults: { id: nanoid(10), balance: 0 },
@@ -34,12 +26,7 @@ const getBalance = async (store_id) => {
   return data;
 };
 
-const updateBalance = async (transaction_id, product_id) => {
-  const product = await Product.findOne({
-    attributes: { exclude: ["image_product"] },
-    where: { id: product_id },
-  });
-
+const updateBalance = async (transaction_id, store_id) => {
   let data = {
     success: false,
     message: null,
@@ -52,46 +39,52 @@ const updateBalance = async (transaction_id, product_id) => {
   const detailTransaction = await getDetailTransaction(transaction_id);
 
   const cartDetailsData = detailTransaction.carts_details.map((cart) => {
-    if (cart.product_id === product_id) {
+    if (cart.store_id === store_id) {
       return {
         ...cart,
       };
     }
   });
 
-  const balance = await module.exports.getBalance(product.store_id);
+  const balance = await module.exports.getBalance(store_id);
 
   data.detail = cartDetailsData;
   data.balance = balance;
 
-  isArrived = data.arrival === "ARRIVED" ? true : false;
+  const relevantCartDetail = data.detail.find(
+    (item) => item && item.store_id === store_id
+  );
 
-  if (!isArrived) {
-    data.detail.forEach((element) => {
-      data.arrival = element.arrival_shipping_status;
+  if (relevantCartDetail) {
+    isArrived =
+      relevantCartDetail.arrival_shipping_status === "ARRIVED" ? true : false;
+
+    if (!isArrived) {
+      data.arrival = relevantCartDetail.arrival_shipping_status;
       data.newBalance = data.balance;
-      data.newBalance += element.sub_total_cart_price;
-    });
+      data.newBalance += relevantCartDetail.sub_total_cart_price;
 
-    await StoreBalance.update(
-      { balance: data.newBalance },
-      { where: { store_id: product.store_id } }
-    );
+      await StoreBalance.update(
+        { balance: data.newBalance },
+        { where: { store_id: store_id } }
+      );
 
-    data.success = true;
-    data.message = "Product is has arrived";
+      data.success = true;
+      data.message = "Product is has arrived";
 
+      return data;
+    }
+
+    data = {
+      success: false,
+      message: "Product has arrived, cannot update status",
+      arrival: null,
+      detail: null,
+      balance: null,
+      newBalance: null,
+    };
     return data;
   }
-
-  data = {
-    success: false,
-    message: "Product has arrived, cannot update status",
-    arrival: null,
-    detail: null,
-    balance: null,
-    newBalance: null,
-  };
 
   return data;
 };

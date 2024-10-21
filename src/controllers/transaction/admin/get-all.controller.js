@@ -5,6 +5,7 @@ const {
   User,
   Store,
   Profile,
+  DetailTransaction,
 } = require("../../../models");
 const { response } = require("../../../utils/response.utils");
 const { Op } = require("sequelize");
@@ -92,15 +93,71 @@ const getAllTransactionsAdmin = async (req, res) => {
       })
       .filter((transaction) => transaction !== null);
 
+    let updatedTransactions = [];
+
+    for (const transaction of mergedTransactions) {
+      let updatedCarts = [];
+      let arrivalShippingStatus = "UNCONFIRMED";
+
+      const detailTransaction = await DetailTransaction.findAll({
+        where: {
+          transaction_id: transaction.id,
+        },
+        include: [
+          {
+            model: Transaction,
+            as: "transaction",
+            attributes: ["id"],
+          },
+        ],
+        attributes: ["id", "carts_details"],
+      });
+
+      if (detailTransaction.length > 0) {
+        const detailWithStatus = detailTransaction.find(
+          (detail) => detail.carts_details.length
+        );
+        if (detailWithStatus) {
+          const cartWithStatus = detailWithStatus.carts_details.find(
+            (cart) => cart.arrival_shipping_status
+          );
+          if (cartWithStatus) {
+            arrivalShippingStatus = cartWithStatus.arrival_shipping_status;
+          }
+        }
+      }
+
+      transaction.cart_details.forEach(async (cart) => {
+        if (cart.id) {
+          const newCart = {
+            unit_price: cart.unit_price,
+            id: cart.id,
+            user_id: cart.user_id,
+            product_id: cart.product_id,
+            qty: cart.qty,
+            arrival_shipping_status: arrivalShippingStatus,
+            user: cart.user,
+            product: cart.product,
+          };
+          updatedCarts.push(newCart);
+        }
+      });
+
+      const updatedTransaction = {
+        ...transaction,
+        cart_details: updatedCarts,
+      };
+      updatedTransactions.push(updatedTransaction);
+    }
+
     return response(
       res,
       200,
       true,
       "Transactions retrieved successfully",
-      mergedTransactions
+      updatedTransactions
     );
   } catch (error) {
-    console.error(error);
     return response(res, error.status || 500, false, error.message, null);
   }
 };
