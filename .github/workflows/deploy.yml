@@ -5,6 +5,7 @@ on:
     branches: ["staging"]
     paths:
       - "src/**"
+      - ".github/workflows/**"
 
 env:
   REGISTRY: ghcr.io
@@ -15,7 +16,7 @@ env:
   ZONE: asia-southeast2-a
 
 jobs:
-  build:
+  setup:
     runs-on: ubuntu-latest
     environment: staging
     permissions:
@@ -28,14 +29,14 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Google Auth
-        id: auth-build
+        id: auth-setup
         uses: "google-github-actions/auth@v2"
         with:
           workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
           service_account: ${{ secrets.CLOUD_RUN_SA }}
 
-      - name: SSH to Compute Engine and Build
-        id: compute-ssh-build
+      - name: SSH to Compute Engine and Setup Environment
+        id: compute-ssh-setup
         uses: "google-github-actions/ssh-compute@v1"
         env:
           NODE_ENV: ${{ secrets.NODE_ENV }}
@@ -130,6 +131,46 @@ jobs:
             FRONTEND_PORT=${{ env.FRONTEND_PORT }}
             FRONTEND_HOST=${{ env.FRONTEND_HOST }}
             EOF
+
+      - name: Setup Output
+        id: compute-ssh-deploy-output
+        run: |-
+          echo '${{ steps.compute-ssh-deploy.outputs.stdout }}'
+          echo '${{ steps.compute-ssh-deploy.outputs.stderr }}'
+
+  build:
+    needs: setup
+    runs-on: ubuntu-latest
+    environment: staging
+    permissions:
+      contents: read
+      actions: read
+      packages: read
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Google Auth
+        id: auth-build
+        uses: "google-github-actions/auth@v2"
+        with:
+          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
+          service_account: ${{ secrets.CLOUD_RUN_SA }}
+
+      - name: SSH to Compute Engine and Build
+        id: compute-ssh-build
+        uses: "google-github-actions/ssh-compute@v1"
+        with:
+          instance_name: ${{ env.INSTANCE_NAME }}
+          zone: ${{ env.ZONE }}
+          ssh_private_key: ${{ secrets.SERVICE_ACCOUNT_SECRET_SSH_KEY }}
+          user: ${{ secrets.CE_USER }}
+          command: |-
+            cd $(pwd)/${{ env.REPO }}
+            git checkout staging
+            git fetch --dry-run
+            git pull origin staging
             bash ./shell/build.sh staging ${{ env.COMMIT_SHA }}
 
       - name: Build Output
