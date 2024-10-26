@@ -48,6 +48,13 @@ else
     exit 1
   fi
 
+  export $(cat .env) > /dev/null 2>&1; envsubst < nginx/templates/be.conf.template > nginx/templates/be.conf
+
+  if [ $? -ne 0 ]; then
+    echo "Failed to update for backend route"
+    exit 1
+  fi
+
   docker config create be.conf ./nginx/templates/be.conf
 
   if [ $? -ne 0 ]; then
