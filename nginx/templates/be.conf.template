@@ -18,9 +18,9 @@ server {
 
     server_name ${HOST};
 
-    ssl_certificate /etc/nginx/cloudflare/fullchain.pem;
-    ssl_certificate_key /etc/nginx/cloudflare/privkey.pem;
-    ssl_dhparam /etc/nginx/dhparam/dhparam.pem;
+    ssl_certificate /run/secrets/fullchain.pem;
+    ssl_certificate_key /run/secrets/privkey.pem;
+    ssl_dhparam /run/secrets/dhparam.pem;
 
     location /api/ {
         proxy_pass http://${BACKEND_SERVICE}:${PORT};
