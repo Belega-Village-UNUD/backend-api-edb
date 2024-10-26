@@ -32,6 +32,7 @@ const estimateCosts = async (data) => {
       .then((response) => {
         let estimation = {
           store_id: data.detail.store.id,
+          store_name: data.detail.store.name,
           carts: data.detail.carts,
           total_all_cart_weight: data.totalAllCartWeight,
           origin: response.rajaongkir.origin_details,
