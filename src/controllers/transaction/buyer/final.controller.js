@@ -97,6 +97,8 @@ const finalTransaction = async (req, res) => {
       }
 
       const totalValue = countTotalTransactionAfterShipping(cartDetails);
+      const totalFinalPrice =
+        transaction.total_amount + totalValue.subTotalShipping;
 
       const payload = {
         id: nanoid(10),
@@ -104,7 +106,7 @@ const finalTransaction = async (req, res) => {
         carts_details: cartDetails,
         sub_total_transaction_price_before_shipping: transaction.total_amount,
         sub_total_shipping: totalValue.subTotalShipping,
-        total_final_price: totalValue.totalFinalPrice,
+        total_final_price: totalFinalPrice,
         receipt_link: "", // TODO create the receipt link for the template by upload image first and return the link
       };
 
