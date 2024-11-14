@@ -74,18 +74,55 @@ const decline = async (req, res) => {
       const product = await Product.findOne({
         attributes: { exclude: ["image_product"] },
         where: { id: cart.product_id, display: true },
+        include: [
+          {
+            model: Store,
+            as: "store",
+            attributes: ["id", "name", "user_id"],
+          },
+        ],
       });
 
       if (!product) {
         return response(res, 500, false, "There's no product of this id", null);
       }
 
+      if (product.store.user_id === id) {
+        const totalCart = cart.unit_price * cart.qty;
+        transaction.total_amount -= totalCart;
+      }
+
       product.stock += cart.qty;
       await product.save();
     }
 
-    transaction.status = "CANCEL";
-    await transaction.save();
+    let statusStore = transaction.status_store || [];
+    const storeIndex = statusStore.findIndex(
+      (store) => store.store_id === storeUser.id
+    );
+    if (storeIndex === -1) {
+      return response(res, 404, false, "Store not found in transaction", null);
+    }
+
+    statusStore[storeIndex] = {
+      ...statusStore[storeIndex],
+      status_store: "cancel",
+    };
+
+    const allStoresCancelled = statusStore.every(
+      (store) => store.status_store === "cancel"
+    );
+
+    if (allStoresCancelled) {
+      transaction.status = "CANCEL";
+    }
+
+    let transactionData = transaction.toJSON();
+    transactionData.status_store = statusStore;
+    transactionData.status = transaction.status;
+    await Transaction.update(transactionData, {
+      where: { id: transactionId },
+    });
 
     return response(res, 200, true, "Transaction declined", 1);
   } catch (error) {
