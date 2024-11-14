@@ -1,5 +1,12 @@
 const { nanoid } = require("nanoid");
-const { Cart, User, Profile, Product, Transaction } = require("../../models");
+const {
+  Cart,
+  User,
+  Profile,
+  Product,
+  Transaction,
+  Store,
+} = require("../../models");
 const { response } = require("../../utils/response.utils");
 const { Op } = require("sequelize");
 const { getOneTransactionWithProduct } = require("../../utils/orm.utils");
@@ -30,18 +37,37 @@ const checkoutCart = async (req, res) => {
     });
 
     let totalAmount = 0;
+    const storeStatus = {};
+
     for (const cart of carts) {
       const isCheckout = cart.is_checkout ? true : false;
       if (!isCheckout) {
         const qty = cart.qty;
 
         const product = await Product.findOne({
-          attributes: { exclude: ["image_product"] },
           where: { id: cart.product_id, display: true },
+          attributes: { exclude: ["images"] },
+          include: [
+            {
+              model: Store,
+              as: "store",
+              attributes: ["id", "name", "user_id"],
+            },
+          ],
         });
 
         if (!product) {
           return response(res, 404, false, "Product not found", null);
+        }
+
+        if (product.store.user_id === id) {
+          return response(
+            res,
+            400,
+            false,
+            "You cannot checkout your own store's product",
+            null
+          );
         }
 
         if (qty > product.stock) {
@@ -94,6 +120,13 @@ const checkoutCart = async (req, res) => {
         await product.save();
 
         totalAmount += product.price * qty;
+
+        if (!storeStatus[product.store_id]) {
+          storeStatus[product.store_id] = {
+            store_id: product.store_id,
+            status_store: "pending",
+          };
+        }
       }
       if (isCheckout) {
         // remove the cartIds
@@ -118,19 +151,8 @@ const checkoutCart = async (req, res) => {
       status: "PENDING",
       token: null,
       redirect_url: null,
+      status_store: Object.values(storeStatus),
     });
-
-    // TODO move update checkout here from line 80 and create orm.utils.js
-
-    const transactionWithProduct = await getOneTransactionWithProduct(
-      transaction.id,
-      cartIds
-    );
-
-    //const data = {
-    //  transaction,
-    //  transactionWithProduct,
-    //};
 
     return response(res, 200, true, "Checkout successful", transaction);
   } catch (error) {
