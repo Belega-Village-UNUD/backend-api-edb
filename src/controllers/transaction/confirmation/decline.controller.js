@@ -14,12 +14,12 @@ const decline = async (req, res) => {
     const { id: transactionId } = req.params;
     const { id } = req.user;
 
-    const storeUserId = await Store.findOne({
+    const storeUser = await Store.findOne({
       attributes: ["id", "user_id"],
       where: { user_id: id },
     });
 
-    if (!storeUserId) {
+    if (!storeUser) {
       return response(
         res,
         404,

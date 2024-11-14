@@ -1,8 +1,4 @@
-const {
-  User,
-  Transaction,
-  Store,
-} = require("../../../models");
+const { User, Transaction, Store } = require("../../../models");
 const { response } = require("../../../utils/response.utils");
 
 const confirm = async (req, res) => {
@@ -10,12 +6,12 @@ const confirm = async (req, res) => {
     const { id: transactionId } = req.params;
     const { id } = req.user;
 
-    const storeUserId = await Store.findOne({
+    const storeUser = await Store.findOne({
       attributes: ["id", "user_id"],
       where: { user_id: id },
     });
 
-    if (!storeUserId) {
+    if (!storeUser) {
       return response(
         res,
         404,
@@ -55,10 +51,39 @@ const confirm = async (req, res) => {
       );
     }
 
-    transaction.status = "PAYABLE";
-    await transaction.save();
+    let statusStore = transaction.status_store || [];
+    const pendingStores = statusStore.filter(
+      (store) => store.status_store === "pending"
+    );
+    const lastPendingStore = pendingStores[pendingStores.length - 1];
+    const storeIndex = statusStore.findIndex(
+      (store) => store.store_id === storeUser.id
+    );
+    if (storeIndex === -1) {
+      return response(res, 404, false, "Store not found in transaction", null);
+    }
 
-    return response(res, 200, true, "Transaction confirmed", 1);
+    if (lastPendingStore && lastPendingStore.store_id === storeUser.id) {
+      const isLastPendingStore = lastPendingStore.store_id === storeUser.id;
+      if (isLastPendingStore) {
+        transaction.status = "PAYABLE";
+      }
+    }
+
+    statusStore[storeIndex] = {
+      ...statusStore[storeIndex],
+      status_store: "confirm",
+    };
+
+    let transactionData = transaction.toJSON();
+    transactionData.status_store = statusStore;
+    transactionData.status = transaction.status;
+
+    await Transaction.update(transactionData, {
+      where: { id: transactionId },
+    });
+
+    return response(res, 200, true, "Transaction confirmed", null);
   } catch (error) {
     return response(res, error.status || 500, false, error.message, null);
   }
