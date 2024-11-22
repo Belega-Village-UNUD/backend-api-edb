@@ -8,13 +8,25 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.STRING,
       },
-      transaction_id: {
+      detail_transaction_id: {
         allowNull: false,
         type: Sequelize.STRING,
       },
       store_id: {
         allowNull: false,
         type: Sequelize.STRING,
+      },
+      shipping_method: {
+        allowNull: false,
+        type: Sequelize.STRING,
+      },
+      shipping_price: {
+        allowNull: false,
+        type: Sequelize.DECIMAL,
+      },
+      total_price: {
+        allowNull: false,
+        type: Sequelize.DECIMAL,
       },
       createdAt: {
         allowNull: false,

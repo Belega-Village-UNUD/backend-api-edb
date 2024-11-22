@@ -9,16 +9,21 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsTo(models.Transaction, {
-        foreignKey: "transaction_id",
-        as: "transaction",
+      this.belongsTo(models.DetailTransaction, {
+        foreignKey: "detail_transaction_id",
+        as: "detail_transaction",
+      });
+      this.belongsTo(models.Store, {
+        foreignKey: "store_id",
+        as: "store",
       });
     }
   }
   Invoice.init(
     {
-      transaction_id: DataTypes.STRING,
+      detail_transaction_id: DataTypes.STRING,
       store_id: DataTypes.STRING,
+      shipping_method: DataTypes.STRING,
       shipping_price: {
         type: DataTypes.DECIMAL,
         get() {
