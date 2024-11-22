@@ -3,6 +3,13 @@ const controllers = require("../../../controllers/transaction");
 const middleware = require("../../../middlewares");
 const { MODULE, ROLE } = require("../../../utils/enum.utils");
 
+router.get(
+  "/invoice",
+  middleware.restrict,
+  middleware.rbac(MODULE.TRANSACTION, ROLE.BUYER, true, false),
+  middleware.buyerVerified,
+  controllers.invoiceTransaction
+);
 router.put(
   "/final",
   middleware.restrict,
