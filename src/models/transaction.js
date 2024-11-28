@@ -47,6 +47,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       status: DataTypes.ENUM("PENDING", "PAYABLE", "SUCCESS", "CANCEL"),
+      status_store: DataTypes.JSON,
       token: DataTypes.STRING,
       redirect_url: DataTypes.STRING,
     },

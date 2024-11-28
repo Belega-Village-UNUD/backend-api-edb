@@ -50,7 +50,6 @@ const estimateCosts = async (data) => {
 
 const countTotalTransactionAfterShipping = (cartDetails) => {
   let subTotalShipping = 0;
-  let totalFinalPrice = 0;
   let totalCartPrice = 0;
 
   for (const detail of cartDetails) {
@@ -62,10 +61,8 @@ const countTotalTransactionAfterShipping = (cartDetails) => {
     }
   }
 
-  totalFinalPrice = totalCartPrice + subTotalShipping;
   return {
     subTotalShipping,
-    totalFinalPrice,
     totalCartPrice,
   };
 };

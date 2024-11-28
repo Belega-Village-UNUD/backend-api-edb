@@ -8,6 +8,7 @@ const getOneBuyerTransactionHistory = require("./buyer/get-one.controller");
 const payTransaction = require("./buyer/pay.controller");
 const cancelTransaction = require("./buyer/cancel.controller");
 const finalTransaction = require("./buyer/final.controller");
+const invoiceTransaction = require("./buyer/invoice.controller");
 const getTransactionReports = require("./store/reports.controller");
 const getAllTransactionsReports = require("./admin/reports.controller");
 const getAllTransactionsAdmin = require("./admin/get-all.controller");
@@ -25,6 +26,7 @@ module.exports = {
   payTransaction,
   cancelTransaction,
   finalTransaction,
+  invoiceTransaction,
   getTransactionReports,
   getAllTransactionsReports,
   getAllTransactionsAdmin,
