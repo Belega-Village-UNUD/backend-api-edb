@@ -167,7 +167,7 @@ jobs:
       - name: Upload analysis results to GitHub
         uses: github/codeql-action/upload-sarif@v2
         id: upload-eslint-result
-        if: github/codeql-action/upload-sarif@v2
+        if: success() || failure()
         with:
           sarif_file: eslint-result.sarif
           wait-for-processing: true
