@@ -138,6 +138,40 @@ jobs:
           echo '${{ steps.compute-ssh-deploy.outputs.stdout }}'
           echo '${{ steps.compute-ssh-deploy.outputs.stderr }}'
 
+  eslint:
+    runs-on: ubuntu-latest
+    environment: staging
+    permissions:
+      contents: read
+      actions: read
+      security-events: write
+      packages: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install ESLint
+        id: install-eslint
+        run: |
+          npm install eslint@8.10.0
+          npm install @microsoft/eslint-formatter-sarif@2.1.7
+
+      - name: Run ESLint
+        id: run-eslint
+        run: npx eslint .
+          --config  eslint.config.js
+          --ext .js,.jsx,.ts,.tsx
+          --format @microsoft/eslint-formatter-sarif
+          --output-file eslint-result.sarif
+
+      - name: Upload analysis results to GitHub
+        uses: github/codeql-action/upload-sarif@v2
+        id: upload-eslint-result
+        if: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: eslint-result.sarif
+          wait-for-processing: true
+
   build:
     needs: setup
     runs-on: ubuntu-latest
