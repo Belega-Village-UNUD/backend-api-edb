@@ -160,7 +160,7 @@ jobs:
         id: run-eslint
         run: npx eslint .
           --config  eslint.config.js
-          --ext .js,.jsx,.ts,.tsx
+          ./src
           --format @microsoft/eslint-formatter-sarif
           --output-file eslint-result.sarif
 
