@@ -204,7 +204,7 @@ jobs:
             git checkout staging
             git fetch --dry-run
             git pull origin staging
-            bash ./shell/build.sh staging ${{ env.COMMIT_SHA }} ${{ env.REGISTRY }} ${{ env.IMAGE_NAME }}
+            bash ./shell/build.sh staging ${{ env.COMMIT_SHA }} ${{ env.REGISTRY }} ${${{ env.IMAGE_NAME }},,}
 
       - name: Build Output
         id: compute-ssh-build-output
@@ -243,8 +243,8 @@ jobs:
           command: |-
             cd $(pwd)/${{ env.REPO }}
             echo ${{ secrets.GITHUB_TOKEN }} | docker login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
-            docker push ${{  env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.COMMIT_SHA }}
-            docker push ${{  env.REGISTRY }}/${{ env.IMAGE_NAME }}:staging
+            docker push ${{  env.REGISTRY }}/${${{ env.IMAGE_NAME }},,}:${{ env.COMMIT_SHA }}
+            docker push ${{  env.REGISTRY }}/${${{ env.IMAGE_NAME }},,}:staging
 
       - name: Release Output
         id: compute-ssh-release-output
@@ -282,7 +282,7 @@ jobs:
           user: ${{ secrets.CE_USER }}
           command: |-
             cd $(pwd)/${{ env.REPO }}
-            bash ./shell/deploy.sh staging ${{ env.COMMIT_SHA }} ${{ env.REGISTRY }} ${{ env.IMAGE_NAME }}
+            bash ./shell/deploy.sh staging ${{ env.COMMIT_SHA }} ${{ env.REGISTRY }} ${${{ env.IMAGE_NAME }},,}
             bash ./shell/proxy.sh
             rm .env
 
