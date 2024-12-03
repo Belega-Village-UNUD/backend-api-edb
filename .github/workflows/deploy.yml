@@ -140,6 +140,7 @@ jobs:
           echo '${{ steps.compute-ssh-deploy.outputs.stderr }}'
 
   eslint:
+    needs: setup
     runs-on: ubuntu-latest
     environment: staging
     permissions:
