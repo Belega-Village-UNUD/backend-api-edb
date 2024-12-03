@@ -2,6 +2,8 @@
 
 BRANCH=$1
 COMMIT_SHA=$2
+REGISTRY=$3
+IMAGE_NAME=$4
 
 echo $BRANCH;
 
@@ -20,13 +22,13 @@ if [ $? -ne 0 ]; then
       exit 1
   fi
 else
-  docker service update --force --image registry.belegacommerce.shop/belega-village-unud/backend-api-edb:$COMMIT_SHA backend_app
+  docker service update --force --image $REGISTRY/$IMAGE_NAME:$COMMIT_SHA backend_app
   if [ $? -ne 0 ]; then
       echo "Error in deploying $BRANCH of Backend Belega Service"
       exit 1
   fi
 fi
 
-echo "Successfully deploy the image for registry.belegacommerce.shop/belega-village-unud/backend-api-edb:$COMMIT_SHA on service backend_app"
+echo "Successfully deploy the image for $REGISTRY/$IMAGE_NAME:$COMMIT_SHA:$COMMIT_SHA on service backend_app"
 
 docker service ls | grep backend_app | awk '{print $2, $3, $4, $5}'
