@@ -9,7 +9,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: belega-village-unud/backend-api-edb
   COMMIT_SHA: ${{ github.sha }}
   REPO: backend-api-edb
   INSTANCE_NAME: belega-instance
@@ -84,7 +84,6 @@ jobs:
           zone: ${{ env.ZONE }}
           ssh_private_key: ${{ secrets.SERVICE_ACCOUNT_SECRET_SSH_KEY }}
           user: ${{ secrets.CE_USER }}
-          string: ${{ env.IMAGE_NAME }}
           command: |-
             cd $(pwd)/${{ env.REPO }}
             git checkout staging
@@ -206,7 +205,7 @@ jobs:
             git checkout staging
             git fetch --dry-run
             git pull origin staging
-            bash ./shell/build.sh staging ${{ env.COMMIT_SHA }} ${{ env.REGISTRY }} ${{ steps.compute-ssh-setup.string.outputs.lowercase }}
+            bash ./shell/build.sh staging ${{ env.COMMIT_SHA }} ${{ env.REGISTRY }} ${{ env.IMAGE_NAME }}
 
       - name: Build Output
         id: compute-ssh-build-output
@@ -245,8 +244,8 @@ jobs:
           command: |-
             cd $(pwd)/${{ env.REPO }}
             echo ${{ secrets.GITHUB_TOKEN }} | docker login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
-            docker push ${{  env.REGISTRY }}/${{ steps.compute-ssh-setup.string.outputs.lowercase }}:${{ env.COMMIT_SHA }}
-            docker push ${{  env.REGISTRY }}/${{ steps.compute-ssh-setup.string.outputs.lowercase }}:staging
+            docker push ${{  env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.COMMIT_SHA }}
+            docker push ${{  env.REGISTRY }}/${{ env.IMAGE_NAME }}:staging
 
       - name: Release Output
         id: compute-ssh-release-output
@@ -284,7 +283,7 @@ jobs:
           user: ${{ secrets.CE_USER }}
           command: |-
             cd $(pwd)/${{ env.REPO }}
-            bash ./shell/deploy.sh staging ${{ env.COMMIT_SHA }} ${{ env.REGISTRY }} ${{ steps.compute-ssh-setup.string.outputs.lowercase }}
+            bash ./shell/deploy.sh staging ${{ env.COMMIT_SHA }} ${{ env.REGISTRY }} ${{ env.IMAGE_NAME }}
             bash ./shell/proxy.sh
             rm .env
 
