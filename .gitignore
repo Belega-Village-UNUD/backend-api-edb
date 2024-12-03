@@ -5,4 +5,5 @@ certbot
 data_backup
 nginx/dhparam
 nginx/cloudflare
+nginx/templates/*.conf
 reports
