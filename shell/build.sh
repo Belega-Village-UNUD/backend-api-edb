@@ -23,7 +23,7 @@ if [ "$(git rev-parse --abbrev-ref HEAD)" != "$BRANCH" ]; then
     git fetch --dry-run;
 fi
 
-git pull origin $BRANCH;
+git pull --force origin $BRANCH;
 
 if [ $? -ne 0 ]; then
     echo "Error in pull and fetch $BRANCH of Backend Belega Service $?"
