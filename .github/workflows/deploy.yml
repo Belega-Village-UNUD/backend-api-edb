@@ -164,7 +164,7 @@ jobs:
           --output-file eslint-result.sarif
 
       - name: Upload analysis results to GitHub
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         id: upload-eslint-result
         if: success() || failure()
         with:
@@ -178,7 +178,7 @@ jobs:
     permissions:
       contents: read
       actions: read
-      packages: read
+      packages: write
       id-token: write
     steps:
       - name: Checkout repository
@@ -204,10 +204,50 @@ jobs:
             git checkout staging
             git fetch --dry-run
             git pull origin staging
-            bash ./shell/build.sh staging ${{ env.COMMIT_SHA }}
+            bash ./shell/build.sh staging ${{ env.COMMIT_SHA }} ${{ env.REGISTRY }} ${{ env.IMAGE_NAME }}
 
       - name: Build Output
         id: compute-ssh-build-output
+        run: |-
+          echo '${{ steps.compute-ssh-build.outputs.stdout }}'
+          echo '${{ steps.compute-ssh-build.outputs.stderr }}'
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: staging
+    permissions:
+      contents: read
+      actions: read
+      packages: write
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Google Auth
+        id: auth-build
+        uses: "google-github-actions/auth@v2"
+        with:
+          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
+          service_account: ${{ secrets.CLOUD_RUN_SA }}
+
+      - name: SSH to Compute Engine and Release Image
+        id: compute-ssh-release
+        uses: "google-github-actions/ssh-compute@v1"
+        with:
+          instance_name: ${{ env.INSTANCE_NAME }}
+          zone: ${{ env.ZONE }}
+          ssh_private_key: ${{ secrets.SERVICE_ACCOUNT_SECRET_SSH_KEY }}
+          user: ${{ secrets.CE_USER }}
+          command: |-
+            cd $(pwd)/${{ env.REPO }}
+            echo ${{ secrets.GITHUB_TOKEN }} | docker login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
+            docker push ${{  env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.COMMIT_SHA }}
+            docker push ${{  env.REGISTRY }}/${{ env.IMAGE_NAME }}:staging
+
+      - name: Release Output
+        id: compute-ssh-release-output
         run: |-
           echo '${{ steps.compute-ssh-build.outputs.stdout }}'
           echo '${{ steps.compute-ssh-build.outputs.stderr }}'
@@ -242,7 +282,7 @@ jobs:
           user: ${{ secrets.CE_USER }}
           command: |-
             cd $(pwd)/${{ env.REPO }}
-            bash ./shell/deploy.sh staging ${{ env.COMMIT_SHA }}
+            bash ./shell/deploy.sh staging ${{ env.COMMIT_SHA }} ${{ env.REGISTRY }} ${{ env.IMAGE_NAME }}
             bash ./shell/proxy.sh
             rm .env
 
