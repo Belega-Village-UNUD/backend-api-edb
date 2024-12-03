@@ -16,7 +16,7 @@ fi
 docker service ls | grep "backend_app"
 
 if [ $? -ne 0 ]; then
-  export COMMIT_SHA=$COMMIT_SHA $(cat .env | grep PORT) >  /dev/null 2>&1; docker stack deploy -c ./docker/service/docker-compose.yml backend
+  export COMMIT_SHA=$COMMIT_SHA $(cat .env | grep PORT) REGISTRY=$REGISTRY IMAGE_NAME=$IMAGE_NAME >  /dev/null 2>&1; docker stack deploy -c ./docker/service/docker-compose.yml backend
   if [ $? -ne 0 ]; then
       echo "Error in deploying $BRANCH of Backend Belega Service"
       exit 1
