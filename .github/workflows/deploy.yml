@@ -253,7 +253,7 @@ jobs:
           echo '${{ steps.compute-ssh-build.outputs.stderr }}'
 
   deploy:
-    needs: build
+    needs: release
     runs-on: ubuntu-latest
     environment: staging
     permissions:
