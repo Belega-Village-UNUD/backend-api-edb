@@ -11,12 +11,6 @@ router.get(
   controllers.midtrans.checkStatus
 );
 
-router.post(
-  "/callback",
-  middleware.restrict,
-  middleware.rbac(MODULE.TRANSACTION, ROLE.BUYER, true, false),
-  middleware.buyerVerified,
-  controllers.midtrans.callbackMidtrans
-);
+router.post("/callback", controllers.midtrans.callbackMidtrans);
 
 module.exports = router;
