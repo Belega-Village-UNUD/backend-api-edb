@@ -72,14 +72,12 @@ fi
 
 if [ $(docker service ps ssl_nginx | grep -i running | wc -l) == 0 ]; then
   docker service update --config-rm --force be.conf
-  docker config rm be.cponf 
+  docker config rm be.conf 
   echo "Failed updating config for backend route on ssl service, something is wrong with the nginx configuration, please check the template and make sure the variable is available"
   exit 1
 fi
 
 
 echo "Successfully updating backend config on service ssl_nginx"
-
-echo "Successfully deploy the image for registry.belegacommerce.shop/belega-village-unud/backend-api-edb:$COMMIT_SHA on service backend_app"
 
 docker service ls | grep ssl_nginx | awk '{print $2, $3, $4, $5}'
