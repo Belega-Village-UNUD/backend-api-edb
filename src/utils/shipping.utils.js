@@ -110,7 +110,7 @@ const cartDetailsWithShippingCost = async (
 
   const cartDetails = estimation.map((item, iteration) => {
     const sub_total_cart_price = item.carts[0].qty * item.carts[0].price;
-    const arrival_shipping_status = "PACKING";
+    const arrival_shipping_status = "UNCONFIRMED";
     const shipping = {
       code: item.shipping[0].code,
       costs:
