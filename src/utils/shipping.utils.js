@@ -178,9 +178,26 @@ const changeShippingStatus = async (store_id, transaction_id, status) => {
   }
 };
 
+const changeAllShippingStatus = async (transaction_id, status) => {
+  try {
+    const detailTransaction = await getDetailTransaction(transaction_id);
+    const cartDetailsData = detailTransaction.carts_details.map((cart) => {
+      if (cart.arrival_shipping_status === "UNCONFIRMED") {
+        return { ...cart, arrival_shipping_status: status };
+      }
+    });
+
+    detailTransaction.carts_details = cartDetailsData;
+    detailTransaction.save();
+  } catch (error) {
+    return error;
+  }
+};
+
 module.exports = {
   estimateCosts,
   countTotalTransactionAfterShipping,
   cartDetailsWithShippingCost,
   changeShippingStatus,
+  changeAllShippingStatus,
 };

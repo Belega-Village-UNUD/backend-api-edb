@@ -2,7 +2,7 @@ const { modifyStatusTransaction } = require("../../utils/midtrans.utils");
 const { response } = require("../../utils/response.utils");
 const crypto = require("crypto");
 const { MIDTRANS_SERVER_KEY } = require("../../utils/constan");
-const { changeShippingStatus } = require("../../utils/shipping.utils");
+const { changeAllShippingStatus } = require("../../utils/shipping.utils");
 
 const handleMidtransWebhook = async (req, res) => {
   try {
@@ -27,11 +27,7 @@ const handleMidtransWebhook = async (req, res) => {
       return response(res, 404, false, "Transaction not found", null);
     }
 
-    const updateShippingStatus = await changeShippingStatus(
-      status_code,
-      order_id,
-      "PACKING"
-    );
+    await changeAllShippingStatus(order_id, "PACKING");
 
     return response(res, 200, true, "Webhook handled successfully", null);
   } catch (error) {
