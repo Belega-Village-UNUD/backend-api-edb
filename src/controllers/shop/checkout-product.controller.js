@@ -11,6 +11,7 @@ const { response } = require("../../utils/response.utils");
 
 const checkoutProduct = async (req, res) => {
   try {
+    validateRequestBody(req);
     const { id } = req.user;
 
     const user = await User.findOne({

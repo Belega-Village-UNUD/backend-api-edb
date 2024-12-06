@@ -1,8 +1,7 @@
 const jwt = require("jsonwebtoken");
 const { User } = require("../models");
 const bcrypt = require("bcrypt");
-const crypto = require('crypto');
-
+const crypto = require("crypto");
 
 module.exports = {
   generateToken: (user) => {
@@ -20,5 +19,11 @@ module.exports = {
       .toUpperCase();
     const encryptedOTP = bcrypt.hashSync(otp, 10);
     return { otp, encryptedOTP };
+  },
+
+  validateRequestBody: (req) => {
+    if (!req.body || Object.keys(req.body).length === 0) {
+      throw new Error("Request body cannot be empty");
+    }
   },
 };

@@ -5,6 +5,7 @@ const { generateToken } = require("../../utils/token.utils");
 
 const forgotPassword = async (req, res) => {
   try {
+    validateRequestBody(req);
     const { email } = req.body;
 
     const user = await User.findOne({ where: { email } });

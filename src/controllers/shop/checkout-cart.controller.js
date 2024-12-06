@@ -10,9 +10,11 @@ const {
 const { response } = require("../../utils/response.utils");
 const { Op } = require("sequelize");
 const { getOneTransactionWithProduct } = require("../../utils/orm.utils");
+const { validateRequestBody } = require("../../utils/token.utils");
 
 const checkoutCart = async (req, res) => {
   try {
+    validateRequestBody(req);
     const { id } = req.user;
     const user = await User.findOne({
       where: { id },

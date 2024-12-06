@@ -4,6 +4,7 @@ const db = require("../../models");
 
 const declinedStore = async (req, res) => {
   try {
+    validateRequestBody(req);
     const { id } = req.user;
     const { user_id, unverified_reason } = req.body;
 

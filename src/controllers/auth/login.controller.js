@@ -6,6 +6,7 @@ const { ROLE } = require("../../utils/enum.utils");
 
 const login = async (req, res) => {
   try {
+    validateRequestBody(req);
     const { email, password } = req.body;
 
     const user = await User.findOne({

@@ -1,9 +1,11 @@
 const { User } = require("../../models");
 const bcrypt = require("bcrypt");
 const { response } = require("../../utils/response.utils");
+const { validateRequestBody } = require("../../utils/token.utils");
 
 const changePassword = async (req, res) => {
   try {
+    validateRequestBody(req);
     const { email } = req.user;
     const { currentPassword, newPassword, confirmNewPassword } = req.body;
 

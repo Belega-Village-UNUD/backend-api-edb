@@ -6,6 +6,7 @@ const { readFileSyncJSON } = require("../../utils/file.utils");
 
 const registerStore = async (req, res) => {
   try {
+    validateRequestBody(req);
     const { id } = req.user;
     const { name, phone, address, description, city_id } = req.body;
 

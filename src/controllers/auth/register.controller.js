@@ -10,9 +10,9 @@ const register = async (req, res) => {
   try {
     const { email, password, confirmPassword } = req.body;
 
-    if (password !== confirmPassword)
+    if (password !== confirmPassword) {
       return response(res, 400, false, "Password doesn't match", null);
-
+    }
     const userExist = await User.findOne({ where: { email } });
     if (userExist) return response(res, 400, false, "Email already used", null);
 
