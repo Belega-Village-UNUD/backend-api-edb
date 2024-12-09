@@ -181,11 +181,19 @@ const changeShippingStatus = async (store_id, transaction_id, status) => {
 const changeAllShippingStatus = async (transaction_id, status) => {
   try {
     const detailTransaction = await getDetailTransaction(transaction_id);
+    if (!detailTransaction) {
+      throw `No Detail Transaction for this ${transaction_id}`;
+    }
+
     const cartDetailsData = detailTransaction.carts_details.map((cart) => {
       if (cart.arrival_shipping_status === "UNCONFIRMED") {
         return { ...cart, arrival_shipping_status: status };
       }
     });
+
+    if (!cartDetailsData) {
+      throw `No Detail Transaction for this ${transaction_id}`;
+    }
 
     detailTransaction.carts_details = cartDetailsData;
     detailTransaction.save();
