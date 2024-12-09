@@ -1,6 +1,7 @@
 const { response } = require("../../utils/response.utils");
 const { Store, User } = require("../../models");
 const db = require("../../models");
+const { validateRequestBody } = require("../../utils/token.utils");
 
 const declinedStore = async (req, res) => {
   try {

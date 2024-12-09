@@ -1,7 +1,10 @@
 const { User, Role, Store } = require("../../models");
 const bcrypt = require("bcrypt");
 const { response } = require("../../utils/response.utils");
-const { generateToken } = require("../../utils/token.utils");
+const {
+  generateToken,
+  validateRequestBody,
+} = require("../../utils/token.utils");
 const { ROLE } = require("../../utils/enum.utils");
 
 const login = async (req, res) => {

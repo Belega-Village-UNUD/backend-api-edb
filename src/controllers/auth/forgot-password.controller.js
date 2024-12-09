@@ -1,7 +1,10 @@
 const { User } = require("../../models");
 const { response } = require("../../utils/response.utils");
 const { sendOTP } = require("../../configs/otp.config");
-const { generateToken } = require("../../utils/token.utils");
+const {
+  generateToken,
+  validateRequestBody,
+} = require("../../utils/token.utils");
 
 const forgotPassword = async (req, res) => {
   try {

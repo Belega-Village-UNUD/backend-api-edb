@@ -3,6 +3,7 @@ const { response } = require("../../utils/response.utils");
 const { nanoid } = require("nanoid");
 const { singleUpload } = require("../../utils/imagekit.utils");
 const { readFileSyncJSON } = require("../../utils/file.utils");
+const { validateRequestBody } = require("../../utils/token.utils");
 
 const registerStore = async (req, res) => {
   try {

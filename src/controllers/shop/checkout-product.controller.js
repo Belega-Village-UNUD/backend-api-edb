@@ -8,6 +8,7 @@ const {
   Store,
 } = require("../../models");
 const { response } = require("../../utils/response.utils");
+const { validateRequestBody } = require("../../utils/token.utils");
 
 const checkoutProduct = async (req, res) => {
   try {
