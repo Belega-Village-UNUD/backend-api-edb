@@ -27,7 +27,11 @@ const handleMidtransWebhook = async (req, res) => {
       return response(res, 404, false, "Transaction not found", null);
     }
 
-    await changeAllShippingStatus(order_id, "PACKING");
+    const shipping_status = await changeAllShippingStatus(order_id, "PACKING");
+
+    if (!shipping_status) {
+      throw "error on updating shipping status";
+    }
 
     return response(res, 200, true, "Webhook handled successfully", null);
   } catch (error) {
