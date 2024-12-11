@@ -178,9 +178,9 @@ const changeShippingStatus = async (store_id, transaction_id, status) => {
   }
 };
 
-const changeAllShippingStatus = async (transaction_id, status) => {
+const changeAllShippingStatus = (transaction_id, status) => {
   try {
-    const detailTransaction = await getDetailTransaction(transaction_id);
+    const detailTransaction = getDetailTransaction(transaction_id);
     if (!detailTransaction) {
       throw `No Detail Transaction for this ${transaction_id}`;
     }
@@ -196,7 +196,7 @@ const changeAllShippingStatus = async (transaction_id, status) => {
     }
 
     detailTransaction.carts_details = cartDetailsData;
-    await detailTransaction.save();
+    detailTransaction.save();
   } catch (error) {
     return error;
   }
