@@ -196,7 +196,7 @@ const changeAllShippingStatus = async (transaction_id, status) => {
     }
 
     detailTransaction.carts_details = cartDetailsData;
-    detailTransaction.save();
+    await detailTransaction.save();
   } catch (error) {
     return error;
   }
