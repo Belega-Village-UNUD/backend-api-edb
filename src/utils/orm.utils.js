@@ -214,6 +214,12 @@ module.exports = {
         where: {
           transaction_id: transaction_id,
         },
+        include: [
+          {
+            model: Transaction,
+            as: "transaction",
+          },
+        ],
       });
 
       return detail;

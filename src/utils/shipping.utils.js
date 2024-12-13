@@ -178,9 +178,9 @@ const changeShippingStatus = async (store_id, transaction_id, status) => {
   }
 };
 
-const changeAllShippingStatus = (transaction_id, status) => {
+const changeAllShippingStatus = async (transaction_id, status) => {
   try {
-    const detailTransaction = getDetailTransaction(transaction_id);
+    const detailTransaction = await getDetailTransaction(transaction_id);
     if (!detailTransaction) {
       throw `No Detail Transaction for this ${transaction_id}`;
     }
@@ -189,6 +189,7 @@ const changeAllShippingStatus = (transaction_id, status) => {
       if (cart.arrival_shipping_status === "UNCONFIRMED") {
         return { ...cart, arrival_shipping_status: status };
       }
+      return cart;
     });
 
     if (!cartDetailsData) {
@@ -196,7 +197,7 @@ const changeAllShippingStatus = (transaction_id, status) => {
     }
 
     detailTransaction.carts_details = cartDetailsData;
-    detailTransaction.save();
+    await detailTransaction.save();
   } catch (error) {
     return error;
   }
