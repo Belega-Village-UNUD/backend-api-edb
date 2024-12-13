@@ -35,7 +35,6 @@ const handleMidtransWebhook = async (req, res) => {
 
     return response(res, 200, true, "Webhook handled successfully", null);
   } catch (error) {
-    console.error("line 38", error);
     return response(res, error.status || 500, false, error.message, null);
   }
 };

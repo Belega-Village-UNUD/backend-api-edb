@@ -200,7 +200,6 @@ const changeAllShippingStatus = async (transaction_id, status) => {
     await detailTransaction.save();
     return true;
   } catch (error) {
-    console.log("line 202: ", JSON.stringify(error));
     return error;
   }
 };
