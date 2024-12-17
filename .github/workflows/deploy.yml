@@ -172,6 +172,46 @@ jobs:
           sarif_file: eslint-result.sarif
           wait-for-processing: true
 
+  sast-bearer-cli:
+    needs: eslint
+    runs-on: ubuntu-latest
+    environment: staging
+    permissions:
+      contents: read
+      actions: read
+      security-events: write
+      packages: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Google Auth
+        id: auth-sast-bearer-cli
+        uses: "google-github-actions/auth@v2"
+        with:
+          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
+          service_account: ${{ secrets.CLOUD_RUN_SA }}
+
+      - name: SSH to Compute Engine and SAST
+        id: compute-ssh-sast-bearer-cli
+        uses: "google-github-actions/ssh-compute@v1"
+        with:
+          instance_name: ${{ env.INSTANCE_NAME }}
+          zone: ${{ env.ZONE }}
+          ssh_private_key: ${{ secrets.SERVICE_ACCOUNT_SECRET_SSH_KEY }}
+          user: ${{ secrets.CE_USER }}
+          command: |-
+            cd $(pwd)/bearer-sast-tools/
+            ./scan-bearer.sh ../${{ env.REPO  }} ${{ env.REPO }}-${{ env.COMMIT_SHA }}
+            ./upload-sarif.sh ${{ secrets.GITHUB_TOKEN }} ${{ env.REPO }}-${{ env.COMMIT_SHA }}-security.sarif ${{ env.COMMIT_SHA }} ${{ env.REPO }}
+
+      - name: SAST Output
+        id: compute-ssh-sast-bearer-cli-output
+        run: |-
+          echo '${{ steps.compute-ssh-sast-bearer-cli.outputs.stdout }}'
+          echo '${{ steps.compute-ssh-sast-bearer-cli.outputs.stderr }}'
+
+
   build:
     needs: setup
     runs-on: ubuntu-latest
