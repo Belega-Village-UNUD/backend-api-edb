@@ -183,6 +183,7 @@ jobs:
       actions: read
       security-events: write
       packages: read
+      id-token: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
