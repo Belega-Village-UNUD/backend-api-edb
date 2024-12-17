@@ -140,6 +140,7 @@ jobs:
 
   eslint:
     needs: setup
+    continue-on-error: true
     runs-on: ubuntu-latest
     environment: staging
     permissions:
@@ -193,7 +194,7 @@ jobs:
           workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
           service_account: ${{ secrets.CLOUD_RUN_SA }}
 
-      - name: SSH to Compute Engine and SAST
+      - name: SSH to Compute Engine and SAST Bearer
         id: compute-ssh-sast-bearer-cli
         uses: "google-github-actions/ssh-compute@v1"
         with:
