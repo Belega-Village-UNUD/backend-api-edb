@@ -195,25 +195,20 @@ jobs:
           workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
           service_account: ${{ secrets.CLOUD_RUN_SA }}
 
-      - name: SSH to Compute Engine and SAST Bearer
-        id: compute-ssh-sast-bearer-cli
-        uses: "google-github-actions/ssh-compute@v1"
+      - name: Run Bearer
+        uses: bearer/bearer-action@v2
+        id: run-bearer-scan
         with:
-          instance_name: ${{ env.INSTANCE_NAME }}
-          zone: ${{ env.ZONE }}
-          ssh_private_key: ${{ secrets.SERVICE_ACCOUNT_SECRET_SSH_KEY }}
-          user: ${{ secrets.CE_USER }}
-          command: |-
-            cd $(pwd)/bearer-sast-tools/
-            ./scan-bearer.sh ../${{ env.REPO  }} ${{ env.REPO }}-${{ env.COMMIT_SHA }}
-            ./upload-sarif.py ${{ env.REPO  }} ${{ env.COMMIT_SHA }} ${{ secrets.GITHUB_TOKEN }} staging $(gzip -c ${{ env.REPO }}-${{ env.COMMIT_SHA }}-security.sarif | base64 -w0 )
+          format: sarif
+          output: ${{ env.REPO }}-${{ env.COMMIT_SHA }}-security.sarif
 
-      - name: SAST Output
-        id: compute-ssh-sast-bearer-cli-output
-        run: |-
-          echo '${{ steps.compute-ssh-sast-bearer-cli.outputs.stdout }}'
-          echo '${{ steps.compute-ssh-sast-bearer-cli.outputs.stderr }}'
-
+      - name: Upload analysis results to GitHub
+        uses: github/codeql-action/upload-sarif@v3
+        id: upload-bearer-result
+        if: success() || failure()
+        with:
+          sarif_file: ${{ env.REPO }}-${{ env.COMMIT_SHA }}-security.sarif
+          wait-for-processing: true
 
   build:
     needs: setup
