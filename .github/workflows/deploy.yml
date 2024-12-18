@@ -206,13 +206,7 @@ jobs:
           command: |-
             cd $(pwd)/bearer-sast-tools/
             ./scan-bearer.sh ../${{ env.REPO  }} ${{ env.REPO }}-${{ env.COMMIT_SHA }}
-            curl -L \
-              -X POST \
-              -H "Accept: application/vnd.github+json" \
-              -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-              -H "X-GitHub-Api-Version: 2022-11-28" \
-              https://api.github.com/repos/Belega-Village-UNUD/${{ env.REPO }}/code-scanning/sarifs \
-              -d '{"commit_sha":"${{ env.COMMIT_SHA }}","ref":"refs/heads/staging","sarif":"$(gzip -c output/${{ env.REPO }}-${{ env.COMMIT_SHA }}-security.sarif | base64 -w0)"}'
+            ./upload-sarif.py ${{ env.REPO  }} ${{ env.COMMIT_SHA }} ${{ secrets.GITHUB_TOKEN }} ${{ staging }} $(gzip -c ${{ env.REPO }}-${{ env.COMMIT_SHA }}-security.sarif | base64 -w0 )
 
       - name: SAST Output
         id: compute-ssh-sast-bearer-cli-output
