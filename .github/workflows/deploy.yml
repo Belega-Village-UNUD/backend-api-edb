@@ -206,7 +206,7 @@ jobs:
           command: |-
             cd $(pwd)/bearer-sast-tools/
             ./scan-bearer.sh ../${{ env.REPO  }} ${{ env.REPO }}-${{ env.COMMIT_SHA }}
-            ./upload-sarif.py ${{ env.REPO  }} ${{ env.COMMIT_SHA }} ${{ secrets.GITHUB_TOKEN }} ${{ staging }} $(gzip -c ${{ env.REPO }}-${{ env.COMMIT_SHA }}-security.sarif | base64 -w0 )
+            ./upload-sarif.py ${{ env.REPO  }} ${{ env.COMMIT_SHA }} ${{ secrets.GITHUB_TOKEN }} staging $(gzip -c ${{ env.REPO }}-${{ env.COMMIT_SHA }}-security.sarif | base64 -w0 )
 
       - name: SAST Output
         id: compute-ssh-sast-bearer-cli-output
